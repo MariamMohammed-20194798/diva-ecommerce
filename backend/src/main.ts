@@ -12,7 +12,7 @@ async function bootstrap() {
   app.use(cookieParser());
   app.use('/api/checkout/webhook', express.raw({ type: 'application/json' }));
   app.enableCors({
-    origin: process.env.FRONTEND_URL,
+    origin: [process.env.FRONTEND_URL, 'https://ecommerce-app-omega-hazel.vercel.app'],
     credentials: true,
     exposedHeaders: ['x-session-id'],
   });
