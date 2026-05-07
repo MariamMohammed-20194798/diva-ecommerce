@@ -11,14 +11,14 @@ const policyItems = [
   "exchange/refunds come with a 250 egp fee",
 ]
 
-export function ExchangeRefunds() {
+export default function ExchangeRefunds() {
   const ref = useRef<HTMLDivElement>(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
 
   return (
     <section ref={ref} className="py-24 bg-white overflow-hidden">
       <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
-        <motion.h2 
+        <motion.h2
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
@@ -26,8 +26,8 @@ export function ExchangeRefunds() {
         >
           Exchange & Refunds
         </motion.h2>
-        
-        <motion.p 
+
+        <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ delay: 0.2, duration: 0.6 }}
@@ -37,15 +37,15 @@ export function ExchangeRefunds() {
           encounter any issue, feel free to reach out; your feedback helps us grow!
         </motion.p>
 
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={isInView ? { opacity: 1, scale: 1 } : {}}
           transition={{ delay: 0.4, duration: 0.8 }}
           className="mt-16 grid grid-cols-1 gap-6 sm:grid-cols-2"
         >
           {policyItems.slice(0, 2).map((item, index) => (
-            <motion.div 
-              key={item} 
+            <motion.div
+              key={item}
               whileHover={{ y: -5 }}
               className="rounded-2xl bg-muted px-8 py-8 text-sm text-foreground/90 font-medium flex items-center justify-center text-center shadow-sm"
             >
@@ -53,7 +53,7 @@ export function ExchangeRefunds() {
             </motion.div>
           ))}
           <div className="sm:col-span-2 sm:flex sm:justify-center">
-            <motion.div 
+            <motion.div
               whileHover={{ y: -5 }}
               className="rounded-2xl bg-muted px-8 py-8 text-sm text-foreground/90 font-medium flex items-center justify-center text-center shadow-sm sm:w-[calc(50%-0.75rem)]"
             >

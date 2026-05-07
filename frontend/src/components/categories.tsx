@@ -39,7 +39,7 @@ function flattenSubcategories(nodes: CategoryNode[]): CategoryNode[] {
   });
 }
 
-export function Categories() {
+export default function Categories() {
   const [categoriesTree, setCategoriesTree] = useState<CategoryNode[]>([]);
   const [isHovered, setIsHovered] = useState(false);
   const [canScrollLeft, setCanScrollLeft] = useState(false);

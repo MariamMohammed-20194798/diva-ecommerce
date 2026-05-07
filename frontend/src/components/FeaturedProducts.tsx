@@ -16,7 +16,7 @@ import {
   type Product,
 } from '@/lib/products';
 
-export function FeaturedProducts() {
+export default function FeaturedProducts() {
   const [products, setProducts] = useState<Product[]>([]);
   const [wishlistedProductIds, setWishlistedProductIds] = useState<string[]>([]);
   const [activeWishlistProductId, setActiveWishlistProductId] = useState<string | null>(

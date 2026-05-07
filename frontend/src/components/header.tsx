@@ -10,7 +10,7 @@ import { getWishlistProductIds, subscribeToWishlistUpdates } from "@/lib/product
 import { motion } from "framer-motion"
 
 const navigation = [
-  { name: "Home", href: "/home" },
+  { name: "Home", href: "/" },
   { name: "New Arrivals", href: "#new" },
   { name: "Collections", href: "/collections" },
   { name: "Size Guide", href: "/size-guide" },

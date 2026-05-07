@@ -5,7 +5,7 @@ import { motion, useInView } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
-export function Newsletter() {
+export default function Newsletter() {
   const [email, setEmail] = useState("")
   const ref = useRef<HTMLDivElement>(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
@@ -32,8 +32,8 @@ export function Newsletter() {
               Join Our World
             </h2>
           </motion.div>
-          
-          <motion.p 
+
+          <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 0.2, duration: 0.6 }}
@@ -41,10 +41,10 @@ export function Newsletter() {
           >
             Subscribe to receive exclusive access to new collections, special offers, and styling inspiration.
           </motion.p>
-          
-          <motion.form 
+
+          <motion.form
             suppressHydrationWarning
-            onSubmit={handleSubmit} 
+            onSubmit={handleSubmit}
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 0.4, duration: 0.6 }}
@@ -67,8 +67,8 @@ export function Newsletter() {
               Subscribe
             </Button>
           </motion.form>
-          
-          <motion.p 
+
+          <motion.p
             initial={{ opacity: 0 }}
             animate={isInView ? { opacity: 1 } : {}}
             transition={{ delay: 0.8, duration: 1 }}

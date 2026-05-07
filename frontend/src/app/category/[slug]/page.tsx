@@ -24,7 +24,7 @@ const sortOptions = [
   { name: "Best Selling", value: "best-selling" },
 ]
 
-export default function CategoryPage() {
+export default function Categories() {
   const params = useParams()
   const slug = params.slug as string
 
