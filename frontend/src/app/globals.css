@@ -119,7 +119,30 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer components {
+
+  /* ──────────────────────────────────────────────
+     MARQUEE
+  ────────────────────────────────────────────── */
+  .marquee-track {
+    @apply flex whitespace-nowrap w-max;
+    animation: marquee 22s linear infinite;
+  }
+
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
   }
 }
