@@ -7,7 +7,7 @@ import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { Toaster } from '@/components/ui/sonner';
 
-const inter = Inter({ subsets: ['latin'] });
+// const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   applicationName: 'DIVA',
@@ -22,7 +22,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} min-h-dvh bg-muted flex flex-col`} suppressHydrationWarning={true}>
+      <body className={`min-h-dvh flex flex-col`} suppressHydrationWarning={true}>
         <QueryProvider>
           <Header />
           <main className="flex-1">

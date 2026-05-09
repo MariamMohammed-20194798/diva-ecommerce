@@ -124,56 +124,56 @@
 ────────────────────────────────────────────── */
 @theme {
   /* ── Colors: Cream ── */
-  --color-cream:       #FAF6F0;
+  --color-cream: #FAF6F0;
   --color-cream-light: #FDFAF6;
-  --color-cream-mid:   #F0E9DF;
-  --color-cream-dark:  #E5D9CC;
+  --color-cream-mid: #F0E9DF;
+  --color-cream-dark: #E5D9CC;
 
   /* ── Colors: Rose Gold ── */
-  --color-rose-gold:        #C8956C;
-  --color-rose-gold-pale:   #F5E8DC;
-  --color-rose-gold-light:  #E8C4A8;
-  --color-rose-gold-mid:    #D4A88A;
-  --color-rose-gold-deep:   #A0614A;
+  --color-rose-gold: #C8956C;
+  --color-rose-gold-pale: #F5E8DC;
+  --color-rose-gold-light: #E8C4A8;
+  --color-rose-gold-mid: #D4A88A;
+  --color-rose-gold-deep: #A0614A;
   --color-rose-gold-darker: #7A4535;
 
   /* ── Colors: Charcoal ── */
-  --color-charcoal:       #2A2018;
-  --color-charcoal-soft:  #3D3025;
+  --color-charcoal: #2A2018;
+  --color-charcoal-soft: #3D3025;
   --color-charcoal-light: #574838;
 
   /* ── Colors: Warm Gray ── */
-  --color-warm-gray:       #8A7968;
+  --color-warm-gray: #8A7968;
   --color-warm-gray-light: #B5A898;
-  --color-warm-gray-dark:  #6A5A4A;
+  --color-warm-gray-dark: #6A5A4A;
 
   /* ── Colors: Ivory ── */
-  --color-ivory:      #FFFDF9;
+  --color-ivory: #FFFDF9;
   --color-ivory-warm: #F8F2EA;
 
   /* ── Colors: Blush ── */
-  --color-blush:       #F2D4C2;
+  --color-blush: #F2D4C2;
   --color-blush-light: #FAE8DC;
-  --color-blush-deep:  #D4A090;
+  --color-blush-deep: #D4A090;
 
   /* ── Typography: Fonts ── */
   --font-cormorant: 'Cormorant Garamond', Georgia, serif;
-  --font-jost:      'Jost', system-ui, sans-serif;
+  --font-jost: 'Jost', system-ui, sans-serif;
 
   /* ── Typography: Font Sizes ── */
-  --text-2xs:                     0.6rem;
-  --text-2xs--line-height:        1rem;
-  --text-2xs--letter-spacing:     0.05em;
-  --text-display-sm:              2rem;
+  --text-2xs: 0.6rem;
+  --text-2xs--line-height: 1rem;
+  --text-2xs--letter-spacing: 0.05em;
+  --text-display-sm: 2rem;
   --text-display-sm--line-height: 1.1;
   --text-display-sm--letter-spacing: -0.01em;
-  --text-display-md:              3rem;
+  --text-display-md: 3rem;
   --text-display-md--line-height: 1.05;
   --text-display-md--letter-spacing: -0.02em;
-  --text-display-lg:              4.5rem;
+  --text-display-lg: 4.5rem;
   --text-display-lg--line-height: 1.0;
   --text-display-lg--letter-spacing: -0.02em;
-  --text-display-xl:              6rem;
+  --text-display-xl: 6rem;
   --text-display-xl--line-height: 0.95;
   --text-display-xl--letter-spacing: -0.03em;
 
@@ -182,24 +182,24 @@
   --tracking-widest3: 0.4em;
 
   /* ── Spacing ── */
-  --spacing-18:  4.5rem;
-  --spacing-22:  5.5rem;
-  --spacing-26:  6.5rem;
-  --spacing-30:  7.5rem;
-  --spacing-42:  10.5rem;
-  --spacing-50:  12.5rem;
+  --spacing-18: 4.5rem;
+  --spacing-22: 5.5rem;
+  --spacing-26: 6.5rem;
+  --spacing-30: 7.5rem;
+  --spacing-42: 10.5rem;
+  --spacing-50: 12.5rem;
   --spacing-128: 32rem;
 
   /* ── Animations ── */
-  --animate-fade-up:    fadeUp 0.9s ease forwards;
-  --animate-fade-in:    fadeIn 1s ease forwards;
-  --animate-marquee:    marquee 22s linear infinite;
+  --animate-fade-up: fadeUp 0.9s ease forwards;
+  --animate-fade-in: fadeIn 1s ease forwards;
+  --animate-marquee: marquee 22s linear infinite;
   --animate-pulse-soft: pulseSoft 6s ease-in-out infinite;
-  --animate-float:      float 5s ease-in-out infinite;
+  --animate-float: float 5s ease-in-out infinite;
 
   /* ── Shadows ── */
-  --shadow-soft:  0 4px 24px rgba(42, 32, 24, 0.06);
-  --shadow-card:  0 8px 40px rgba(42, 32, 24, 0.08);
+  --shadow-soft: 0 4px 24px rgba(42, 32, 24, 0.06);
+  --shadow-card: 0 8px 40px rgba(42, 32, 24, 0.08);
   --shadow-float: 0 16px 60px rgba(42, 32, 24, 0.12);
 }
 
@@ -223,8 +223,7 @@
   }
 
   /* Hide default cursor globally — replaced by custom cursor component */
-  * {
-  }
+  * {}
 }
 
 @layer components {
@@ -262,13 +261,27 @@
 }
 
 @keyframes pulseSoft {
-  0%, 100% { transform: translate(-50%, -50%) scale(1); }
-  50%       { transform: translate(-50%, -50%) scale(1.06); }
+
+  0%,
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  50% {
+    transform: translate(-50%, -50%) scale(1.06);
+  }
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50%       { transform: translateY(-12px); }
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-12px);
+  }
 }
 
 @keyframes marquee {
