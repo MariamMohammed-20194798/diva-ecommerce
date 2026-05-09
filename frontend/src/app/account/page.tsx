@@ -376,7 +376,7 @@ export default function AccountPage() {
         <div className="flex items-center gap-15">
           <div className="flex lg:flex-1">
             <Link href="/" className="text-2xl font-light tracking-[0.3em] text-foreground">
-              Diva
+              DIVA
             </Link>
           </div>
           <nav className="flex items-center gap-6 text-sm mt-2">
