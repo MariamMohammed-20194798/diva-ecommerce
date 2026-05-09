@@ -24,6 +24,7 @@ export default async function FeaturedProduct() {
                         src={product.image}
                         alt={product.name}
                         fill
+                        sizes="(max-width: 640px) 70vw, (max-width: 1024px) 45vw, 24vw"
                         className="object-cover"
                         priority
                     />
