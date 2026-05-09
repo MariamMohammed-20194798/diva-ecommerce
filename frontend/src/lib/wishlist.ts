@@ -53,11 +53,13 @@ export const subscribeToWishlistUpdates = (listener: () => void) => {
 };
 
 export async function fetchWishlist() {
-  if (typeof window !== "undefined" && !window.localStorage.getItem("accessToken")) {
+  try {
+    const response = await api.get<WishlistItem[]>("/wishlist");
+    return response.data;
+  } catch (error) {
+    // If it's a 401 or other error and refresh didn't help, return empty array
     return [];
   }
-  const response = await api.get<WishlistItem[]>("/wishlist");
-  return response.data;
 }
 
 export async function addToWishlist(variantId: string, image?: string) {

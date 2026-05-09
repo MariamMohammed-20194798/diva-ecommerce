@@ -176,13 +176,7 @@ export default function CartPage() {
   };
 
   useEffect(() => {
-    const frame = window.requestAnimationFrame(() => {
-      void loadPageData();
-    });
-
-    return () => {
-      window.cancelAnimationFrame(frame);
-    };
+    void loadPageData();
   }, []);
 
   const mutateQuantity = async (item: CartItem, nextQuantity: number) => {
