@@ -215,7 +215,6 @@
 
   html {
     scroll-behavior: smooth;
-    cursor: none;
   }
 
   body {
@@ -225,7 +224,6 @@
 
   /* Hide default cursor globally — replaced by custom cursor component */
   * {
-    cursor: none !important;
   }
 }
 
