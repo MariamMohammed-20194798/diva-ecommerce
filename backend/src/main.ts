@@ -12,7 +12,11 @@ async function bootstrap() {
   app.use(cookieParser());
   app.use('/api/checkout/webhook', express.raw({ type: 'application/json' }));
   app.enableCors({
-    origin: [process.env.FRONTEND_URL, 'https://ecommerce-app-omega-hazel.vercel.app'],
+    origin: [
+      process.env.FRONTEND_URL,
+      'http://localhost:3000',
+      'http://127.0.0.1:3000'
+    ],
     credentials: true,
     exposedHeaders: ['x-session-id'],
   });
@@ -27,7 +31,7 @@ async function bootstrap() {
 
   app.setGlobalPrefix('api');
 
-  await app.listen(process.env.PORT ?? 3001);
+  await app.listen(process.env.PORT ?? 3001, '0.0.0.0');
   console.log(`Backend running on port ${process.env.PORT ?? 3001}`);
 }
 void bootstrap();

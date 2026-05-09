@@ -52,10 +52,12 @@ export default function Newsletter() {
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Your email address"
             className="flex-1 px-6 py-4 bg-ivory text-charcoal text-sm outline-none border-none placeholder:text-warm-gray-light font-jost"
+            suppressHydrationWarning
           />
           <button
             onClick={handleSubmit}
             className="px-8 py-4 bg-charcoal text-ivory text-2xs tracking-[0.2em] uppercase font-jost transition-colors duration-300 hover:bg-rose-gold-deep"
+            suppressHydrationWarning
           >
             Join
           </button>
