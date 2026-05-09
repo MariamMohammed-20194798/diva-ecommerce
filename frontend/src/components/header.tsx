@@ -11,9 +11,9 @@ import { motion } from "framer-motion"
 
 const navigation = [
   { name: "Home", href: "/" },
-  { name: "New Arrivals", href: "#new" },
+  { name: "New Arrivals", href: "/collection" },
   { name: "Collections", href: "/collections" },
-  { name: "Size Guide", href: "/size-guide" },
+  // { name: "Size Guide", href: "/size-guide" },
   { name: "Our Story", href: "/our-story" },
 ]
 

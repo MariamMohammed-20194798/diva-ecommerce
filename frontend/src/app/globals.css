@@ -236,6 +236,11 @@
     animation: marquee 22s linear infinite;
   }
 
+  .floating-tag {
+    @apply absolute bg-ivory shadow-card p-4 opacity-0;
+    animation: fadeIn 1s ease forwards;
+  }
+
   /* ──────────────────────────────────────────────
      BUTTONS
   ────────────────────────────────────────────── */
