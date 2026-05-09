@@ -1,6 +1,6 @@
-import Link from "next/link";
 import Image from "next/image";
 import { getProductBySlug } from "@/lib/products";
+import FeaturedProductActions from "./FeaturedProductActions";
 
 export default async function FeaturedProduct() {
     const product = await getProductBySlug("the-soleil-draped-gown");
@@ -83,14 +83,7 @@ export default async function FeaturedProduct() {
                     EGP {product.price.toLocaleString()}
                 </div>
 
-                <div className="flex gap-4 items-center">
-                    <Link href={`/products/${product.slug}`} className="btn-primary">
-                        Add to Wardrobe
-                    </Link>
-                    <Link href={`/products/${product.slug}`} className="btn-ghost flex items-center">
-                        Save to Wishlist
-                    </Link>
-                </div>
+                <FeaturedProductActions product={product} />
             </div>
         </section>
     );
