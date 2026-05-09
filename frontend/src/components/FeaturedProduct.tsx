@@ -15,7 +15,7 @@ export default async function FeaturedProduct() {
     ];
 
     return (
-        <section className="px-16 py-36 grid grid-cols-2 gap-32 items-center">
+        <section className="mx-auto max-w-7xl px-16 py-36 grid grid-cols-2 gap-32 items-center">
             {/* Visual */}
             <div className="relative reveal">
                 {/* Main image placeholder */}

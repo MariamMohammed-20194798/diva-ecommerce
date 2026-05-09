@@ -138,7 +138,7 @@ export default function Categories() {
   };
 
   return (
-    <section ref={sectionRef} className="bg-muted py-24 overflow-hidden" id="collections">
+    <section ref={sectionRef} className="bg-background py-24 overflow-hidden" id="collections">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div
           className="mb-16 text-center"

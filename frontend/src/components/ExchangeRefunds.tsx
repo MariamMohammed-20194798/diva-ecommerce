@@ -9,6 +9,7 @@ const policyItems = [
   "requests are accepted within 14 days of receiving the order",
   "the process takes up to 14 days",
   "exchange/refunds come with a 250 egp fee",
+  "items must be unused and returned in their original packaging",
 ]
 
 export default function ExchangeRefunds() {
@@ -16,7 +17,7 @@ export default function ExchangeRefunds() {
   const isInView = useInView(ref, { once: true, margin: "-100px" })
 
   return (
-    <section ref={ref} className="py-24 bg-white overflow-hidden">
+    <section ref={ref} className="py-24 bg-background overflow-hidden">
       <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
@@ -43,23 +44,15 @@ export default function ExchangeRefunds() {
           transition={{ delay: 0.4, duration: 0.8 }}
           className="mt-16 grid grid-cols-1 gap-6 sm:grid-cols-2"
         >
-          {policyItems.slice(0, 2).map((item, index) => (
+          {policyItems.map((item, index) => (
             <motion.div
               key={item}
               whileHover={{ y: -5 }}
-              className="rounded-2xl bg-muted px-8 py-8 text-sm text-foreground/90 font-medium flex items-center justify-center text-center shadow-sm"
+              className="rounded-2xl px-8 py-8 text-sm text-foreground/90 font-medium flex items-center justify-center text-center shadow-sm"
             >
               {item}
             </motion.div>
           ))}
-          <div className="sm:col-span-2 sm:flex sm:justify-center">
-            <motion.div
-              whileHover={{ y: -5 }}
-              className="rounded-2xl bg-muted px-8 py-8 text-sm text-foreground/90 font-medium flex items-center justify-center text-center shadow-sm sm:w-[calc(50%-0.75rem)]"
-            >
-              {policyItems[2]}
-            </motion.div>
-          </div>
         </motion.div>
 
         <motion.div
@@ -67,15 +60,12 @@ export default function ExchangeRefunds() {
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ delay: 0.6, duration: 0.6 }}
         >
-          <Button
-            asChild
-            variant="outline"
-            size="lg"
-            className="mt-16 rounded-full border-foreground/30 px-10 h-14 text-base font-normal hover:bg-foreground hover:text-white transition-all hover:scale-105 active:scale-95"
+          <button
+            className="btn-primary mt-12 px-5 h-12 hover:bg-foreground hover:text-white transition-all hover:scale-105 active:scale-95"
             suppressHydrationWarning
           >
-            <Link href="/account">request an exchange/refund</Link>
-          </Button>
+            request an exchange/refund
+          </button>
         </motion.div>
       </div>
     </section>

@@ -8,6 +8,8 @@ import ScrollReveal from "@/components/ScrollReveal"
 import CustomCursor from "@/components/CustomCursor"
 import Marquee from "@/components/Marquee"
 import FeaturedProduct from "@/components/FeaturedProduct"
+import Philosophy from "@/components/Philosophy"
+
 export default function Home() {
   return (
     <>
@@ -17,8 +19,9 @@ export default function Home() {
         <Hero />
         <Marquee />
         <FeaturedProducts />
-        <Categories />
         <FeaturedProduct />
+        <Categories />
+        <Philosophy />
         <ExchangeRefunds />
         <Newsletter />
       </main>
