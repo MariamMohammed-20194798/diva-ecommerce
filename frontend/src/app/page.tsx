@@ -7,7 +7,7 @@ import Newsletter from "@/components/NewLetter"
 import ScrollReveal from "@/components/ScrollReveal"
 import CustomCursor from "@/components/CustomCursor"
 import Marquee from "@/components/Marquee"
-
+import FeaturedProduct from "@/components/FeaturedProduct"
 export default function Home() {
   return (
     <>
@@ -18,6 +18,7 @@ export default function Home() {
         <Marquee />
         <FeaturedProducts />
         <Categories />
+        <FeaturedProduct />
         <ExchangeRefunds />
         <Newsletter />
       </main>

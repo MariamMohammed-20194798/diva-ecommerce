@@ -236,6 +236,63 @@
     animation: marquee 22s linear infinite;
   }
 
+  /* ──────────────────────────────────────────────
+     BUTTONS
+  ────────────────────────────────────────────── */
+  .btn-primary {
+    @apply inline-block px-10 py-4 bg-rose-gold text-ivory text-2xs tracking-[0.25em] uppercase font-normal no-underline transition-all duration-300;
+  }
+
+  .btn-primary:hover {
+    @apply bg-rose-gold-deep -translate-y-0.5;
+  }
+
+  .btn-ghost {
+    @apply text-2xs tracking-[0.2em] uppercase text-charcoal no-underline relative pb-0.5;
+  }
+
+  .btn-ghost::after {
+    content: '';
+    @apply absolute bottom-0 left-0 w-0 h-px bg-rose-gold;
+    transition: width 0.4s ease;
+  }
+
+  .btn-ghost:hover::after {
+    @apply w-full;
+  }
+
+  /* ──────────────────────────────────────────────
+     SCROLL REVEAL
+  ────────────────────────────────────────────── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(32px);
+    transition:
+      opacity 0.8s ease,
+      transform 0.8s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .reveal-delay-1 {
+    transition-delay: 0.1s;
+  }
+
+  .reveal-delay-2 {
+    transition-delay: 0.22s;
+  }
+
+  .reveal-delay-3 {
+    transition-delay: 0.35s;
+  }
+
+  .reveal-delay-4 {
+    transition-delay: 0.5s;
+  }
+
 }
 
 @keyframes fadeUp {
