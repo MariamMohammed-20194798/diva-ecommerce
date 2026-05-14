@@ -68,8 +68,8 @@ export default function AuthPage() {
 
     setIsSubmitting(true);
     try {
-      await api.post("/auth/send-otp", { 
-        email, 
+      await api.post("/auth/send-otp", {
+        email,
         type: mode === "signin" ? "LOGIN" : "SIGNUP",
         ...(mode === "signup" && { name })
       });
@@ -94,8 +94,8 @@ export default function AuthPage() {
 
     setIsSubmitting(true);
     try {
-      const response = await api.post("/auth/verify-otp", { 
-        email, 
+      const response = await api.post("/auth/verify-otp", {
+        email,
         code: otp,
         type: mode === "signin" ? "LOGIN" : "SIGNUP",
         ...(mode === "signup" && { name })
@@ -108,7 +108,7 @@ export default function AuthPage() {
       }
 
       setSuccess("Signed in successfully. Redirecting...");
-      router.push("/account");
+      router.push("/");
     } catch (submitError) {
       setError(getApiErrorMessage(submitError));
     } finally {
@@ -246,7 +246,7 @@ export default function AuthPage() {
         {step === "email" && (
           <>
             <div className="my-3 text-center text-sm text-muted-foreground">or</div>
-            
+
             <div className="mt-4">
               {mode === "signin" && (
                 <button
