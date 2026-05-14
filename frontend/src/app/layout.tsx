@@ -21,7 +21,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" data-scroll-behavior="smooth">
       <body className={`min-h-dvh flex flex-col`} suppressHydrationWarning={true}>
         <QueryProvider>
           <Header />
