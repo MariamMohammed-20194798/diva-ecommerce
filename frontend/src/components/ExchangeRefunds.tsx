@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button"
 const policyItems = [
   "requests are accepted within 14 days of receiving the order",
   "the process takes up to 14 days",
-  "exchange/refunds come with a 250 egp fee",
+  "exchange/refunds come with a 80 egp fee",
   "items must be unused and returned in their original packaging",
 ]
 

@@ -3,7 +3,7 @@ import { notifyWishlistUpdated } from "@/lib/wishlist";
 
 export const CART_UPDATED_EVENT = "cart-updated";
 export const CART_FREE_SHIPPING_THRESHOLD = 10000;
-export const CART_STANDARD_SHIPPING = 250;
+export const CART_STANDARD_SHIPPING = 80;
 
 export type CartProduct = {
   id: string;

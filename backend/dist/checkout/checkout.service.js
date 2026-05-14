@@ -26,7 +26,7 @@ let CheckoutService = CheckoutService_1 = class CheckoutService {
     stripe;
     logger = new common_1.Logger(CheckoutService_1.name);
     freeShippingThreshold = 10000;
-    standardShippingAmount = 250;
+    standardShippingAmount = 80;
     constructor(prisma, cartRepo, config) {
         this.prisma = prisma;
         this.cartRepo = cartRepo;

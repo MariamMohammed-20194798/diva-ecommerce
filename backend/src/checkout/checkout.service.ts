@@ -21,7 +21,7 @@ export class CheckoutService {
   private readonly stripe: any;
   private readonly logger = new Logger(CheckoutService.name);
   private readonly freeShippingThreshold = 10000;
-  private readonly standardShippingAmount = 250;
+  private readonly standardShippingAmount = 80;
 
   constructor(
     private readonly prisma: PrismaService,
