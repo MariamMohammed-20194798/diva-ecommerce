@@ -13,9 +13,8 @@ async function bootstrap() {
   app.use('/api/checkout/webhook', express.raw({ type: 'application/json' }));
   app.enableCors({
     origin: [
-      process.env.FRONTEND_URL,
-      'http://localhost:3000',
-      'http://127.0.0.1:3000'
+      "http://localhost:3000",
+      "https://ecommerce-app-omega-hazel.vercel.app/"
     ],
     credentials: true,
     exposedHeaders: ['x-session-id'],
