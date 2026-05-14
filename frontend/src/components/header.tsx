@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { Search, ShoppingBag, User, Menu, X, Heart } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { fetchCart, subscribeToCartUpdates } from "@/lib/cart"
@@ -11,7 +11,7 @@ import { motion } from "framer-motion"
 
 const navigation = [
   { name: "Home", href: "/" },
-  { name: "New Arrivals", href: "/collection" },
+  // { name: "New Arrivals", href: "/collection" },
   { name: "Collections", href: "/collections" },
   // { name: "Size Guide", href: "/size-guide" },
   { name: "Our Story", href: "/our-story" },
@@ -19,10 +19,18 @@ const navigation = [
 
 export function Header() {
   const pathname = usePathname()
+  const router = useRouter()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [wishlistedProductIds, setWishlistedProductIds] = useState<string[]>([])
   const [cartItemCount, setCartItemCount] = useState(0)
   const [isScrolled, setIsScrolled] = useState(false);
+  const [accountHref, setAccountHref] = useState("/auth");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setAccountHref(window.localStorage.getItem("accessToken") ? "/account" : "/auth");
+    }
+  }, [pathname]);
 
 
   useEffect(() => {
@@ -140,10 +148,11 @@ export function Header() {
                   </span>}
                 </Button>
               </Link>
-              <Link href='/account'>
+              <Link href={accountHref}>
                 <Button variant="ghost" size="icon" aria-label="Account">
                   <User className="h-5 w-5" />
-                </Button></Link>
+                </Button>
+              </Link>
 
               <Link href="/cart">
                 <Button variant="ghost" size="icon" className="relative" aria-label="Shopping bag">

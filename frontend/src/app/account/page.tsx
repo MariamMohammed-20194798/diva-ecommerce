@@ -233,28 +233,18 @@ export default function AccountPage() {
         if (fromToken) {
           setUser(fromToken);
         }
+      } else {
+        router.replace("/auth");
+        return;
       }
 
       try {
-        const refresh = await api.post("/auth/refresh");
-        const accessToken = refresh.data?.accessToken as string | undefined;
-        const backendUser = refresh.data?.user as UserState | undefined;
-        if (accessToken) {
-          localStorage.setItem("accessToken", accessToken);
-          api.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
-          const decoded = decodeToken(accessToken);
-          if (decoded) {
-            setUser((current) => ({ ...decoded, emailVerified: current?.emailVerified }));
-          }
-        }
-        if (backendUser) {
-          setUser(backendUser);
-        }
-
         await Promise.all([loadAddresses(), loadOrders()]);
-      } catch {
-        localStorage.removeItem("accessToken");
-        router.replace("/auth");
+      } catch (err) {
+        if (axios.isAxiosError(err) && err.response?.status === 401) {
+          localStorage.removeItem("accessToken");
+          router.replace("/auth");
+        }
         return;
       } finally {
         setIsBooting(false);
