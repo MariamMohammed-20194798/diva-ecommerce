@@ -74,7 +74,20 @@ api.interceptors.response.use(
     const originalRequest = error.config;
 
     // Handle 401 errors
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if (error.response?.status === 401) {
+      // Avoid infinite loops if refresh itself fails
+      if (originalRequest.url?.includes("/auth/refresh")) {
+        isRefreshing = false;
+        if (typeof window !== "undefined") {
+          window.localStorage.removeItem("accessToken");
+        }
+        return Promise.reject(error);
+      }
+
+      if (originalRequest._retry) {
+        return Promise.reject(error);
+      }
+
       // If we're already refreshing, queue the request
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
@@ -87,14 +100,6 @@ api.interceptors.response.use(
           .catch((err) => {
             return Promise.reject(err);
           });
-      }
-
-      // Avoid infinite loops if refresh itself fails
-      if (originalRequest.url?.includes("/auth/refresh")) {
-        if (typeof window !== "undefined") {
-          window.localStorage.removeItem("accessToken");
-        }
-        return Promise.reject(error);
       }
 
       originalRequest._retry = true;
