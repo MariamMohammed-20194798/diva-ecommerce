@@ -45,6 +45,7 @@ export default function FeaturedProductActions({ product }: FeaturedProductActio
                 onClick={handleAddToCart}
                 disabled={isAddingToCart}
                 className="btn-primary flex items-center justify-center gap-2 min-w-[200px]"
+                suppressHydrationWarning
             >
                 {isAddingToCart ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
@@ -58,6 +59,7 @@ export default function FeaturedProductActions({ product }: FeaturedProductActio
                 onClick={handleAddToWishlist}
                 disabled={isAddingToWishlist}
                 className="btn-ghost flex items-center gap-2"
+                suppressHydrationWarning
             >
                 {isAddingToWishlist ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
