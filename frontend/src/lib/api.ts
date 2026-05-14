@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const fallbackApiBaseUrl = "http://127.0.0.1:3001/api";
+const fallbackApiBaseUrl = "https://ecommerce-app-production-422e.up.railway.app/api";
 const CART_SESSION_STORAGE_KEY = "cartSessionId";
 
 export const getStoredCartSessionId = () => {
