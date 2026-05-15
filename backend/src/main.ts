@@ -5,17 +5,52 @@ import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import * as express from 'express';
 
+function parseAllowedOrigins(): Set<string> {
+  const raw = [
+    'http://localhost:3000',
+    process.env.FRONTEND_URL,
+    'https://ecommerce-app-omega-hazel.vercel.app',
+  ];
+
+  return new Set(
+    raw
+      .filter((value): value is string => Boolean(value))
+      .flatMap((value) => value.split(','))
+      .map((origin) => origin.trim().replace(/\/$/, ''))
+      .filter(Boolean),
+  );
+}
+
+function isVercelDeploymentOrigin(origin: string): boolean {
+  return /^https:\/\/[\w-]+\.vercel\.app$/i.test(origin);
+}
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const allowedOrigins = parseAllowedOrigins();
 
   app.use(helmet());
   app.use(cookieParser());
   app.use('/api/checkout/webhook', express.raw({ type: 'application/json' }));
   app.enableCors({
-    origin: [
-      "http://localhost:3000",
-      "https://ecommerce-app-omega-hazel.vercel.app/"
-    ],
+    origin: (origin, callback) => {
+      if (!origin) {
+        callback(null, true);
+        return;
+      }
+
+      const normalized = origin.replace(/\/$/, '');
+
+      if (
+        allowedOrigins.has(normalized) ||
+        isVercelDeploymentOrigin(normalized)
+      ) {
+        callback(null, origin);
+        return;
+      }
+
+      callback(new Error(`Origin ${origin} not allowed by CORS`), false);
+    },
     credentials: true,
     exposedHeaders: ['x-session-id'],
   });
