@@ -1,0 +1,12 @@
+---
+title: List Categories
+api: GET /categories
+authMethod: none
+---
+
+Returns a flat paginated list of categories.
+
+<ParamField query="page" type="number" default="1">Page number</ParamField>
+<ParamField query="limit" type="number" default="20">Items per page (max 100)</ParamField>
+<ParamField query="rootOnly" type="boolean" default="false">Return only top-level categories</ParamField>
+<ParamField query="withCounts" type="boolean" default="false">Include product and subcategory counts</ParamField>

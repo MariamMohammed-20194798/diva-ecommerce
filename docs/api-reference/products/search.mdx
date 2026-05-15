@@ -1,0 +1,11 @@
+---
+title: Search Products
+api: GET /products/search
+authMethod: none
+---
+
+Full-text search across product names and descriptions using PostgreSQL `pg_trgm` + `tsvector`.
+
+<ParamField query="q" type="string" required>Search term</ParamField>
+<ParamField query="page" type="number" default="1">Page number</ParamField>
+<ParamField query="limit" type="number" default="20">Items per page</ParamField>

@@ -1,0 +1,49 @@
+---
+title: Introduction
+description: Ecommerce REST API for categories, products, cart, checkout, and more.
+---
+
+## Overview
+
+The Ecommerce API powers the storefront backend. All routes are prefixed with `/api` and return JSON.
+
+| Environment | Base URL |
+| ----------- | -------- |
+| Local       | `http://127.0.0.1:3001/api` |
+| Production  | `https://ecommerce-app-production-422e.up.railway.app/api` |
+
+## Quick start
+
+1. Start the backend: `pnpm --filter backend start:dev`
+2. Run the docs locally: `pnpm docs:dev` from the repo root
+3. Open the **API Reference** tab to browse endpoints by collection
+
+## Try it (local playground)
+
+The API playground sends requests **from your browser** directly to the backend (`proxy: false` in `docs.json`). Both must be running:
+
+- Backend: `http://127.0.0.1:3001`
+- Docs: usually `http://localhost:3000`
+
+If you see `ECONNREFUSED`, the backend is not listening on port 3001. If you see a CORS error, restart the backend after pulling the latest CORS changes.
+
+## Conventions
+
+- **Prices** are stored in **cents** (e.g. `2999` = $29.99)
+- **Pagination**: most list endpoints accept `page` and `limit` query params
+- **IDs** are UUIDs unless noted (slugs are used for SEO-friendly product/category URLs)
+- **Admin routes** require a JWT with the `ADMIN` role
+
+## Collections
+
+| Collection  | Description |
+| ----------- | ----------- |
+| Categories  | Category tree, listing, and admin CRUD |
+| Products    | Catalog search, filters, and admin CRUD |
+| Carts       | Guest and authenticated shopping carts |
+| Orders      | Order history and admin status updates |
+| Checkout    | Stripe payment intents and webhooks |
+| Addresses   | Saved shipping addresses |
+| Reviews     | Product reviews (verified purchasers) |
+| Wishlist    | Saved product variants |
+| Auth        | OTP login, refresh tokens, and Google OAuth |

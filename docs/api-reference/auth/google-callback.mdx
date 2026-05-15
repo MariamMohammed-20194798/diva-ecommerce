@@ -1,0 +1,12 @@
+---
+title: Google OAuth Callback
+api: GET /auth/google/callback
+authMethod: none
+playground: none
+---
+
+Handles the Google OAuth callback. Creates or logs in the user, sets the refresh cookie, and redirects to `{FRONTEND_URL}/auth/callback`.
+
+<Note>
+Called automatically by Google after authentication. Not intended for manual API calls.
+</Note>

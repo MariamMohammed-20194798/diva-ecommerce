@@ -1,0 +1,8 @@
+---
+title: Get Order
+api: GET /orders/{id}
+---
+
+Returns full order detail including items, shipping address, payment record, and discounts. Users can only access their own orders.
+
+<ParamField path="id" type="string" required>Order UUID</ParamField>

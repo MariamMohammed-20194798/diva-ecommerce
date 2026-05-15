@@ -1,0 +1,10 @@
+---
+title: Check Wishlist Status
+api: GET /wishlist/status/{variantId}
+---
+
+Checks whether a product variant is in the user's wishlist.
+
+<ParamField path="variantId" type="string" required>Product variant UUID</ParamField>
+
+<ResponseField name="inWishlist" type="boolean">Whether the variant is wishlisted</ResponseField>

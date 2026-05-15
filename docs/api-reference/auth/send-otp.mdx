@@ -1,0 +1,18 @@
+---
+title: Send OTP
+api: POST /auth/send-otp
+authMethod: none
+---
+
+Sends a one-time password to the user's email for login or signup.
+
+<ParamField body="email" type="string" required>User email address</ParamField>
+<ParamField body="type" type="string" required>`LOGIN` or `SIGNUP`</ParamField>
+<ParamField body="name" type="string">Display name (required for signup)</ParamField>
+
+```json Example request
+{
+  "email": "user@example.com",
+  "type": "LOGIN"
+}
+```

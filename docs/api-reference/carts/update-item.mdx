@@ -1,0 +1,17 @@
+---
+title: Update Cart Item
+api: PATCH /cart/items/{id}
+authMethod: none
+---
+
+Updates the quantity of a cart item. Sending `quantity: 0` removes the item.
+
+<ParamField path="id" type="string" required>Cart item UUID</ParamField>
+<ParamField header="x-session-id" type="string">Guest session ID</ParamField>
+<ParamField body="quantity" type="number" required>New quantity (0–99; 0 removes item)</ParamField>
+
+```json Example request
+{
+  "quantity": 2
+}
+```

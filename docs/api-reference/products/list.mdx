@@ -1,0 +1,18 @@
+---
+title: List Products
+api: GET /products
+authMethod: none
+---
+
+Returns a paginated list of active products with optional filters.
+
+<ParamField query="page" type="number" default="1">Page number</ParamField>
+<ParamField query="limit" type="number" default="20">Items per page</ParamField>
+<ParamField query="category" type="string">Category slug or UUID</ParamField>
+<ParamField query="size" type="string">Filter by size (e.g. `M`)</ParamField>
+<ParamField query="color" type="string">Filter by color (e.g. `black`)</ParamField>
+<ParamField query="priceMin" type="number">Minimum price in cents</ParamField>
+<ParamField query="priceMax" type="number">Maximum price in cents</ParamField>
+<ParamField query="sort" type="string" default="newest">
+  Sort order: `price_asc`, `price_desc`, `newest`, `popular`, `rating`
+</ParamField>

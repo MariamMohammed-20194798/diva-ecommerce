@@ -25,6 +25,10 @@ function isVercelDeploymentOrigin(origin: string): boolean {
   return /^https:\/\/[\w-]+\.vercel\.app$/i.test(origin);
 }
 
+function isLocalDevOrigin(origin: string): boolean {
+  return /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(origin);
+}
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const allowedOrigins = parseAllowedOrigins();
@@ -43,7 +47,8 @@ async function bootstrap() {
 
       if (
         allowedOrigins.has(normalized) ||
-        isVercelDeploymentOrigin(normalized)
+        isVercelDeploymentOrigin(normalized) ||
+        (process.env.NODE_ENV !== 'production' && isLocalDevOrigin(normalized))
       ) {
         callback(null, origin);
         return;

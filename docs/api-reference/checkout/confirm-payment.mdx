@@ -1,0 +1,16 @@
+---
+title: Confirm Payment
+api: POST /checkout/confirm
+---
+
+Finalizes a successful Stripe payment after client-side confirmation. Creates the order if payment succeeded.
+
+<ParamField body="paymentIntentId" type="string" required>
+  Stripe PaymentIntent ID from client-side confirmation
+</ParamField>
+
+```json Example request
+{
+  "paymentIntentId": "pi_3Nx..."
+}
+```

@@ -1,0 +1,12 @@
+---
+title: Get Category Tree
+api: GET /categories/tree
+authMethod: none
+---
+
+Returns all categories as a nested tree. Each root category includes a `children` array with subcategories. Useful for navigation menus.
+
+<ResponseField name="id" type="string">Category UUID</ResponseField>
+<ResponseField name="name" type="string">Display name</ResponseField>
+<ResponseField name="slug" type="string">URL slug</ResponseField>
+<ResponseField name="children" type="array">Nested subcategories</ResponseField>

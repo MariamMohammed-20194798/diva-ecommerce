@@ -1,0 +1,31 @@
+---
+title: Create Product
+api: POST /products
+---
+
+Creates a product with optional variants in one request. Requires **ADMIN** role.
+
+<ParamField body="name" type="string" required>Product name</ParamField>
+<ParamField body="slug" type="string">URL slug; auto-generated if omitted</ParamField>
+<ParamField body="categoryId" type="string" required>Category UUID</ParamField>
+<ParamField body="description" type="string">Product description</ParamField>
+<ParamField body="basePrice" type="number" required>Base price in cents</ParamField>
+<ParamField body="images" type="array">Product image URLs</ParamField>
+<ParamField body="isActive" type="boolean" default="true">Whether product is visible</ParamField>
+<ParamField body="variants" type="array">Optional variant objects (sku, size, color, stockQuantity, etc.)</ParamField>
+
+```json Example request
+{
+  "name": "Classic Black Tee",
+  "categoryId": "550e8400-e29b-41d4-a716-446655440000",
+  "basePrice": 2999,
+  "variants": [
+    {
+      "sku": "TSHIRT-BLK-M",
+      "size": "M",
+      "color": "black",
+      "stockQuantity": 100
+    }
+  ]
+}
+```

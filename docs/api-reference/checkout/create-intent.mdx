@@ -1,0 +1,24 @@
+---
+title: Create Payment Intent
+api: POST /checkout/intent
+---
+
+Creates a Stripe PaymentIntent. Server recalculates the cart total, validates stock, and applies discount codes. Returns `clientSecret` for Stripe Elements.
+
+<ParamField body="addressId" type="string" required>Shipping address UUID from saved addresses</ParamField>
+<ParamField body="discountCode" type="string">Optional discount code</ParamField>
+<ParamField query="autoCreateOrder" type="boolean">
+  Testing only: create order immediately without waiting for webhook
+</ParamField>
+
+<ResponseField name="clientSecret" type="string">Stripe client secret for Elements</ResponseField>
+<ResponseField name="subtotal" type="number">Subtotal in cents</ResponseField>
+<ResponseField name="discount" type="number">Discount amount in cents</ResponseField>
+<ResponseField name="total" type="number">Final total in cents</ResponseField>
+
+```json Example request
+{
+  "addressId": "550e8400-e29b-41d4-a716-446655440000",
+  "discountCode": "SAVE10"
+}
+```

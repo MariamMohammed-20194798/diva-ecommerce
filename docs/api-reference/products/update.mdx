@@ -1,0 +1,14 @@
+---
+title: Update Product
+api: PUT /products/{id}
+---
+
+Partial update of product fields. Requires **ADMIN** role.
+
+<ParamField path="id" type="string" required>Product UUID</ParamField>
+<ParamField body="name" type="string">Product name</ParamField>
+<ParamField body="categoryId" type="string">Category UUID</ParamField>
+<ParamField body="description" type="string">Description</ParamField>
+<ParamField body="basePrice" type="number">Base price in cents</ParamField>
+<ParamField body="isActive" type="boolean">Visibility flag</ParamField>
+<ParamField body="images" type="array">Product image URLs</ParamField>

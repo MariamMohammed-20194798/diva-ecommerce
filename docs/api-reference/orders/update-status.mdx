@@ -1,0 +1,22 @@
+---
+title: Update Order Status
+api: PATCH /admin/orders/{id}/status
+---
+
+Updates order status with valid transition enforcement. Requires **ADMIN** role. Sends a customer email after each change.
+
+<ParamField path="id" type="string" required>Order UUID</ParamField>
+<ParamField body="status" type="string" required>
+  New status: `PENDING`, `PAID`, `PROCESSING`, `SHIPPED`, `DELIVERED`, `CANCELLED`
+</ParamField>
+<ParamField body="trackingNumber" type="string">Required when status is `SHIPPED`</ParamField>
+<ParamField body="note" type="string">Optional internal note</ParamField>
+
+```json Example request
+{
+  "status": "SHIPPED",
+  "trackingNumber": "DHL-123456789"
+}
+```
+
+**Valid transitions:** `PENDING` → `PAID` → `PROCESSING` → `SHIPPED` → `DELIVERED`

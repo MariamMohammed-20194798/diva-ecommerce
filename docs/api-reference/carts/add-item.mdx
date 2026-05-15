@@ -1,0 +1,26 @@
+---
+title: Add Cart Item
+api: POST /cart/items
+authMethod: none
+---
+
+Adds a product variant to the cart. If the variant already exists, quantities are merged. Stock is validated before adding.
+
+<ParamField header="x-session-id" type="string">Guest session ID</ParamField>
+<ParamField body="variantId" type="string" required>Product variant UUID</ParamField>
+<ParamField body="quantity" type="number" required>Quantity to add (1–99)</ParamField>
+<ParamField body="customization" type="object">
+  Optional custom print data (text, design, position, colors)
+</ParamField>
+
+```json Example request
+{
+  "variantId": "550e8400-e29b-41d4-a716-446655440000",
+  "quantity": 1,
+  "customization": {
+    "text": "My Name",
+    "position": "front",
+    "color": "#ffffff"
+  }
+}
+```

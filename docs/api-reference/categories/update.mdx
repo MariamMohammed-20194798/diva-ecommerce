@@ -1,0 +1,13 @@
+---
+title: Update Category
+api: PUT /categories/{id}
+---
+
+Partial update — send only fields that change. Requires **ADMIN** role.
+
+<ParamField path="id" type="string" required>Category UUID</ParamField>
+<ParamField body="name" type="string">Display name</ParamField>
+<ParamField body="slug" type="string">URL slug</ParamField>
+<ParamField body="description" type="string">Description</ParamField>
+<ParamField body="parentId" type="string | null">Set to `null` to promote to root level</ParamField>
+<ParamField body="images" type="array">Category image URLs</ParamField>

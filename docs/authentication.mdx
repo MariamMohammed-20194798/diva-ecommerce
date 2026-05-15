@@ -1,0 +1,42 @@
+---
+title: Authentication
+description: How to authenticate API requests with JWT and cookies.
+---
+
+## Bearer token (access)
+
+Most protected endpoints expect an `Authorization` header:
+
+```bash
+Authorization: Bearer <accessToken>
+```
+
+Obtain an access token via `POST /auth/verify-otp` or `POST /auth/refresh`.
+
+Access tokens expire after **15 minutes** (configurable via `JWT_ACCESS_EXPIRES_IN`).
+
+## Refresh token (cookie)
+
+After OTP verification or Google OAuth, the API sets an **httpOnly** refresh cookie:
+
+- Cookie name: `refresh_token`
+- Path: `/api/auth`
+- Used by: `POST /auth/refresh` and `POST /auth/logout`
+
+Send requests with `credentials: include` so the browser includes the cookie.
+
+## Guest cart session
+
+Cart endpoints work without login. For guests, pass a session id via:
+
+- Header: `x-session-id: <uuid>`
+- Or cookie: `session_id`
+
+If neither is provided, the API generates a session and returns it in the `x-session-id` response header.
+
+## Admin access
+
+Endpoints marked **(admin)** require:
+
+1. Valid JWT (`Authorization: Bearer ...`)
+2. User role `ADMIN`

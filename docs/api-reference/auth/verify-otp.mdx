@@ -1,0 +1,31 @@
+---
+title: Verify OTP
+api: POST /auth/verify-otp
+authMethod: none
+---
+
+Verifies the OTP code and returns an access token. Sets an httpOnly refresh token cookie.
+
+<ParamField body="email" type="string" required>User email address</ParamField>
+<ParamField body="code" type="string" required>6-digit OTP code</ParamField>
+<ParamField body="type" type="string" required>`LOGIN` or `SIGNUP`</ParamField>
+<ParamField body="name" type="string">Display name (for signup)</ParamField>
+
+```json Example request
+{
+  "email": "user@example.com",
+  "code": "123456",
+  "type": "LOGIN"
+}
+```
+
+```json Example response
+{
+  "accessToken": "eyJhbGciOiJIUzI1NiIs...",
+  "user": {
+    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "email": "user@example.com",
+    "role": "USER"
+  }
+}
+```

@@ -1,0 +1,143 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "Ecommerce API",
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
+  },
+  "favicon": "/favicon.svg",
+  "colors": {
+    "primary": "#2563EB",
+    "light": "#3B82F6",
+    "dark": "#1D4ED8"
+  },
+  "api": {
+    "mdx": {
+      "server": "http://127.0.0.1:3001/api",
+      "auth": {
+        "method": "bearer"
+      }
+    },
+    "playground": {
+      "display": "interactive",
+      "proxy": false,
+      "credentials": true
+    }
+  },
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": ["introduction", "authentication"]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "Categories",
+            "icon": "folder-tree",
+            "pages": [
+              "api-reference/categories/get-tree",
+              "api-reference/categories/list",
+              "api-reference/categories/get-by-slug",
+              "api-reference/categories/get-products",
+              "api-reference/categories/create",
+              "api-reference/categories/update",
+              "api-reference/categories/delete"
+            ]
+          },
+          {
+            "group": "Products",
+            "icon": "shirt",
+            "pages": [
+              "api-reference/products/search",
+              "api-reference/products/list",
+              "api-reference/products/get-by-slug",
+              "api-reference/products/get-reviews",
+              "api-reference/products/create",
+              "api-reference/products/update"
+            ]
+          },
+          {
+            "group": "Carts",
+            "icon": "shopping-cart",
+            "pages": [
+              "api-reference/carts/get",
+              "api-reference/carts/add-item",
+              "api-reference/carts/update-item",
+              "api-reference/carts/remove-item"
+            ]
+          },
+          {
+            "group": "Orders",
+            "icon": "package",
+            "pages": [
+              "api-reference/orders/list",
+              "api-reference/orders/get-by-id",
+              "api-reference/orders/update-status"
+            ]
+          },
+          {
+            "group": "Checkout",
+            "icon": "credit-card",
+            "pages": [
+              "api-reference/checkout/create-intent",
+              "api-reference/checkout/confirm-payment",
+              "api-reference/checkout/webhook"
+            ]
+          },
+          {
+            "group": "Addresses",
+            "icon": "map-pin",
+            "pages": [
+              "api-reference/addresses/list",
+              "api-reference/addresses/get-by-id",
+              "api-reference/addresses/create",
+              "api-reference/addresses/update",
+              "api-reference/addresses/set-default",
+              "api-reference/addresses/delete"
+            ]
+          },
+          {
+            "group": "Reviews",
+            "icon": "star",
+            "pages": [
+              "api-reference/reviews/list-my",
+              "api-reference/reviews/create",
+              "api-reference/reviews/update",
+              "api-reference/reviews/delete"
+            ]
+          },
+          {
+            "group": "Wishlist",
+            "icon": "heart",
+            "pages": [
+              "api-reference/wishlist/get",
+              "api-reference/wishlist/add",
+              "api-reference/wishlist/remove",
+              "api-reference/wishlist/check-status"
+            ]
+          },
+          {
+            "group": "Auth",
+            "icon": "lock",
+            "pages": [
+              "api-reference/auth/send-otp",
+              "api-reference/auth/verify-otp",
+              "api-reference/auth/refresh",
+              "api-reference/auth/logout",
+              "api-reference/auth/google",
+              "api-reference/auth/google-callback"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

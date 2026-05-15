@@ -1,0 +1,10 @@
+---
+title: Update Review
+api: PUT /reviews/{id}
+---
+
+Updates your own review. Supports partial update of rating and body.
+
+<ParamField path="id" type="string" required>Review UUID</ParamField>
+<ParamField body="rating" type="number">Rating from 1 to 5</ParamField>
+<ParamField body="body" type="string">Updated written feedback</ParamField>

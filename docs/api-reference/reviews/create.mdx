@@ -1,0 +1,18 @@
+---
+title: Create Review
+api: POST /reviews
+---
+
+Creates a review for a purchased product (shipped or delivered orders only). One review per user per product.
+
+<ParamField body="productId" type="string" required>Product UUID</ParamField>
+<ParamField body="rating" type="number" required>Rating from 1 to 5</ParamField>
+<ParamField body="body" type="string">Optional written feedback (3–2000 chars)</ParamField>
+
+```json Example request
+{
+  "productId": "550e8400-e29b-41d4-a716-446655440000",
+  "rating": 5,
+  "body": "Excellent quality! Would definitely buy again."
+}
+```

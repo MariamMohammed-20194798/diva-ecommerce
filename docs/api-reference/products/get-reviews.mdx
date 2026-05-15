@@ -1,0 +1,12 @@
+---
+title: Get Product Reviews
+api: GET /products/{id}/reviews
+authMethod: none
+---
+
+Returns paginated reviews for a product with average rating and total count in metadata.
+
+<ParamField path="id" type="string" required>Product UUID</ParamField>
+<ParamField query="page" type="number" default="1">Page number</ParamField>
+<ParamField query="limit" type="number" default="10">Items per page</ParamField>
+<ParamField query="rating" type="number">Filter by rating (1–5)</ParamField>

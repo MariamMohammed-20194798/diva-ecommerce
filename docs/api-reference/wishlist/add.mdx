@@ -1,0 +1,16 @@
+---
+title: Add to Wishlist
+api: POST /wishlist
+---
+
+Adds a product variant to the wishlist.
+
+<ParamField body="variantId" type="string" required>Product variant UUID</ParamField>
+<ParamField body="image" type="string">Product image URL at time of wishlisting</ParamField>
+
+```json Example request
+{
+  "variantId": "550e8400-e29b-41d4-a716-446655440000",
+  "image": "https://cdn.example.com/products/tee-black.jpg"
+}
+```

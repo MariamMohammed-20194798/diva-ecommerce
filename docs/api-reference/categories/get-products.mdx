@@ -1,0 +1,14 @@
+---
+title: Get Products by Category
+api: GET /categories/{slug}/products
+authMethod: none
+---
+
+Returns paginated products belonging to the given category.
+
+<ParamField path="slug" type="string" required>Category URL slug</ParamField>
+<ParamField query="page" type="number" default="1">Page number</ParamField>
+<ParamField query="limit" type="number" default="20">Items per page</ParamField>
+<ParamField query="includeSubcategories" type="boolean" default="false">
+  Also include products from child categories
+</ParamField>

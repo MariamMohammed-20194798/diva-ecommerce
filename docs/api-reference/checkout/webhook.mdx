@@ -1,0 +1,20 @@
+---
+title: Stripe Webhook
+api: POST /checkout/webhook
+authMethod: none
+playground: none
+---
+
+Receives events from Stripe. Verifies the webhook signature using `STRIPE_WEBHOOK_SECRET`. On `payment_intent.succeeded`, atomically creates the order, decrements stock, records payment, and clears the cart.
+
+<Warning>
+This endpoint is called by **Stripe**, not your frontend. It must receive the **raw** request body — JSON body-parser is disabled for this route.
+</Warning>
+
+<ParamField header="stripe-signature" type="string" required>Stripe webhook signature header</ParamField>
+
+```json Response
+{
+  "received": true
+}
+```

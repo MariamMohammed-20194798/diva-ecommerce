@@ -1,0 +1,12 @@
+---
+title: List Orders
+api: GET /orders
+---
+
+Returns paginated order history for the authenticated user.
+
+<ParamField query="page" type="number" default="1">Page number</ParamField>
+<ParamField query="limit" type="number" default="10">Items per page</ParamField>
+<ParamField query="status" type="string">
+  Filter by status: `PENDING`, `PAID`, `PROCESSING`, `SHIPPED`, `DELIVERED`, `CANCELLED`
+</ParamField>

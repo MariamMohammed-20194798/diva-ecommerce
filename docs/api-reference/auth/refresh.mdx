@@ -1,0 +1,23 @@
+---
+title: Refresh Token
+api: POST /auth/refresh
+authMethod: none
+playground: simple
+---
+
+Rotates the refresh token and returns a new access token. Requires the `refresh_token` httpOnly cookie from a prior login.
+
+<Note>
+Send requests with `credentials: include` so the browser includes the refresh cookie.
+</Note>
+
+```json Example response
+{
+  "accessToken": "eyJhbGciOiJIUzI1NiIs...",
+  "user": {
+    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "email": "user@example.com",
+    "role": "USER"
+  }
+}
+```

@@ -1,0 +1,8 @@
+---
+title: Delete Address
+api: DELETE /addresses/{id}
+---
+
+Deletes an address. Returns **422** if it is the default address while others exist, or if linked to orders.
+
+<ParamField path="id" type="string" required>Address UUID</ParamField>

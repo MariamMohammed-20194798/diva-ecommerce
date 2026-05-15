@@ -1,0 +1,15 @@
+---
+title: Update Address
+api: PUT /addresses/{id}
+---
+
+Partial update — send only fields that change.
+
+<ParamField path="id" type="string" required>Address UUID</ParamField>
+<ParamField body="line1" type="string">Street address</ParamField>
+<ParamField body="line2" type="string">Apartment, suite, etc.</ParamField>
+<ParamField body="city" type="string">City</ParamField>
+<ParamField body="state" type="string">State or region</ParamField>
+<ParamField body="postalCode" type="string">Postal / ZIP code</ParamField>
+<ParamField body="country" type="string">Country</ParamField>
+<ParamField body="isDefault" type="boolean">Set as default</ParamField>

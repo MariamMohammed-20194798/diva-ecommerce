@@ -1,0 +1,8 @@
+---
+title: Delete Category
+api: DELETE /categories/{id}
+---
+
+Deletes a category. Returns **422** if the category has products or subcategories. Requires **ADMIN** role.
+
+<ParamField path="id" type="string" required>Category UUID</ParamField>

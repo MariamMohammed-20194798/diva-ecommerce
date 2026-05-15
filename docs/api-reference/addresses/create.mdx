@@ -1,0 +1,25 @@
+---
+title: Create Address
+api: POST /addresses
+---
+
+Creates a new shipping address. The first address is automatically set as default.
+
+<ParamField body="line1" type="string" required>Street address</ParamField>
+<ParamField body="line2" type="string">Apartment, suite, etc.</ParamField>
+<ParamField body="city" type="string" required>City</ParamField>
+<ParamField body="state" type="string">State or region</ParamField>
+<ParamField body="postalCode" type="string" required>Postal / ZIP code</ParamField>
+<ParamField body="country" type="string" required>Country</ParamField>
+<ParamField body="isDefault" type="boolean">Set as default (ignored for first address)</ParamField>
+
+```json Example request
+{
+  "line1": "123 Rue de Rivoli",
+  "line2": "Apt 5B",
+  "city": "Paris",
+  "state": "Ile-de-France",
+  "postalCode": "75001",
+  "country": "France"
+}
+```

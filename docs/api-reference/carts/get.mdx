@@ -1,0 +1,15 @@
+---
+title: Get Cart
+api: GET /cart
+authMethod: none
+---
+
+Returns the cart for the authenticated user or the current guest session. Creates an empty cart if none exists. Response includes `subtotal` and `itemCount`.
+
+<ParamField header="x-session-id" type="string">
+  Guest session ID (optional — API generates one if missing)
+</ParamField>
+
+<ResponseField name="items" type="array">Cart line items with variant details</ResponseField>
+<ResponseField name="subtotal" type="number">Subtotal in cents</ResponseField>
+<ResponseField name="itemCount" type="number">Total quantity across items</ResponseField>

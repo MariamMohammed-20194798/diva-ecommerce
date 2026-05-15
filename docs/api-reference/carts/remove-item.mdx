@@ -1,0 +1,10 @@
+---
+title: Remove Cart Item
+api: DELETE /cart/items/{id}
+authMethod: none
+---
+
+Removes a single item from the cart. Caller must own the cart.
+
+<ParamField path="id" type="string" required>Cart item UUID</ParamField>
+<ParamField header="x-session-id" type="string">Guest session ID</ParamField>
