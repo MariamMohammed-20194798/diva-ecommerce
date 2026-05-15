@@ -3,7 +3,6 @@ import {
   Controller,
   Get,
   Post,
-  Query,
   Req,
   Res,
   UseGuards,
@@ -62,8 +61,6 @@ export class AuthController {
     return { ok: true };
   }
 
-
-
   @Get('google')
   @UseGuards(GoogleOAuthConfiguredGuard, AuthGuard('google'))
   googleAuth() {
@@ -92,10 +89,12 @@ export class AuthController {
     );
     const maxAgeMs = maxAgeDays * 24 * 60 * 60 * 1000;
     const isProd = this.config.get<string>('NODE_ENV') === 'production';
+    // Vercel (frontend) + Railway (API) are different sites; Lax blocks cross-site cookies.
+    const sameSite = isProd ? ('none' as const) : ('lax' as const);
     return {
       httpOnly: true,
       secure: isProd,
-      sameSite: 'lax' as const,
+      sameSite,
       path: '/api/auth',
       maxAge: maxAgeMs,
     };
@@ -107,10 +106,11 @@ export class AuthController {
 
   private clearRefreshCookie(res: Response) {
     const isProd = this.config.get<string>('NODE_ENV') === 'production';
+    const sameSite = isProd ? ('none' as const) : ('lax' as const);
     res.clearCookie(REFRESH_COOKIE, {
       httpOnly: true,
       secure: isProd,
-      sameSite: 'lax',
+      sameSite,
       path: '/api/auth',
     });
   }

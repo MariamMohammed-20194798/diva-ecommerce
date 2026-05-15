@@ -25,9 +25,9 @@ export const storeCartSessionId = (sessionId: string | null | undefined) => {
 };
 
 let isRefreshing = false;
-let failedQueue: { resolve: (token: string) => void; reject: (error: any) => void }[] = [];
+let failedQueue: { resolve: (token: string) => void; reject: (error: unknown) => void }[] = [];
 
-const processQueue = (error: any, token: string | null = null) => {
+const processQueue = (error: unknown, token: string | null = null) => {
   failedQueue.forEach((prom) => {
     if (error) {
       prom.reject(error);
@@ -73,10 +73,20 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    // Handle 401 errors
+    // Handle 401 errors (session expired), not auth form errors like "user not found"
     if (error.response?.status === 401) {
+      const requestUrl = originalRequest.url ?? "";
+      const isAuthRoute = requestUrl.includes("/auth/");
+      const hasStoredAccessToken =
+        typeof window !== "undefined" &&
+        Boolean(window.localStorage.getItem("accessToken"));
+
+      if (isAuthRoute || !hasStoredAccessToken) {
+        return Promise.reject(error);
+      }
+
       // Avoid infinite loops if refresh itself fails
-      if (originalRequest.url?.includes("/auth/refresh")) {
+      if (requestUrl.includes("/auth/refresh")) {
         isRefreshing = false;
         if (typeof window !== "undefined") {
           window.localStorage.removeItem("accessToken");
