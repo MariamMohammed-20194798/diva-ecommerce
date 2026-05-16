@@ -6,54 +6,54 @@ export declare class WishlistRepository {
     findByUserId(userId: string): Promise<({
         variant: {
             product: {
-                id: string;
-                slug: string;
                 name: string;
+                id: string;
                 images: string[];
+                slug: string;
                 basePrice: Prisma.Decimal;
             };
         } & {
             id: string;
-            images: string[];
-            productId: string;
-            sku: string;
             size: string | null;
             color: string | null;
+            sku: string;
             priceOverride: Prisma.Decimal | null;
             stockQuantity: number;
+            images: string[];
+            productId: string;
         };
     } & {
         id: string;
+        createdAt: Date;
         userId: string;
         variantId: string;
         image: string | null;
-        createdAt: Date;
     })[]>;
     add(userId: string, variantId: string, image?: string): Promise<{
         variant: {
             product: {
-                id: string;
-                slug: string;
                 name: string;
+                id: string;
                 images: string[];
+                slug: string;
                 basePrice: Prisma.Decimal;
             };
         } & {
             id: string;
-            images: string[];
-            productId: string;
-            sku: string;
             size: string | null;
             color: string | null;
+            sku: string;
             priceOverride: Prisma.Decimal | null;
             stockQuantity: number;
+            images: string[];
+            productId: string;
         };
     } & {
         id: string;
+        createdAt: Date;
         userId: string;
         variantId: string;
         image: string | null;
-        createdAt: Date;
     }>;
     remove(userId: string, variantId: string): Promise<Prisma.BatchPayload>;
     exists(userId: string, variantId: string): Promise<boolean>;

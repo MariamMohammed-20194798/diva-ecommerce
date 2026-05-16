@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { resolveBackendEnvFilePaths } from './config/env-path';
 import { AuthModule } from './auth/auth.module';
 import { ProductsModule } from './products/products.module';
 import { DatabaseModule } from './database/database.module';
@@ -13,7 +14,10 @@ import { WishlistModule } from './wishlist/wishlist.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: resolveBackendEnvFilePaths(),
+    }),
     DatabaseModule,
     AuthModule,
     ProductsModule,

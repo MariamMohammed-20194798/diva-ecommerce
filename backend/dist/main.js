@@ -42,17 +42,46 @@ const app_module_1 = require("./app.module");
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const helmet_1 = __importDefault(require("helmet"));
 const express = __importStar(require("express"));
+function parseAllowedOrigins() {
+    const raw = [
+        'http://localhost:3000',
+        process.env.FRONTEND_URL,
+        'https://ecommerce-app-omega-hazel.vercel.app',
+    ];
+    return new Set(raw
+        .filter((value) => Boolean(value))
+        .flatMap((value) => value.split(','))
+        .map((origin) => origin.trim().replace(/\/$/, ''))
+        .filter(Boolean));
+}
+function isVercelDeploymentOrigin(origin) {
+    return /^https:\/\/[\w-]+\.vercel\.app$/i.test(origin);
+}
+function isLocalDevOrigin(origin) {
+    return /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(origin);
+}
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
+    app.enableShutdownHooks();
+    const allowedOrigins = parseAllowedOrigins();
     app.use((0, helmet_1.default)());
     app.use((0, cookie_parser_1.default)());
     app.use('/api/checkout/webhook', express.raw({ type: 'application/json' }));
     app.enableCors({
-        origin: [
-            process.env.FRONTEND_URL,
-            'http://localhost:3000',
-            'http://127.0.0.1:3000'
-        ],
+        origin: (origin, callback) => {
+            if (!origin) {
+                callback(null, true);
+                return;
+            }
+            const normalized = origin.replace(/\/$/, '');
+            if (allowedOrigins.has(normalized) ||
+                isVercelDeploymentOrigin(normalized) ||
+                (process.env.NODE_ENV !== 'production' && isLocalDevOrigin(normalized))) {
+                callback(null, origin);
+                return;
+            }
+            callback(new Error(`Origin ${origin} not allowed by CORS`), false);
+        },
         credentials: true,
         exposedHeaders: ['x-session-id'],
     });

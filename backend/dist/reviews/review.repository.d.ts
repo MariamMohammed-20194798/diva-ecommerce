@@ -17,8 +17,8 @@ export declare class ReviewRepository {
         createdAt: Date;
         updatedAt: Date;
         userId: string;
-        productId: string;
         rating: number;
+        productId: string;
         body: string | null;
     })[]>;
     findById(id: string): Promise<({
@@ -36,8 +36,8 @@ export declare class ReviewRepository {
         createdAt: Date;
         updatedAt: Date;
         userId: string;
-        productId: string;
         rating: number;
+        productId: string;
         body: string | null;
     }) | null>;
     productExists(productId: string): Promise<{
@@ -67,8 +67,8 @@ export declare class ReviewRepository {
         createdAt: Date;
         updatedAt: Date;
         userId: string;
-        productId: string;
         rating: number;
+        productId: string;
         body: string | null;
     }>;
     update(id: string, data: Partial<{
@@ -89,8 +89,8 @@ export declare class ReviewRepository {
         createdAt: Date;
         updatedAt: Date;
         userId: string;
-        productId: string;
         rating: number;
+        productId: string;
         body: string | null;
     }>;
     remove(id: string): Promise<{
@@ -98,8 +98,8 @@ export declare class ReviewRepository {
         createdAt: Date;
         updatedAt: Date;
         userId: string;
-        productId: string;
         rating: number;
+        productId: string;
         body: string | null;
     }>;
 }

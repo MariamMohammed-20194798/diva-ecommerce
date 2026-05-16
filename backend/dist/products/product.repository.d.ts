@@ -12,30 +12,30 @@ export declare class ProductRepository {
             variants: {
                 priceOverride: number | null;
                 id: string;
-                images: string[];
-                sku: string;
                 size: string | null;
                 color: string | null;
+                sku: string;
                 stockQuantity: number;
+                images: string[];
             }[];
             category: {
+                name: string;
                 id: string;
                 slug: string;
-                name: string;
             };
             _count: {
                 reviews: number;
             };
-            id: string;
-            categoryId: string;
-            slug: string;
             name: string;
-            description: string | null;
-            images: string[];
-            isActive: boolean;
-            metadata: Prisma.JsonValue | null;
+            id: string;
             createdAt: Date;
             updatedAt: Date;
+            description: string | null;
+            isActive: boolean;
+            images: string[];
+            slug: string;
+            categoryId: string;
+            metadata: Prisma.JsonValue | null;
         }[];
         meta: {
             total: number;
@@ -50,57 +50,57 @@ export declare class ProductRepository {
         variants: {
             priceOverride: number | null;
             id: string;
-            images: string[];
-            sku: string;
             size: string | null;
             color: string | null;
+            sku: string;
             stockQuantity: number;
+            images: string[];
         }[];
         category: {
+            name: string;
             id: string;
             slug: string;
-            name: string;
         };
         reviews: ({
             user: {
-                id: string;
                 email: string;
+                id: string;
             };
         } & {
             id: string;
             createdAt: Date;
             updatedAt: Date;
-            productId: string;
             userId: string;
             rating: number;
+            productId: string;
             body: string | null;
         })[];
         _count: {
             reviews: number;
         };
-        id: string;
-        categoryId: string;
-        slug: string;
         name: string;
-        description: string | null;
-        images: string[];
-        isActive: boolean;
-        metadata: Prisma.JsonValue | null;
+        id: string;
         createdAt: Date;
         updatedAt: Date;
+        description: string | null;
+        isActive: boolean;
+        images: string[];
+        slug: string;
+        categoryId: string;
+        metadata: Prisma.JsonValue | null;
     } | null>;
     findById(id: string): Promise<{
-        id: string;
-        categoryId: string;
-        slug: string;
         name: string;
-        description: string | null;
-        images: string[];
-        basePrice: Prisma.Decimal;
-        isActive: boolean;
-        metadata: Prisma.JsonValue | null;
+        id: string;
         createdAt: Date;
         updatedAt: Date;
+        description: string | null;
+        isActive: boolean;
+        images: string[];
+        slug: string;
+        categoryId: string;
+        basePrice: Prisma.Decimal;
+        metadata: Prisma.JsonValue | null;
     } | null>;
     search(query: SearchQueryDto): Promise<{
         data: ({
@@ -108,29 +108,29 @@ export declare class ProductRepository {
             variants: {
                 priceOverride: number | null;
                 id: string;
-                images: string[];
                 size: string | null;
                 color: string | null;
                 stockQuantity: number;
+                images: string[];
             }[];
             category: {
+                name: string;
                 id: string;
                 slug: string;
-                name: string;
             };
             _count: {
                 reviews: number;
             };
-            id: string;
-            categoryId: string;
-            slug: string;
             name: string;
-            description: string | null;
-            images: string[];
-            isActive: boolean;
-            metadata: Prisma.JsonValue | null;
+            id: string;
             createdAt: Date;
             updatedAt: Date;
+            description: string | null;
+            isActive: boolean;
+            images: string[];
+            slug: string;
+            categoryId: string;
+            metadata: Prisma.JsonValue | null;
         } | null)[];
         meta: {
             total: number;
@@ -143,16 +143,16 @@ export declare class ProductRepository {
     findReviews(productId: string, query: ReviewsQueryDto): Promise<{
         data: ({
             user: {
-                id: string;
                 email: string;
+                id: string;
             };
         } & {
             id: string;
             createdAt: Date;
             updatedAt: Date;
-            productId: string;
             userId: string;
             rating: number;
+            productId: string;
             body: string | null;
         })[];
         meta: {
@@ -170,56 +170,56 @@ export declare class ProductRepository {
         variants: {
             priceOverride: number | null;
             id: string;
-            images: string[];
-            productId: string;
-            sku: string;
             size: string | null;
             color: string | null;
+            sku: string;
             stockQuantity: number;
+            images: string[];
+            productId: string;
         }[];
         category: {
+            name: string;
             id: string;
             slug: string;
-            name: string;
         };
-        id: string;
-        categoryId: string;
-        slug: string;
         name: string;
-        description: string | null;
-        images: string[];
-        isActive: boolean;
-        metadata: Prisma.JsonValue | null;
+        id: string;
         createdAt: Date;
         updatedAt: Date;
+        description: string | null;
+        isActive: boolean;
+        images: string[];
+        slug: string;
+        categoryId: string;
+        metadata: Prisma.JsonValue | null;
     }>;
     update(id: string, dto: UpdateProductDto): Promise<{
         basePrice: number;
         variants: {
             priceOverride: number | null;
             id: string;
-            images: string[];
-            productId: string;
-            sku: string;
             size: string | null;
             color: string | null;
+            sku: string;
             stockQuantity: number;
+            images: string[];
+            productId: string;
         }[];
         category: {
+            name: string;
             id: string;
             slug: string;
-            name: string;
         };
-        id: string;
-        categoryId: string;
-        slug: string;
         name: string;
-        description: string | null;
-        images: string[];
-        isActive: boolean;
-        metadata: Prisma.JsonValue | null;
+        id: string;
         createdAt: Date;
         updatedAt: Date;
+        description: string | null;
+        isActive: boolean;
+        images: string[];
+        slug: string;
+        categoryId: string;
+        metadata: Prisma.JsonValue | null;
     }>;
     slugExists(slug: string, excludeId?: string): Promise<boolean>;
 }

@@ -30,10 +30,10 @@ export declare class OrdersController {
             updatedAt: Date;
             userId: string;
             status: import("@prisma/client").$Enums.OrderStatus;
+            addressId: string;
             trackingNumber: string | null;
             totalAmount: import("@prisma/client/runtime/library").Decimal;
             stripePaymentId: string | null;
-            addressId: string;
         })[];
         meta: {
             total: number;
@@ -66,11 +66,11 @@ export declare class OrdersController {
                 id: string;
                 size: string | null;
                 color: string | null;
-                images: string[];
-                productId: string;
                 sku: string;
                 priceOverride: import("@prisma/client/runtime/library").Decimal | null;
                 stockQuantity: number;
+                images: string[];
+                productId: string;
             };
         } & {
             id: string;
@@ -90,9 +90,9 @@ export declare class OrdersController {
         }[];
         discounts: ({
             discount: {
-                type: import("@prisma/client").$Enums.DiscountType;
                 code: string;
                 value: import("@prisma/client/runtime/library").Decimal;
+                type: import("@prisma/client").$Enums.DiscountType;
             };
         } & {
             id: string;
@@ -107,10 +107,10 @@ export declare class OrdersController {
         updatedAt: Date;
         userId: string;
         status: import("@prisma/client").$Enums.OrderStatus;
+        addressId: string;
         trackingNumber: string | null;
         totalAmount: import("@prisma/client/runtime/library").Decimal;
         stripePaymentId: string | null;
-        addressId: string;
     }>;
     updateStatus(id: string, dto: UpdateOrderStatusDto): Promise<{
         address: {
@@ -135,11 +135,11 @@ export declare class OrdersController {
                 id: string;
                 size: string | null;
                 color: string | null;
-                images: string[];
-                productId: string;
                 sku: string;
                 priceOverride: import("@prisma/client/runtime/library").Decimal | null;
                 stockQuantity: number;
+                images: string[];
+                productId: string;
             };
         } & {
             id: string;
@@ -159,9 +159,9 @@ export declare class OrdersController {
         }[];
         discounts: ({
             discount: {
-                type: import("@prisma/client").$Enums.DiscountType;
                 code: string;
                 value: import("@prisma/client/runtime/library").Decimal;
+                type: import("@prisma/client").$Enums.DiscountType;
             };
         } & {
             id: string;
@@ -176,9 +176,9 @@ export declare class OrdersController {
         updatedAt: Date;
         userId: string;
         status: import("@prisma/client").$Enums.OrderStatus;
+        addressId: string;
         trackingNumber: string | null;
         totalAmount: import("@prisma/client/runtime/library").Decimal;
         stripePaymentId: string | null;
-        addressId: string;
     }>;
 }

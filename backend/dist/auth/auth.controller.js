@@ -64,10 +64,11 @@ let AuthController = class AuthController {
         const maxAgeDays = Number(this.config.get('REFRESH_TOKEN_DAYS', '30'));
         const maxAgeMs = maxAgeDays * 24 * 60 * 60 * 1000;
         const isProd = this.config.get('NODE_ENV') === 'production';
+        const sameSite = isProd ? 'none' : 'lax';
         return {
             httpOnly: true,
             secure: isProd,
-            sameSite: 'lax',
+            sameSite,
             path: '/api/auth',
             maxAge: maxAgeMs,
         };
@@ -77,10 +78,11 @@ let AuthController = class AuthController {
     }
     clearRefreshCookie(res) {
         const isProd = this.config.get('NODE_ENV') === 'production';
+        const sameSite = isProd ? 'none' : 'lax';
         res.clearCookie(auth_constants_1.REFRESH_COOKIE, {
             httpOnly: true,
             secure: isProd,
-            sameSite: 'lax',
+            sameSite,
             path: '/api/auth',
         });
     }

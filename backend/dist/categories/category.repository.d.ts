@@ -19,9 +19,9 @@ export declare class CategoryRepository {
         } & {
             name: string;
             id: string;
-            slug: string;
             description: string | null;
             images: string[];
+            slug: string;
             parentId: string | null;
         })[];
         meta: {
@@ -39,9 +39,9 @@ export declare class CategoryRepository {
     } & {
         name: string;
         id: string;
-        slug: string;
         description: string | null;
         images: string[];
+        slug: string;
         parentId: string | null;
     } & {
         children: ({
@@ -51,9 +51,9 @@ export declare class CategoryRepository {
         } & {
             name: string;
             id: string;
-            slug: string;
             description: string | null;
             images: string[];
+            slug: string;
             parentId: string | null;
         } & any)[];
     })[]>;
@@ -70,23 +70,23 @@ export declare class CategoryRepository {
         children: {
             name: string;
             id: string;
-            slug: string;
             description: string | null;
+            slug: string;
         }[];
     } & {
         name: string;
         id: string;
-        slug: string;
         description: string | null;
         images: string[];
+        slug: string;
         parentId: string | null;
     }) | null>;
     findById(id: string): Promise<{
         name: string;
         id: string;
-        slug: string;
         description: string | null;
         images: string[];
+        slug: string;
         parentId: string | null;
     } | null>;
     findProductsBySlug(slug: string, query: CategoryProductsQueryDto): Promise<{
@@ -104,21 +104,21 @@ export declare class CategoryRepository {
                 id: string;
                 size: string | null;
                 color: string | null;
-                images: string[];
                 priceOverride: Prisma.Decimal | null;
                 stockQuantity: number;
+                images: string[];
             }[];
         } & {
             name: string;
             id: string;
             createdAt: Date;
             updatedAt: Date;
-            isActive: boolean;
-            slug: string;
             description: string | null;
+            isActive: boolean;
             images: string[];
-            basePrice: Prisma.Decimal;
+            slug: string;
             categoryId: string;
+            basePrice: Prisma.Decimal;
             metadata: Prisma.JsonValue | null;
         })[];
         meta: {
@@ -140,9 +140,9 @@ export declare class CategoryRepository {
     } & {
         name: string;
         id: string;
-        slug: string;
         description: string | null;
         images: string[];
+        slug: string;
         parentId: string | null;
     }>;
     update(id: string, data: Partial<UpdateCategoryDto> & {
@@ -165,17 +165,17 @@ export declare class CategoryRepository {
     } & {
         name: string;
         id: string;
-        slug: string;
         description: string | null;
         images: string[];
+        slug: string;
         parentId: string | null;
     }>;
     delete(id: string): Promise<{
         name: string;
         id: string;
-        slug: string;
         description: string | null;
         images: string[];
+        slug: string;
         parentId: string | null;
     }>;
     slugExists(slug: string, excludeId?: string): Promise<boolean>;

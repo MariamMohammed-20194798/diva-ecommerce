@@ -31,6 +31,7 @@ function isLocalDevOrigin(origin: string): boolean {
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableShutdownHooks();
   const allowedOrigins = parseAllowedOrigins();
 
   app.use(helmet());

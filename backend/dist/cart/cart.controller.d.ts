@@ -24,19 +24,19 @@ export declare class CartController {
             product: {
                 name: string;
                 id: string;
-                slug: string;
                 images: string[];
+                slug: string;
                 basePrice: import("@prisma/client/runtime/library").Decimal;
             };
         } & {
             id: string;
             size: string | null;
             color: string | null;
-            images: string[];
-            productId: string;
             sku: string;
             priceOverride: import("@prisma/client/runtime/library").Decimal | null;
             stockQuantity: number;
+            images: string[];
+            productId: string;
         };
     } & {
         id: string;
@@ -50,19 +50,19 @@ export declare class CartController {
             product: {
                 name: string;
                 id: string;
-                slug: string;
                 images: string[];
+                slug: string;
                 basePrice: import("@prisma/client/runtime/library").Decimal;
             };
         } & {
             id: string;
             size: string | null;
             color: string | null;
-            images: string[];
-            productId: string;
             sku: string;
             priceOverride: import("@prisma/client/runtime/library").Decimal | null;
             stockQuantity: number;
+            images: string[];
+            productId: string;
         };
     } & {
         id: string;

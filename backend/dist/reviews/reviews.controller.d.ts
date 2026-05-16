@@ -21,8 +21,8 @@ export declare class ReviewsController {
         createdAt: Date;
         updatedAt: Date;
         userId: string;
-        productId: string;
         rating: number;
+        productId: string;
         body: string | null;
     })[]>;
     create(dto: CreateReviewDto, req: Request): Promise<{
@@ -40,8 +40,8 @@ export declare class ReviewsController {
         createdAt: Date;
         updatedAt: Date;
         userId: string;
-        productId: string;
         rating: number;
+        productId: string;
         body: string | null;
     }>;
     update(id: string, dto: UpdateReviewDto, req: Request): Promise<{
@@ -59,8 +59,8 @@ export declare class ReviewsController {
         createdAt: Date;
         updatedAt: Date;
         userId: string;
-        productId: string;
         rating: number;
+        productId: string;
         body: string | null;
     }>;
     remove(id: string, req: Request): Promise<{
