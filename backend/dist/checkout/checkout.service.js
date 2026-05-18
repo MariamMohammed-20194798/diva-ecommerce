@@ -177,18 +177,18 @@ let CheckoutService = CheckoutService_1 = class CheckoutService {
             this.logger.warn(`Order already exists for PaymentIntent ${intent.id}. Skipping.`);
             return existing;
         }
-        const cart = (await this.prisma.cart.findUnique({
-            where: { id: cartId },
-            include: {
-                items: { include: { variant: { include: { product: true } } } },
-            },
-        }));
-        if (!cart || !cart.items.length) {
-            this.logger.error(`Cart ${cartId} is empty or not found. Cannot create order.`);
-            return;
-        }
         try {
             return await this.prisma.$transaction(async (tx) => {
+                const cart = (await tx.cart.findUnique({
+                    where: { id: cartId },
+                    include: {
+                        items: { include: { variant: { include: { product: true } } } },
+                    },
+                }));
+                if (!cart || !cart.items.length) {
+                    this.logger.error(`Cart ${cartId} is empty or not found. Cannot create order.`);
+                    return;
+                }
                 const order = await tx.order.create({
                     data: {
                         userId,
@@ -200,7 +200,8 @@ let CheckoutService = CheckoutService_1 = class CheckoutService {
                             create: cart.items.map((item) => ({
                                 variantId: item.variantId,
                                 quantity: item.quantity,
-                                unitPrice: Number(item.variant.priceOverride ?? item.variant.product.basePrice),
+                                unitPrice: Number(item.variant.priceOverride ??
+                                    item.variant.product.basePrice),
                                 customization: item.customization ?? undefined,
                             })),
                         },
@@ -243,7 +244,7 @@ let CheckoutService = CheckoutService_1 = class CheckoutService {
                 await tx.cartItem.deleteMany({ where: { cartId: cart.id } });
                 this.logger.log(`Order ${order.id} created from PaymentIntent ${intent.id}`);
                 return order;
-            });
+            }, { timeout: 10000 });
         }
         catch (err) {
             this.logger.error(`Failed to create order: ${err.message}`, err.stack);

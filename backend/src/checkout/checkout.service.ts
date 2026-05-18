@@ -277,100 +277,105 @@ export class CheckoutService {
       return existing;
     }
 
-    type CartWithItemsAndProduct = Prisma.CartGetPayload<{
-      include: {
-        items: { include: { variant: { include: { product: true } } } };
-      };
-    }>;
-    type CartItem = CartWithItemsAndProduct['items'][number];
-
-    const cart = (await this.prisma.cart.findUnique({
-      where: { id: cartId },
-      include: {
-        items: { include: { variant: { include: { product: true } } } },
-      },
-    })) as CartWithItemsAndProduct | null;
-
-    if (!cart || !cart.items.length) {
-      this.logger.error(
-        `Cart ${cartId} is empty or not found. Cannot create order.`,
-      );
-      return;
-    }
-
     try {
-      return await this.prisma.$transaction(async (tx) => {
-        // 1 — Create the order
-        const order = await tx.order.create({
-          data: {
-            userId,
-            addressId,
-            status: 'PAID',
-            totalAmount: intent.amount / 100,
-            stripePaymentId: intent.id,
-            items: {
-              create: cart.items.map((item: CartItem) => ({
-                variantId: item.variantId,
-                quantity: item.quantity,
-                unitPrice: Number(
-                  item.variant.priceOverride ?? item.variant.product.basePrice,
-                ),
-                customization: item.customization ?? undefined,
-              })),
+      return await this.prisma.$transaction(
+        async (tx) => {
+          type CartWithItemsAndProduct = Prisma.CartGetPayload<{
+            include: {
+              items: { include: { variant: { include: { product: true } } } };
+            };
+          }>;
+          type CartItem = CartWithItemsAndProduct['items'][number];
+
+          // Load cart INSIDE transaction to maintain transaction context
+          const cart = (await tx.cart.findUnique({
+            where: { id: cartId },
+            include: {
+              items: { include: { variant: { include: { product: true } } } },
             },
-          },
-        });
+          })) as CartWithItemsAndProduct | null;
 
-        // 2 — Create payment record
-        await tx.payment.create({
-          data: {
-            orderId: order.id,
-            stripePaymentId: intent.id,
-            stripeChargeId: intent.latest_charge ?? null,
-            status: 'SUCCEEDED',
-            amount: intent.amount / 100,
-            currency: intent.currency,
-            metadata: intent.metadata,
-            paidAt: new Date(),
-          },
-        });
+          if (!cart || !cart.items.length) {
+            this.logger.error(
+              `Cart ${cartId} is empty or not found. Cannot create order.`,
+            );
+            return;
+          }
 
-        // 3 — Decrement stock for each variant
-        for (const item of cart.items) {
-          await tx.productVariant.update({
-            where: { id: item.variantId },
-            data: { stockQuantity: { decrement: item.quantity } },
-          });
-        }
-
-        // 4 — Apply discount code usage + record it on the order
-        if (discountCodeId) {
-          await tx.discountCode.update({
-            where: { id: discountCodeId },
-            data: { usedCount: { increment: 1 } },
-          });
-
-          const appliedAmount = Math.max(Number(discountCents) / 100, 0);
-          if (appliedAmount > 0) {
-            await tx.orderDiscount.create({
-              data: {
-                orderId: order.id,
-                discountId: discountCodeId,
-                appliedAmount,
+          // 1 — Create the order
+          const order = await tx.order.create({
+            data: {
+              userId,
+              addressId,
+              status: 'PAID',
+              totalAmount: intent.amount / 100,
+              stripePaymentId: intent.id,
+              items: {
+                create: cart.items.map((item: CartItem) => ({
+                  variantId: item.variantId,
+                  quantity: item.quantity,
+                  unitPrice: Number(
+                    item.variant.priceOverride ??
+                      item.variant.product.basePrice,
+                  ),
+                  customization: item.customization ?? undefined,
+                })),
               },
+            },
+          });
+
+          // 2 — Create payment record
+          await tx.payment.create({
+            data: {
+              orderId: order.id,
+              stripePaymentId: intent.id,
+              stripeChargeId: intent.latest_charge ?? null,
+              status: 'SUCCEEDED',
+              amount: intent.amount / 100,
+              currency: intent.currency,
+              metadata: intent.metadata,
+              paidAt: new Date(),
+            },
+          });
+
+          // 3 — Decrement stock for each variant
+          for (const item of cart.items) {
+            await tx.productVariant.update({
+              where: { id: item.variantId },
+              data: { stockQuantity: { decrement: item.quantity } },
             });
           }
-        }
 
-        // 5 — Clear the cart
-        await tx.cartItem.deleteMany({ where: { cartId: cart.id } });
+          // 4 — Apply discount code usage + record it on the order
+          if (discountCodeId) {
+            await tx.discountCode.update({
+              where: { id: discountCodeId },
+              data: { usedCount: { increment: 1 } },
+            });
 
-        this.logger.log(
-          `Order ${order.id} created from PaymentIntent ${intent.id}`,
-        );
+            const appliedAmount = Math.max(Number(discountCents) / 100, 0);
+            if (appliedAmount > 0) {
+              await tx.orderDiscount.create({
+                data: {
+                  orderId: order.id,
+                  discountId: discountCodeId,
+                  appliedAmount,
+                },
+              });
+            }
+          }
 
-        return order;
-      });
+          // 5 — Clear the cart
+          await tx.cartItem.deleteMany({ where: { cartId: cart.id } });
+
+          this.logger.log(
+            `Order ${order.id} created from PaymentIntent ${intent.id}`,
+          );
+
+          return order;
+        },
+        { timeout: 10000 }, // 10 second timeout to prevent premature closure
+      );
     } catch (err: any) {
       this.logger.error(`Failed to create order: ${err.message}`, err.stack);
       throw new InternalServerErrorException('Order creation failed.');
