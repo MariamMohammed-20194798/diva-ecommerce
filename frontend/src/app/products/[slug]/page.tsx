@@ -1,10 +1,20 @@
 'use client';
 
-import { use, useEffect, useState } from 'react';
+import { use, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Heart, Minus, Plus, ChevronRight, Truck, RotateCcw, Shield } from 'lucide-react';
+import {
+  Heart,
+  Minus,
+  Plus,
+  ChevronRight,
+  ChevronLeft,
+  Truck,
+  RotateCcw,
+  Shield,
+} from 'lucide-react';
 import { toast } from 'sonner';
+import { AnimatePresence, motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Footer } from '@/components/footer';
 import { WriteReviewModal } from '@/components/write-review-modal';
@@ -57,6 +67,10 @@ function ProductDetails({
   const [reviewsData, setReviewsData] = useState<ReviewsResponse | null>(null);
   const [isLoadingReviews, setIsLoadingReviews] = useState(true);
   const [isWriteReviewModalOpen, setIsWriteReviewModalOpen] = useState(false);
+  const [canScrollReviewsLeft, setCanScrollReviewsLeft] = useState(false);
+  const [canScrollReviewsRight, setCanScrollReviewsRight] = useState(false);
+  const [isReviewsHovered, setIsReviewsHovered] = useState(false);
+  const reviewsScrollerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const nextImages = getImagesForProductColor(product, selectedColor.name);
@@ -104,6 +118,36 @@ function ProductDetails({
       setIsAddingToWishlist(false);
     }
   };
+
+  const updateReviewsScrollState = () => {
+    const element = reviewsScrollerRef.current;
+    if (!element) {
+      return;
+    }
+
+    const maxScrollLeft = element.scrollWidth - element.clientWidth;
+    setCanScrollReviewsLeft(element.scrollLeft > 0);
+    setCanScrollReviewsRight(element.scrollLeft < maxScrollLeft - 1);
+  };
+
+  const scrollReviewsByAmount = (direction: 'left' | 'right') => {
+    const element = reviewsScrollerRef.current;
+    if (!element) {
+      return;
+    }
+
+    const distance = Math.max(element.clientWidth * 0.8, 300);
+    element.scrollBy({
+      left: direction === 'left' ? -distance : distance,
+      behavior: 'smooth',
+    });
+  };
+
+  useEffect(() => {
+    updateReviewsScrollState();
+    window.addEventListener('resize', updateReviewsScrollState);
+    return () => window.removeEventListener('resize', updateReviewsScrollState);
+  }, [reviews.length]);
 
   const canNavigateGallery = galleryImages.length > 1;
   const activeImage = galleryImages[selectedImageIndex] ?? product.image;
@@ -485,10 +529,10 @@ function ProductDetails({
         )}
 
         {/* Reviews section */}
-        <section className="border-t border-border py-16">
-          <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-            <div className="mb-12">
-              <div className="flex items-start justify-between mb-4">
+        {reviews.length > 0 && (
+          <section className="border-t border-border py-16">
+            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+              <div className="flex items-center justify-between mb-12">
                 <div>
                   <h2 className="text-2xl font-semibold text-foreground mb-2">
                     Customer Reviews
@@ -511,79 +555,134 @@ function ProductDetails({
                   </div>
                 )}
               </div>
-            </div>
 
-            {isLoadingReviews ? (
-              <div className="text-center py-8">
-                <p className="text-sm text-muted-foreground">Loading reviews...</p>
-              </div>
-            ) : reviews.length === 0 ? (
-              <>
-                {/* No reviews yet */}
-                <div className="bg-muted/50 rounded-lg p-8 text-center mb-8">
-                  <p className="text-sm text-muted-foreground mb-4">
-                    No reviews yet. Be the first to share your experience!
-                  </p>
-                  <Button
-                    onClick={() => setIsWriteReviewModalOpen(true)}
-                    className="bg-foreground text-background hover:bg-foreground/90 rounded-full text-sm uppercase tracking-wider"
-                  >
-                    Write a Review
-                  </Button>
-                </div>
-              </>
-            ) : (
-              <>
-                {/* Display reviews */}
-                <div className="space-y-6 mb-8">
+              <div
+                className="group relative"
+                onMouseEnter={() => setIsReviewsHovered(true)}
+                onMouseLeave={() => setIsReviewsHovered(false)}
+              >
+                <div
+                  ref={reviewsScrollerRef}
+                  onScroll={updateReviewsScrollState}
+                  className="flex snap-x snap-mandatory gap-6 overflow-x-auto pb-4 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+                >
                   {reviews.map((review) => (
-                    <div key={review.id} className="border border-border rounded-lg p-6">
-                      <div className="flex items-start justify-between mb-3">
-                        <div className="flex-1">
-                          <StarRating rating={review.rating} showValue={false} />
-                          <p className="text-xs text-muted-foreground mt-2">
-                            by {review.user.email}
+                    <motion.div
+                      key={review.id}
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.4 }}
+                      className="w-[85%] shrink-0 snap-start sm:w-[50%] lg:w-[33.333%]"
+                    >
+                      <div className="border border-border rounded-xl p-6 h-full flex flex-col bg-background hover:shadow-lg transition-shadow">
+                        <div className="flex items-start justify-between mb-4">
+                          <div className="flex-1">
+                            <StarRating rating={review.rating} showValue={false} />
+                          </div>
+                          <p className="text-xs text-muted-foreground ml-2 shrink-0">
+                            {new Date(review.createdAt).toLocaleDateString('en-US', {
+                              year: 'numeric',
+                              month: 'short',
+                              day: 'numeric',
+                            })}
                           </p>
                         </div>
+
+                        {review.body && (
+                          <p className="text-sm text-muted-foreground leading-relaxed mb-4 flex-1">
+                            &quot;{review.body}&quot;
+                          </p>
+                        )}
+
                         <p className="text-xs text-muted-foreground">
-                          {new Date(review.createdAt).toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'short',
-                            day: 'numeric',
-                          })}
+                          by{' '}
+                          <span className="font-medium text-foreground">
+                            {review.user.email.split('@')[0]}
+                          </span>
                         </p>
                       </div>
-                      {review.body && (
-                        <p className="text-sm text-muted-foreground leading-relaxed">
-                          {review.body}
-                        </p>
-                      )}
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
 
-                {/* Write review CTA */}
-                {reviews.length > 0 && (
-                  <div className="border border-border rounded-lg p-8 text-center">
-                    <h3 className="text-lg font-medium text-foreground mb-2">
-                      Share Your Experience
-                    </h3>
-                    <p className="text-sm text-muted-foreground mb-6">
-                      Have you purchased this product? Help other customers by sharing
-                      your honest review and rating.
-                    </p>
-                    <Button
-                      onClick={() => setIsWriteReviewModalOpen(true)}
-                      className="bg-foreground text-background hover:bg-foreground/90 rounded-full text-sm uppercase tracking-wider"
+                <AnimatePresence>
+                  {canScrollReviewsLeft && isReviewsHovered && (
+                    <motion.button
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -10 }}
+                      type="button"
+                      onClick={() => scrollReviewsByAmount('left')}
+                      aria-label="Scroll reviews left"
+                      className="absolute left-0 top-1/2 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-foreground text-background shadow-lg transition-all hover:scale-110 z-30 md:flex"
                     >
-                      Write a Review
-                    </Button>
-                  </div>
-                )}
-              </>
-            )}
-          </div>
-        </section>
+                      <ChevronLeft className="h-5 w-5" />
+                    </motion.button>
+                  )}
+                </AnimatePresence>
+
+                <AnimatePresence>
+                  {canScrollReviewsRight && isReviewsHovered && (
+                    <motion.button
+                      initial={{ opacity: 0, x: 10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: 10 }}
+                      type="button"
+                      onClick={() => scrollReviewsByAmount('right')}
+                      aria-label="Scroll reviews right"
+                      className="absolute right-0 top-1/2 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-foreground text-background shadow-lg transition-all hover:scale-110 z-30 md:flex"
+                    >
+                      <ChevronRight className="h-5 w-5" />
+                    </motion.button>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {/* Write review CTA */}
+              <div className="mt-12 border border-border rounded-lg p-8 text-center">
+                <h3 className="text-lg font-medium text-foreground mb-2">
+                  Share Your Experience
+                </h3>
+                <p className="text-sm text-muted-foreground mb-6">
+                  Have you purchased this product? Help other customers by sharing your
+                  honest review and rating.
+                </p>
+                <Button
+                  onClick={() => setIsWriteReviewModalOpen(true)}
+                  className="bg-foreground text-background hover:bg-foreground/90 rounded-full text-sm uppercase tracking-wider"
+                >
+                  Write a Review
+                </Button>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Empty reviews state */}
+        {!isLoadingReviews && reviews.length === 0 && (
+          <section className="border-t border-border py-16">
+            <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+              <div className="text-center mb-8">
+                <h2 className="text-2xl font-semibold text-foreground mb-2">
+                  Customer Reviews
+                </h2>
+                <p className="text-sm text-muted-foreground">No reviews yet</p>
+              </div>
+
+              <div className="bg-muted/50 rounded-lg p-12 text-center">
+                <p className="text-sm text-muted-foreground mb-6">
+                  No reviews yet. Be the first to share your experience!
+                </p>
+                <Button
+                  onClick={() => setIsWriteReviewModalOpen(true)}
+                  className="bg-foreground text-background hover:bg-foreground/90 rounded-full text-sm uppercase tracking-wider"
+                >
+                  Write a Review
+                </Button>
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* Write Review Modal */}
         <WriteReviewModal
