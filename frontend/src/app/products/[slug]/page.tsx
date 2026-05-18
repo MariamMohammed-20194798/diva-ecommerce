@@ -1,12 +1,14 @@
-"use client"
+'use client';
 
-import { use, useEffect, useState } from "react"
-import Image from "next/image"
-import Link from "next/link"
-import { Heart, Minus, Plus, ChevronRight, Truck, RotateCcw, Shield } from "lucide-react"
-import { toast } from "sonner"
-import { Button } from "@/components/ui/button"
-import { Footer } from "@/components/footer"
+import { use, useEffect, useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { Heart, Minus, Plus, ChevronRight, Truck, RotateCcw, Shield } from 'lucide-react';
+import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
+import { Footer } from '@/components/footer';
+import { WriteReviewModal } from '@/components/write-review-modal';
+import { StarRating } from '@/components/star-rating';
 import {
   addProductToCart,
   formatPriceEgp,
@@ -14,79 +16,120 @@ import {
   getMatchingVariantId,
   getProductBySlug,
   getRelatedProducts,
+  getProductReviews,
   isProductWishlisted,
   toggleProductInWishlist,
   type Product,
-} from "@/lib/products"
+  type Review,
+  type ReviewsResponse,
+} from '@/lib/products';
 
 interface ProductPageProps {
-  params: Promise<{ slug: string }>
+  params: Promise<{ slug: string }>;
 }
 
-function ProductDetails({ product, relatedProducts }: { product: Product; relatedProducts: Product[] }) {
-  const hasSizes = product.sizes.length > 0
-  const [selectedSize, setSelectedSize] = useState<string>(hasSizes ? product.sizes[0] ?? "" : "")
-  const [selectedColor, setSelectedColor] = useState(product.colors[0] ?? { name: "Default", hex: "#888888" })
+function ProductDetails({
+  product,
+  relatedProducts,
+}: {
+  product: Product;
+  relatedProducts: Product[];
+}) {
+  const hasSizes = product.sizes.length > 0;
+  const [selectedSize, setSelectedSize] = useState<string>(
+    hasSizes ? (product.sizes[0] ?? '') : '',
+  );
+  const [selectedColor, setSelectedColor] = useState(
+    product.colors[0] ?? { name: 'Default', hex: '#888888' },
+  );
   const [galleryImages, setGalleryImages] = useState<string[]>(
     getImagesForProductColor(product, product.colors[0]?.name),
-  )
-  const [selectedImageIndex, setSelectedImageIndex] = useState(0)
-  const [quantity, setQuantity] = useState(1)
-  const [activeTab, setActiveTab] = useState<"description" | "details" | "shipping">("description")
-  const [isAddingToCart, setIsAddingToCart] = useState(false)
-  const [isAddingToWishlist, setIsAddingToWishlist] = useState(false)
-  const [isWishlisted, setIsWishlisted] = useState(false)
+  );
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [quantity, setQuantity] = useState(1);
+  const [activeTab, setActiveTab] = useState<'description' | 'details' | 'shipping'>(
+    'description',
+  );
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const [isAddingToWishlist, setIsAddingToWishlist] = useState(false);
+  const [isWishlisted, setIsWishlisted] = useState(false);
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [reviewsData, setReviewsData] = useState<ReviewsResponse | null>(null);
+  const [isLoadingReviews, setIsLoadingReviews] = useState(true);
+  const [isWriteReviewModalOpen, setIsWriteReviewModalOpen] = useState(false);
 
   useEffect(() => {
-    const nextImages = getImagesForProductColor(product, selectedColor.name)
-    setGalleryImages(nextImages)
-    setSelectedImageIndex(0)
-  }, [product, selectedColor.name])
+    const nextImages = getImagesForProductColor(product, selectedColor.name);
+    setGalleryImages(nextImages);
+    setSelectedImageIndex(0);
+  }, [product, selectedColor.name]);
 
   useEffect(() => {
     const checkStatus = async () => {
-      const status = await isProductWishlisted(product.id)
-      setIsWishlisted(status)
-    }
-    void checkStatus()
-  }, [product.id])
+      const status = await isProductWishlisted(product.id);
+      setIsWishlisted(status);
+    };
+    void checkStatus();
+  }, [product.id]);
+
+  useEffect(() => {
+    const loadReviews = async () => {
+      try {
+        setIsLoadingReviews(true);
+        const reviewsResponse = await getProductReviews(product.id);
+        if (reviewsResponse) {
+          setReviewsData(reviewsResponse);
+          setReviews(reviewsResponse.data);
+        }
+      } catch {
+        // Handle error silently, show empty reviews
+        setReviews([]);
+      } finally {
+        setIsLoadingReviews(false);
+      }
+    };
+
+    void loadReviews();
+  }, [product.id]);
 
   const handleToggleWishlist = async () => {
-    setIsAddingToWishlist(true)
+    setIsAddingToWishlist(true);
     try {
-      const nextValue = await toggleProductInWishlist(product)
-      setIsWishlisted(nextValue)
-      toast.success(nextValue ? "Added to wishlist" : "Removed from wishlist")
+      const nextValue = await toggleProductInWishlist(product);
+      setIsWishlisted(nextValue);
+      toast.success(nextValue ? 'Added to wishlist' : 'Removed from wishlist');
     } catch {
-      toast.error("Please login to add items to your wishlist")
+      toast.error('Please login to add items to your wishlist');
     } finally {
-      setIsAddingToWishlist(false)
+      setIsAddingToWishlist(false);
     }
-  }
+  };
 
-  const canNavigateGallery = galleryImages.length > 1
-  const activeImage = galleryImages[selectedImageIndex] ?? product.image
-  const requiresSizeSelection = hasSizes && !selectedSize
+  const canNavigateGallery = galleryImages.length > 1;
+  const activeImage = galleryImages[selectedImageIndex] ?? product.image;
+  const requiresSizeSelection = hasSizes && !selectedSize;
   const colorPreviewImages = product.colors.map((color) => ({
     color,
     image: getImagesForProductColor(product, color.name)[0] ?? product.image,
-  }))
+  }));
 
   const showNextImage = () => {
     if (!canNavigateGallery) {
-      return
+      return;
     }
 
-    setSelectedImageIndex((prev) => (prev + 1) % galleryImages.length)
-  }
+    setSelectedImageIndex((prev) => (prev + 1) % galleryImages.length);
+  };
 
   const showPreviousImage = () => {
     if (!canNavigateGallery) {
-      return
+      return;
     }
 
-    setSelectedImageIndex((prev) => (prev - 1 + galleryImages.length) % galleryImages.length)
-  }
+    setSelectedImageIndex(
+      (prev) => (prev - 1 + galleryImages.length) % galleryImages.length,
+    );
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -103,7 +146,10 @@ function ProductDetails({ product, relatedProducts }: { product: Product; relate
             </li>
             <ChevronRight className="h-4 w-4" />
             <li>
-              <Link href="/collections" className="hover:text-foreground transition-colors">
+              <Link
+                href="/collections"
+                className="hover:text-foreground transition-colors"
+              >
                 Collections
               </Link>
             </li>
@@ -142,13 +188,13 @@ function ProductDetails({ product, relatedProducts }: { product: Product; relate
                   onClick={showNextImage}
                   onWheel={(event) => {
                     if (!canNavigateGallery) {
-                      return
+                      return;
                     }
 
                     if (event.deltaY > 0) {
-                      showNextImage()
+                      showNextImage();
                     } else if (event.deltaY < 0) {
-                      showPreviousImage()
+                      showPreviousImage();
                     }
                   }}
                   className="absolute inset-0 z-10"
@@ -172,10 +218,11 @@ function ProductDetails({ product, relatedProducts }: { product: Product; relate
                     <button
                       key={color.name}
                       onClick={() => setSelectedColor(color)}
-                      className={`relative w-16 aspect-square bg-muted overflow-hidden border-2 transition-colors ${selectedColor.name === color.name
-                        ? "border-foreground"
-                        : "border-transparent hover:border-muted-foreground"
-                        }`}
+                      className={`relative w-16 aspect-square bg-muted overflow-hidden border-2 transition-colors ${
+                        selectedColor.name === color.name
+                          ? 'border-foreground'
+                          : 'border-transparent hover:border-muted-foreground'
+                      }`}
                       aria-label={`Switch to ${color.name} color`}
                       title={color.name}
                     >
@@ -209,7 +256,9 @@ function ProductDetails({ product, relatedProducts }: { product: Product; relate
                       {formatPriceEgp(product.originalPrice)}
                     </span>
                   )}
-                  <span className={`text-xl ${product.isSale ? "text-accent" : "text-foreground/70"}`}>
+                  <span
+                    className={`text-xl ${product.isSale ? 'text-accent' : 'text-foreground/70'}`}
+                  >
                     {formatPriceEgp(product.price)}
                   </span>
                 </div>
@@ -223,17 +272,20 @@ function ProductDetails({ product, relatedProducts }: { product: Product; relate
               <div className="mb-6">
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-sm font-medium text-foreground">Color</span>
-                  <span className="text-sm text-muted-foreground">{selectedColor.name}</span>
+                  <span className="text-sm text-muted-foreground">
+                    {selectedColor.name}
+                  </span>
                 </div>
                 <div className="flex gap-3">
                   {product.colors.map((color) => (
                     <button
                       key={color.name}
                       onClick={() => setSelectedColor(color)}
-                      className={`w-10 h-10 rounded-full border-2 transition-all ${selectedColor.name === color.name
-                        ? "border-foreground scale-110"
-                        : "border-transparent hover:border-muted-foreground"
-                        }`}
+                      className={`w-10 h-10 rounded-full border-2 transition-all ${
+                        selectedColor.name === color.name
+                          ? 'border-foreground scale-110'
+                          : 'border-transparent hover:border-muted-foreground'
+                      }`}
                       style={{ backgroundColor: color.hex }}
                       aria-label={color.name}
                     />
@@ -255,10 +307,11 @@ function ProductDetails({ product, relatedProducts }: { product: Product; relate
                       <button
                         key={size}
                         onClick={() => setSelectedSize(size)}
-                        className={`min-w-[3rem] px-4 py-2.5 text-sm border transition-colors ${selectedSize === size
-                          ? "border-foreground bg-foreground text-background"
-                          : "border-border hover:border-foreground"
-                          }`}
+                        className={`min-w-[3rem] px-4 py-2.5 text-sm border transition-colors ${
+                          selectedSize === size
+                            ? 'border-foreground bg-foreground text-background'
+                            : 'border-border hover:border-foreground'
+                        }`}
                       >
                         {size}
                       </button>
@@ -290,22 +343,26 @@ function ProductDetails({ product, relatedProducts }: { product: Product; relate
                   className="flex-1 rounded-full bg-foreground text-background hover:bg-foreground/90 h-auto py-3 text-sm uppercase tracking-wider"
                   disabled={requiresSizeSelection}
                   onClick={async () => {
-                    setIsAddingToCart(true)
+                    setIsAddingToCart(true);
                     try {
                       const variantId = getMatchingVariantId(product, {
                         size: selectedSize,
                         color: selectedColor.name,
-                      })
-                      await addProductToCart(product, quantity, variantId)
-                      toast.success("Added to cart")
+                      });
+                      await addProductToCart(product, quantity, variantId);
+                      toast.success('Added to cart');
                     } catch {
-                      toast.error("Could not add this product to cart")
+                      toast.error('Could not add this product to cart');
                     } finally {
-                      setIsAddingToCart(false)
+                      setIsAddingToCart(false);
                     }
                   }}
                 >
-                  {requiresSizeSelection ? "Select a Size" : isAddingToCart ? "Adding..." : "Add to Bag"}
+                  {requiresSizeSelection
+                    ? 'Select a Size'
+                    : isAddingToCart
+                      ? 'Adding...'
+                      : 'Add to Bag'}
                 </Button>
                 <Button
                   variant="outline"
@@ -315,7 +372,7 @@ function ProductDetails({ product, relatedProducts }: { product: Product; relate
                   onClick={handleToggleWishlist}
                   disabled={isAddingToWishlist}
                 >
-                  <Heart className={`h-5 w-5 ${isWishlisted ? "fill-current" : ""}`} />
+                  <Heart className={`h-5 w-5 ${isWishlisted ? 'fill-current' : ''}`} />
                 </Button>
               </div>
 
@@ -338,36 +395,40 @@ function ProductDetails({ product, relatedProducts }: { product: Product; relate
               {/* Product tabs */}
               <div className="border-t border-border mt-8 pt-8">
                 <div className="flex border-b border-border">
-                  {(["description", "details", "shipping"] as const).map((tab) => (
+                  {(['description', 'details', 'shipping'] as const).map((tab) => (
                     <button
                       key={tab}
                       onClick={() => setActiveTab(tab)}
-                      className={`px-4 py-3 text-sm font-medium capitalize transition-colors border-b-2 -mb-[2px] ${activeTab === tab
-                        ? "text-foreground border-foreground"
-                        : "text-muted-foreground border-transparent hover:text-foreground"
-                        }`}
+                      className={`px-4 py-3 text-sm font-medium capitalize transition-colors border-b-2 -mb-[2px] ${
+                        activeTab === tab
+                          ? 'text-foreground border-foreground'
+                          : 'text-muted-foreground border-transparent hover:text-foreground'
+                      }`}
                     >
                       {tab}
                     </button>
                   ))}
                 </div>
                 <div className="py-6">
-                  {activeTab === "description" && (
+                  {activeTab === 'description' && (
                     <p className="text-sm text-muted-foreground leading-relaxed">
                       {product.description}
                     </p>
                   )}
-                  {activeTab === "details" && (
+                  {activeTab === 'details' && (
                     <ul className="space-y-2">
                       {product.details.map((detail, i) => (
-                        <li key={i} className="text-sm text-muted-foreground flex items-start gap-2">
+                        <li
+                          key={i}
+                          className="text-sm text-muted-foreground flex items-start gap-2"
+                        >
                           <span className="text-foreground">-</span>
                           {detail}
                         </li>
                       ))}
                     </ul>
                   )}
-                  {activeTab === "shipping" && (
+                  {activeTab === 'shipping' && (
                     <div className="text-sm text-muted-foreground space-y-4">
                       <p>- Standard shipping: 5-7 business days</p>
                       <p>- Express shipping: 2-3 business days</p>
@@ -384,7 +445,7 @@ function ProductDetails({ product, relatedProducts }: { product: Product; relate
         {relatedProducts.length > 0 && (
           <section className="border-t border-border py-16">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-              <h2 className="text-2xl font-light text-foreground text-center mb-12">
+              <h2 className="text-2xl font-semibold text-foreground text-center mb-12">
                 You May Also Like
               </h2>
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-10 sm:gap-x-6 lg:gap-x-8">
@@ -412,7 +473,9 @@ function ProductDetails({ product, relatedProducts }: { product: Product; relate
                       <h3 className="text-sm font-medium text-foreground transition-colors">
                         {relatedProduct.name}
                       </h3>
-                      <p className="mt-1 text-sm text-foreground">{formatPriceEgp(relatedProduct.price)}</p>
+                      <p className="mt-1 text-sm text-foreground">
+                        {formatPriceEgp(relatedProduct.price)}
+                      </p>
                     </div>
                   </Link>
                 ))}
@@ -420,42 +483,159 @@ function ProductDetails({ product, relatedProducts }: { product: Product; relate
             </div>
           </section>
         )}
+
+        {/* Reviews section */}
+        <section className="border-t border-border py-16">
+          <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+            <div className="mb-12">
+              <div className="flex items-start justify-between mb-4">
+                <div>
+                  <h2 className="text-2xl font-semibold text-foreground mb-2">
+                    Customer Reviews
+                  </h2>
+                  <p className="text-sm text-muted-foreground">
+                    {reviewsData?.meta.totalReviews ?? 0} customer review
+                    {(reviewsData?.meta.totalReviews ?? 0) !== 1 ? 's' : ''}
+                  </p>
+                </div>
+                {reviewsData && reviewsData.meta.averageRating > 0 && (
+                  <div className="text-right">
+                    <StarRating
+                      rating={reviewsData.meta.averageRating}
+                      showValue={true}
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Based on {reviewsData.meta.totalReviews} review
+                      {reviewsData.meta.totalReviews !== 1 ? 's' : ''}
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {isLoadingReviews ? (
+              <div className="text-center py-8">
+                <p className="text-sm text-muted-foreground">Loading reviews...</p>
+              </div>
+            ) : reviews.length === 0 ? (
+              <>
+                {/* No reviews yet */}
+                <div className="bg-muted/50 rounded-lg p-8 text-center mb-8">
+                  <p className="text-sm text-muted-foreground mb-4">
+                    No reviews yet. Be the first to share your experience!
+                  </p>
+                  <Button
+                    onClick={() => setIsWriteReviewModalOpen(true)}
+                    className="bg-foreground text-background hover:bg-foreground/90 rounded-full text-sm uppercase tracking-wider"
+                  >
+                    Write a Review
+                  </Button>
+                </div>
+              </>
+            ) : (
+              <>
+                {/* Display reviews */}
+                <div className="space-y-6 mb-8">
+                  {reviews.map((review) => (
+                    <div key={review.id} className="border border-border rounded-lg p-6">
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex-1">
+                          <StarRating rating={review.rating} showValue={false} />
+                          <p className="text-xs text-muted-foreground mt-2">
+                            by {review.user.email}
+                          </p>
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                          {new Date(review.createdAt).toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric',
+                          })}
+                        </p>
+                      </div>
+                      {review.body && (
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                          {review.body}
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Write review CTA */}
+                {reviews.length > 0 && (
+                  <div className="border border-border rounded-lg p-8 text-center">
+                    <h3 className="text-lg font-medium text-foreground mb-2">
+                      Share Your Experience
+                    </h3>
+                    <p className="text-sm text-muted-foreground mb-6">
+                      Have you purchased this product? Help other customers by sharing
+                      your honest review and rating.
+                    </p>
+                    <Button
+                      onClick={() => setIsWriteReviewModalOpen(true)}
+                      className="bg-foreground text-background hover:bg-foreground/90 rounded-full text-sm uppercase tracking-wider"
+                    >
+                      Write a Review
+                    </Button>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        </section>
+
+        {/* Write Review Modal */}
+        <WriteReviewModal
+          isOpen={isWriteReviewModalOpen}
+          onClose={() => setIsWriteReviewModalOpen(false)}
+          productId={product.id}
+          productName={product.name}
+          onReviewSubmitted={async () => {
+            // Refresh reviews after submission
+            const reviewsResponse = await getProductReviews(product.id);
+            if (reviewsResponse) {
+              setReviewsData(reviewsResponse);
+              setReviews(reviewsResponse.data);
+            }
+          }}
+        />
       </main>
     </div>
-  )
+  );
 }
 
 export default function ProductPage({ params }: ProductPageProps) {
-  const resolvedParams = use(params)
-  const [product, setProduct] = useState<Product | null>(null)
-  const [relatedProducts, setRelatedProducts] = useState<Product[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const resolvedParams = use(params);
+  const [product, setProduct] = useState<Product | null>(null);
+  const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const loadProduct = async () => {
       try {
-        setIsLoading(true)
-        setError(null)
-        const loadedProduct = await getProductBySlug(resolvedParams.slug)
+        setIsLoading(true);
+        setError(null);
+        const loadedProduct = await getProductBySlug(resolvedParams.slug);
         if (!loadedProduct) {
-          setError("This product could not be found.")
-          setProduct(null)
-          setRelatedProducts([])
-          return
+          setError('This product could not be found.');
+          setProduct(null);
+          setRelatedProducts([]);
+          return;
         }
-        setProduct(loadedProduct)
-        const related = await getRelatedProducts(loadedProduct, 4)
-        setRelatedProducts(related)
+        setProduct(loadedProduct);
+        const related = await getRelatedProducts(loadedProduct, 4);
+        setRelatedProducts(related);
       } catch {
-        setError("We could not load this product right now. Please try again.")
+        setError('We could not load this product right now. Please try again.');
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
-    }
+    };
 
-    void loadProduct()
-  }, [resolvedParams.slug])
+    void loadProduct();
+  }, [resolvedParams.slug]);
 
   if (isLoading) {
     return (
@@ -464,7 +644,7 @@ export default function ProductPage({ params }: ProductPageProps) {
           <p className="text-sm text-muted-foreground">Loading product...</p>
         </main>
       </div>
-    )
+    );
   }
 
   if (!product) {
@@ -472,9 +652,11 @@ export default function ProductPage({ params }: ProductPageProps) {
       <div className="min-h-screen bg-background">
         {/* <Header /> */}
         <main className="pt-24 pb-16 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <h1 className="text-2xl font-light text-foreground mb-3">Product unavailable</h1>
+          <h1 className="text-2xl font-light text-foreground mb-3">
+            Product unavailable
+          </h1>
           <p className="text-sm text-muted-foreground mb-6">
-            {error ?? "This product could not be found."}
+            {error ?? 'This product could not be found.'}
           </p>
           <Link href="/collections" className="text-sm underline text-foreground">
             Back to Collections
@@ -482,8 +664,14 @@ export default function ProductPage({ params }: ProductPageProps) {
         </main>
         <Footer />
       </div>
-    )
+    );
   }
 
-  return <ProductDetails key={product.id} product={product} relatedProducts={relatedProducts} />
+  return (
+    <ProductDetails
+      key={product.id}
+      product={product}
+      relatedProducts={relatedProducts}
+    />
+  );
 }
