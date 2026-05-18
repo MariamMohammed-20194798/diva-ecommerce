@@ -74,6 +74,7 @@ function ProductDetails({
 
   useEffect(() => {
     const nextImages = getImagesForProductColor(product, selectedColor.name);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setGalleryImages(nextImages);
     setSelectedImageIndex(0);
   }, [product, selectedColor.name]);
