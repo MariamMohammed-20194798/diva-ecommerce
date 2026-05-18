@@ -4,10 +4,7 @@ import {
   fetchWishlist,
   addToWishlist as apiAddToWishlist,
   removeFromWishlist as apiRemoveFromWishlist,
-  checkWishlistStatus,
-  WISHLIST_UPDATED_EVENT,
   subscribeToWishlistUpdates as apiSubscribeToWishlistUpdates,
-  notifyWishlistUpdated,
 } from '@/lib/wishlist';
 
 export interface Product {
@@ -81,6 +78,7 @@ export interface Review {
   createdAt: string;
   updatedAt: string;
   user: {
+    name: string;
     id: string;
     email: string;
   };
@@ -275,7 +273,7 @@ export async function addProductToWishlist(product: WishlistProduct): Promise<vo
   } else {
     // If we only have product ID, we might need to fetch the product first to get a variant
     const fullProduct = await getProductBySlug(
-      (product as any).slug || (product as any).id,
+      (product as Product).slug || (product as Product).id,
     );
     variantId = fullProduct?.variantIds[0];
   }
@@ -285,7 +283,7 @@ export async function addProductToWishlist(product: WishlistProduct): Promise<vo
   }
 
   // Use the provided image if available (WishlistProduct might have it, or Product has it as 'image')
-  const image = (product as any).image || (product as any).images?.[0];
+  const image = (product as Product).image || (product as Product).images?.[0];
 
   await apiAddToWishlist(variantId, image);
 }

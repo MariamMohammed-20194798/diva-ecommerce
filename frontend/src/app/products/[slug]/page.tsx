@@ -597,7 +597,7 @@ function ProductDetails({
                         <p className="text-xs text-muted-foreground">
                           by{' '}
                           <span className="font-medium text-foreground">
-                            {review.user.email.split('@')[0]}
+                            {review.user.name || review.user.email.split('@')[0]}
                           </span>
                         </p>
                       </div>
