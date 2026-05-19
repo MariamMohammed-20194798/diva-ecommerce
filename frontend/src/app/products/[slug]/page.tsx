@@ -289,13 +289,28 @@ function ProductDetails({
             {/* Product info */}
             <div className="lg:sticky lg:top-24 lg:self-start">
               <div className="mb-6">
-                <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground mb-2">
+              <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground mb-2">
                   {product.category}
                 </p>
-                <h1 className="text-3xl lg:text-4xl font-light text-foreground tracking-tight mb-4">
-                  {product.name}
-                </h1>
-                <div className="flex items-center gap-3">
+
+                <div className="flex items-start justify-between gap-4 mb-4">
+                  <h1 className="text-3xl lg:text-4xl font-light text-foreground tracking-tight">
+                    {product.name}
+                  </h1>
+
+                  <Button
+                    variant="outline"
+                    className="rounded-full border-border shrink-0 h-12 w-12 p-0"
+                    aria-label="Add to wishlist"
+                    onClick={handleToggleWishlist}
+                    disabled={isAddingToWishlist}
+                  >
+                      <Heart
+                        className={`!h-6 !w-6 ${isWishlisted ? 'fill-current' : ''}`}
+                      />
+                  </Button>
+                </div>
+                <div className="flex items-center">
                   {product.originalPrice && (
                     <span className="text-xl text-muted-foreground line-through">
                       {formatPriceEgp(product.originalPrice)}
@@ -409,16 +424,6 @@ function ProductDetails({
                       ? 'Adding...'
                       : 'Add to Bag'}
                 </Button>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="rounded-full h-auto aspect-square border-border"
-                  aria-label="Add to wishlist"
-                  onClick={handleToggleWishlist}
-                  disabled={isAddingToWishlist}
-                >
-                  <Heart className={`h-5 w-5 ${isWishlisted ? 'fill-current' : ''}`} />
-                </Button>
               </div>
 
               {/* Shipping info */}
@@ -488,9 +493,9 @@ function ProductDetails({
 
         {/* Related products */}
         {relatedProducts.length > 0 && (
-          <section className="border-t border-border py-16">
+          <section className="border-t border-border py-10">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-              <h2 className="text-2xl font-semibold text-foreground text-center mb-12">
+              <h2 className="text-2xl font-semibold text-foreground text-center">
                 You May Also Like
               </h2>
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-10 sm:gap-x-6 lg:gap-x-8">
@@ -531,13 +536,13 @@ function ProductDetails({
 
         {/* Reviews section */}
         {reviews.length > 0 && (
-          <section className="border-t border-border py-16">
+          <section className="border-t border-border py-10">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-              <div className="flex items-center justify-between mb-12">
-                <div>
-                  <h2 className="text-2xl font-semibold text-foreground mb-2">
-                    Customer Reviews
+            <h2 className="text-2xl font-semibold text-foreground text-center mb-6">
+            Get other girls’ feedback
                   </h2>
+              <div className="flex items-center justify-between mb-3">      
+                <div>        
                   <p className="text-sm text-muted-foreground">
                     {reviewsData?.meta.totalReviews ?? 0} customer review
                     {(reviewsData?.meta.totalReviews ?? 0) !== 1 ? 's' : ''}
@@ -565,7 +570,7 @@ function ProductDetails({
                 <div
                   ref={reviewsScrollerRef}
                   onScroll={updateReviewsScrollState}
-                  className="flex snap-x snap-mandatory gap-6 overflow-x-auto pb-4 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+                  className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-4 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
                 >
                   {reviews.map((review) => (
                     <motion.div
@@ -640,19 +645,12 @@ function ProductDetails({
               </div>
 
               {/* Write review CTA */}
-              <div className="mt-12 border border-border rounded-lg p-8 text-center">
-                <h3 className="text-lg font-medium text-foreground mb-2">
-                  Share Your Experience
-                </h3>
-                <p className="text-sm text-muted-foreground mb-6">
-                  Have you purchased this product? Help other customers by sharing your
-                  honest review and rating.
-                </p>
+              <div className="mt-12 text-center">
                 <Button
                   onClick={() => setIsWriteReviewModalOpen(true)}
-                  className="bg-foreground text-background hover:bg-foreground/90 rounded-full text-sm uppercase tracking-wider"
+                  className="bg-foreground text-background w-60 h-12 hover:bg-foreground/90 rounded-full text-lg tracking-wider"
                 >
-                  Write a Review
+                  Write a review
                 </Button>
               </div>
             </div>
@@ -663,11 +661,10 @@ function ProductDetails({
         {!isLoadingReviews && reviews.length === 0 && (
           <section className="border-t border-border py-16">
             <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-              <div className="text-center mb-8">
-                <h2 className="text-2xl font-semibold text-foreground mb-2">
-                  Customer Reviews
+              <div className="text-center">
+                <h2 className="text-2xl font-semibold text-foreground">
+                  Get other girls’ feedback
                 </h2>
-                <p className="text-sm text-muted-foreground">No reviews yet</p>
               </div>
 
               <div className="bg-muted/50 rounded-lg p-12 text-center">
@@ -676,7 +673,7 @@ function ProductDetails({
                 </p>
                 <Button
                   onClick={() => setIsWriteReviewModalOpen(true)}
-                  className="bg-foreground text-background hover:bg-foreground/90 rounded-full text-sm uppercase tracking-wider"
+                  className="bg-foreground text-background w-60 h-12 hover:bg-foreground/90 rounded-full text-lg tracking-wider"
                 >
                   Write a Review
                 </Button>
