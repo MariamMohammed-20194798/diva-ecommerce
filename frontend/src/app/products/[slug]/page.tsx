@@ -289,7 +289,7 @@ function ProductDetails({
             {/* Product info */}
             <div className="lg:sticky lg:top-24 lg:self-start">
               <div className="mb-6">
-              <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground mb-2">
+                <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground mb-2">
                   {product.category}
                 </p>
 
@@ -305,9 +305,9 @@ function ProductDetails({
                     onClick={handleToggleWishlist}
                     disabled={isAddingToWishlist}
                   >
-                      <Heart
-                        className={`!h-6 !w-6 ${isWishlisted ? 'fill-current' : ''}`}
-                      />
+                    <Heart
+                      className={`!h-6 !w-6 ${isWishlisted ? 'fill-current' : ''}`}
+                    />
                   </Button>
                 </div>
                 <div className="flex items-center">
@@ -538,11 +538,11 @@ function ProductDetails({
         {reviews.length > 0 && (
           <section className="border-t border-border py-10">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <h2 className="text-2xl font-semibold text-foreground text-center mb-6">
-            Get other girls’ feedback
-                  </h2>
-              <div className="flex items-center justify-between mb-3">      
-                <div>        
+              <h2 className="text-2xl font-semibold text-foreground text-center mb-6">
+                Get other girls’ feedback
+              </h2>
+              <div className="flex items-center justify-between mb-3">
+                <div>
                   <p className="text-sm text-muted-foreground">
                     {reviewsData?.meta.totalReviews ?? 0} customer review
                     {(reviewsData?.meta.totalReviews ?? 0) !== 1 ? 's' : ''}
