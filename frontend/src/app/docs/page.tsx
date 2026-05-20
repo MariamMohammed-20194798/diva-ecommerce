@@ -1,9 +1,16 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
+const LOCAL_DOCS_URL = 'http://localhost:3002/introduction';
+const PRODUCTION_DOCS_URL = process.env.NEXT_PUBLIC_DOCS_URL;
+
 export default function DocsPage() {
   if (process.env.NODE_ENV === 'development') {
-    redirect('http://localhost:3002/introduction');
+    redirect(LOCAL_DOCS_URL);
+  }
+
+  if (PRODUCTION_DOCS_URL) {
+    redirect(PRODUCTION_DOCS_URL);
   }
 
   return (
@@ -15,7 +22,8 @@ export default function DocsPage() {
           </p>
           <h1 className="text-4xl font-semibold tracking-tight">Project docs</h1>
           <p className="text-base leading-7 text-muted-foreground">
-            This route opens the Mintlify docs site from the repository `docs/` folder.
+            In production, this route should open your deployed Mintlify docs site using
+            the `NEXT_PUBLIC_DOCS_URL` environment variable.
           </p>
         </div>
 
@@ -29,7 +37,7 @@ export default function DocsPage() {
               pnpm run docs:dev
             </pre>
             <a
-              href="http://localhost:3002/introduction"
+              href={PRODUCTION_DOCS_URL ?? LOCAL_DOCS_URL}
               className="mt-4 inline-flex items-center rounded-full bg-foreground px-4 py-2 text-sm font-medium text-background hover:bg-muted transition"
             >
               Open docs in new tab
