@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import { usePathname, useRouter } from "next/navigation"
+import { usePathname } from "next/navigation"
 import { Search, ShoppingBag, User, Menu, X, Heart } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { fetchCart, subscribeToCartUpdates } from "@/lib/cart"
@@ -19,18 +19,17 @@ const navigation = [
 
 export function Header() {
   const pathname = usePathname()
-  const router = useRouter()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [wishlistedProductIds, setWishlistedProductIds] = useState<string[]>([])
   const [cartItemCount, setCartItemCount] = useState(0)
   const [isScrolled, setIsScrolled] = useState(false);
-  const [accountHref, setAccountHref] = useState("/auth");
+  // const [accountHref, setAccountHref] = useState("/auth");
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setAccountHref(window.localStorage.getItem("accessToken") ? "/account" : "/auth");
-    }
-  }, [pathname]);
+  const accountHref =
+  typeof window !== "undefined" &&
+  window.localStorage.getItem("accessToken")
+    ? "/account"
+    : "/auth";
 
 
   useEffect(() => {
