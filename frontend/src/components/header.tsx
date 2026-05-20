@@ -1,104 +1,98 @@
-"use client"
+'use client';
 
-import { useEffect, useState } from "react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { Search, ShoppingBag, User, Menu, X, Heart } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { fetchCart, subscribeToCartUpdates } from "@/lib/cart"
-import { getWishlistProductIds, subscribeToWishlistUpdates } from "@/lib/products"
-import { motion } from "framer-motion"
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { Search, ShoppingBag, User, Menu, X, Heart } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { fetchCart, subscribeToCartUpdates } from '@/lib/cart';
+import { getWishlistProductIds, subscribeToWishlistUpdates } from '@/lib/products';
+import { motion } from 'framer-motion';
+import { useAuth } from '@/hooks/useAuth';
 
 const navigation = [
-  { name: "Home", href: "/" },
+  { name: 'Home', href: '/' },
   // { name: "New Arrivals", href: "/collection" },
-  { name: "Collections", href: "/collections" },
+  { name: 'Collections', href: '/collections' },
   // { name: "Size Guide", href: "/size-guide" },
-  { name: "Our Story", href: "/our-story" },
-]
+  { name: 'Our Story', href: '/our-story' },
+];
 
 export function Header() {
-  const pathname = usePathname()
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [wishlistedProductIds, setWishlistedProductIds] = useState<string[]>([])
-  const [cartItemCount, setCartItemCount] = useState(0)
+  const pathname = usePathname();
+  const { isAuthenticated } = useAuth();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [wishlistedProductIds, setWishlistedProductIds] = useState<string[]>([]);
+  const [cartItemCount, setCartItemCount] = useState(0);
   const [isScrolled, setIsScrolled] = useState(false);
-  // const [accountHref, setAccountHref] = useState("/auth");
 
-  const accountHref =
-  typeof window !== "undefined" &&
-  window.localStorage.getItem("accessToken")
-    ? "/account"
-    : "/auth";
-
+  const accountHref = isAuthenticated ? '/account' : '/auth';
 
   useEffect(() => {
     const syncWishlist = async () => {
       try {
-        const ids = await getWishlistProductIds()
-        setWishlistedProductIds(ids)
+        const ids = await getWishlistProductIds();
+        setWishlistedProductIds(ids);
       } catch {
-        setWishlistedProductIds([])
+        setWishlistedProductIds([]);
       }
-    }
+    };
 
-    void syncWishlist()
-    window.addEventListener("focus", syncWishlist)
+    void syncWishlist();
+    window.addEventListener('focus', syncWishlist);
     const unsubscribe = subscribeToWishlistUpdates(() => {
-      void syncWishlist()
-    })
+      void syncWishlist();
+    });
 
     return () => {
-      window.removeEventListener("focus", syncWishlist)
-      unsubscribe()
-    }
-  }, [])
+      window.removeEventListener('focus', syncWishlist);
+      unsubscribe();
+    };
+  }, []);
 
   useEffect(() => {
     const syncCart = async () => {
       try {
-        const cart = await fetchCart()
-        setCartItemCount(cart.itemCount ?? 0)
+        const cart = await fetchCart();
+        setCartItemCount(cart.itemCount ?? 0);
       } catch {
-        setCartItemCount(0)
+        setCartItemCount(0);
       }
-    }
+    };
 
-    void syncCart()
-    window.addEventListener("focus", syncCart)
+    void syncCart();
+    window.addEventListener('focus', syncCart);
     const unsubscribe = subscribeToCartUpdates(() => {
-      void syncCart()
-    })
+      void syncCart();
+    });
 
     return () => {
-      window.removeEventListener("focus", syncCart)
-      unsubscribe()
-    }
-  }, [])
+      window.removeEventListener('focus', syncCart);
+      unsubscribe();
+    };
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
     };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  if (pathname === "/auth" || pathname === "/verify-email" || pathname === "/account") {
-    return null
+  if (pathname === '/auth' || pathname === '/verify-email' || pathname === '/account') {
+    return null;
   }
-
 
   return (
     <>
       <motion.header
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled
-          ? "bg-background/90 backdrop-blur-md shadow-sm"
-          : "bg-transparent"
-          }`}
+        transition={{ duration: 0.6, ease: 'easeOut' }}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+          isScrolled ? 'bg-background/90 backdrop-blur-md shadow-sm' : 'bg-transparent'
+        }`}
       >
         <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
@@ -110,13 +104,20 @@ export function Header() {
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 aria-label="Toggle menu"
               >
-                {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+                {mobileMenuOpen ? (
+                  <X className="h-5 w-5" />
+                ) : (
+                  <Menu className="h-5 w-5" />
+                )}
               </Button>
             </div>
 
             {/* Logo */}
             <div className="flex lg:flex-1">
-              <Link href="/" className="text-2xl font-light tracking-[0.3em] text-foreground">
+              <Link
+                href="/"
+                className="text-2xl font-light tracking-[0.3em] text-foreground"
+              >
                 DIVA
               </Link>
             </div>
@@ -140,11 +141,18 @@ export function Header() {
                 <Search className="h-5 w-5" />
               </Button>
               <Link href="/wishlist" className="hidden sm:block">
-                <Button variant="ghost" size="icon" aria-label="Wishlist" className="relative">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  aria-label="Wishlist"
+                  className="relative"
+                >
                   <Heart className="h-5 w-5" />
-                  {wishlistedProductIds.length > 0 && <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-accent text-[10px] font-medium text-accent-foreground flex items-center justify-center">
-                    {wishlistedProductIds.length}
-                  </span>}
+                  {wishlistedProductIds.length > 0 && (
+                    <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-accent text-[10px] font-medium text-accent-foreground flex items-center justify-center">
+                      {wishlistedProductIds.length}
+                    </span>
+                  )}
                 </Button>
               </Link>
               <Link href={accountHref}>
@@ -154,11 +162,18 @@ export function Header() {
               </Link>
 
               <Link href="/cart">
-                <Button variant="ghost" size="icon" className="relative" aria-label="Shopping bag">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="relative"
+                  aria-label="Shopping bag"
+                >
                   <ShoppingBag className="h-5 w-5" />
-                  {cartItemCount > 0 && <span className="absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 text-[10px] font-medium text-accent-foreground">
-                    {cartItemCount}
-                  </span>}
+                  {cartItemCount > 0 && (
+                    <span className="absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 text-[10px] font-medium text-accent-foreground">
+                      {cartItemCount}
+                    </span>
+                  )}
                 </Button>
               </Link>
             </div>
@@ -183,6 +198,6 @@ export function Header() {
           )}
         </nav>
       </motion.header>
-    </>)
+    </>
+  );
 }
-

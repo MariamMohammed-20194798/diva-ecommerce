@@ -1,11 +1,12 @@
-"use client";
+'use client';
 
-import { FormEvent, useEffect, useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { CircleUserRound, Info, Pencil } from "lucide-react";
-import axios from "axios";
-import api from "@/lib/api";
+import { FormEvent, useEffect, useState } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { CircleUserRound, Info, Pencil } from 'lucide-react';
+import axios from 'axios';
+import api from '@/lib/api';
+import { isTokenExpired } from '@/lib/jwt';
 import {
   Dialog,
   DialogContent,
@@ -14,9 +15,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from '@/components/ui/dialog';
 
-type Tab = "profile" | "orders";
+type Tab = 'profile' | 'orders';
 
 type UserState = {
   id: string;
@@ -114,9 +115,9 @@ function getApiErrorMessage(error: unknown, fallback: string) {
   if (axios.isAxiosError(error)) {
     const message = error.response?.data?.message;
     if (Array.isArray(message) && message.length > 0) {
-      return message.join(", ");
+      return message.join(', ');
     }
-    if (typeof message === "string" && message.trim()) {
+    if (typeof message === 'string' && message.trim()) {
       return message;
     }
   }
@@ -124,10 +125,10 @@ function getApiErrorMessage(error: unknown, fallback: string) {
 }
 
 function formatPrice(value: string | number) {
-  const numericValue = typeof value === "number" ? value : Number(value);
-  return new Intl.NumberFormat("en-EG", {
-    style: "currency",
-    currency: "EGP",
+  const numericValue = typeof value === 'number' ? value : Number(value);
+  return new Intl.NumberFormat('en-EG', {
+    style: 'currency',
+    currency: 'EGP',
     minimumFractionDigits: 0,
     maximumFractionDigits: 2,
   }).format(Number.isFinite(numericValue) ? numericValue : 0);
@@ -135,7 +136,7 @@ function formatPrice(value: string | number) {
 
 function decodeToken(token: string): UserState | null {
   try {
-    const payload = token.split(".")[1];
+    const payload = token.split('.')[1];
     if (!payload) return null;
     const decoded = JSON.parse(atob(payload)) as {
       sub?: string;
@@ -148,7 +149,7 @@ function decodeToken(token: string): UserState | null {
       id: decoded.sub,
       email: decoded.email,
       name: decoded.name,
-      role: decoded.role ?? "CUSTOMER",
+      role: decoded.role ?? 'CUSTOMER',
     };
   } catch {
     return null;
@@ -156,18 +157,18 @@ function decodeToken(token: string): UserState | null {
 }
 
 const emptyAddressForm: AddressFormState = {
-  line1: "",
-  line2: "",
-  city: "",
-  state: "",
-  postalCode: "",
-  country: "",
+  line1: '',
+  line2: '',
+  city: '',
+  state: '',
+  postalCode: '',
+  country: '',
   isDefault: false,
 };
 
 export default function AccountPage() {
   const router = useRouter();
-  const [tab, setTab] = useState<Tab>("profile");
+  const [tab, setTab] = useState<Tab>('profile');
   const [user, setUser] = useState<UserState | null>(null);
   const [isBooting, setIsBooting] = useState(true);
   const [addresses, setAddresses] = useState<Address[]>([]);
@@ -177,7 +178,7 @@ export default function AccountPage() {
   const [isLoadingOrderDetail, setIsLoadingOrderDetail] = useState(false);
   const [pageError, setPageError] = useState<string | null>(null);
   const [isSavingAddress, setIsSavingAddress] = useState(false);
-  const [addressModalMode, setAddressModalMode] = useState<"add" | "edit" | null>(null);
+  const [addressModalMode, setAddressModalMode] = useState<'add' | 'edit' | null>(null);
   const [editingAddressId, setEditingAddressId] = useState<string | null>(null);
   const [addressForm, setAddressForm] = useState<AddressFormState>(emptyAddressForm);
   const [selectedOrder, setSelectedOrder] = useState<OrderDetail | null>(null);
@@ -186,10 +187,10 @@ export default function AccountPage() {
   const loadAddresses = async () => {
     setIsLoadingAddresses(true);
     try {
-      const response = await api.get<Address[]>("/addresses");
+      const response = await api.get<Address[]>('/addresses');
       setAddresses(response.data);
     } catch (error) {
-      setPageError(getApiErrorMessage(error, "Failed to load addresses."));
+      setPageError(getApiErrorMessage(error, 'Failed to load addresses.'));
     } finally {
       setIsLoadingAddresses(false);
     }
@@ -198,10 +199,10 @@ export default function AccountPage() {
   const loadOrders = async () => {
     setIsLoadingOrders(true);
     try {
-      const response = await api.get<OrdersResponse>("/orders");
+      const response = await api.get<OrdersResponse>('/orders');
       setOrders(response.data?.data ?? []);
     } catch (error) {
-      setPageError(getApiErrorMessage(error, "Failed to load orders."));
+      setPageError(getApiErrorMessage(error, 'Failed to load orders.'));
     } finally {
       setIsLoadingOrders(false);
     }
@@ -218,7 +219,7 @@ export default function AccountPage() {
       setSelectedOrder(response.data);
     } catch (error) {
       setIsOrderDialogOpen(false);
-      setPageError(getApiErrorMessage(error, "Failed to load order details."));
+      setPageError(getApiErrorMessage(error, 'Failed to load order details.'));
     } finally {
       setIsLoadingOrderDetail(false);
     }
@@ -226,15 +227,19 @@ export default function AccountPage() {
 
   useEffect(() => {
     const bootstrap = async () => {
-      const token = localStorage.getItem("accessToken");
-      if (token) {
-        api.defaults.headers.common.Authorization = `Bearer ${token}`;
-        const fromToken = decodeToken(token);
-        if (fromToken) {
-          setUser(fromToken);
-        }
+      const token = localStorage.getItem('accessToken');
+      if (!token || isTokenExpired(token)) {
+        localStorage.removeItem('accessToken');
+        router.replace('/auth');
+        return;
+      }
+
+      api.defaults.headers.common.Authorization = `Bearer ${token}`;
+      const fromToken = decodeToken(token);
+      if (fromToken) {
+        setUser(fromToken);
       } else {
-        router.replace("/auth");
+        router.replace('/auth');
         return;
       }
 
@@ -242,8 +247,8 @@ export default function AccountPage() {
         await Promise.all([loadAddresses(), loadOrders()]);
       } catch (err) {
         if (axios.isAxiosError(err) && err.response?.status === 401) {
-          localStorage.removeItem("accessToken");
-          router.replace("/auth");
+          localStorage.removeItem('accessToken');
+          router.replace('/auth');
         }
         return;
       } finally {
@@ -261,7 +266,7 @@ export default function AccountPage() {
       !addressForm.postalCode.trim() ||
       !addressForm.country.trim()
     ) {
-      return "Please complete line1, city, postal code, and country.";
+      return 'Please complete line1, city, postal code, and country.';
     }
     return null;
   };
@@ -287,11 +292,11 @@ export default function AccountPage() {
         isDefault: addressForm.isDefault,
       };
 
-      if (addressModalMode === "edit") {
+      if (addressModalMode === 'edit') {
         if (!editingAddressId) return;
         await api.put(`/addresses/${editingAddressId}`, payload);
       } else {
-        await api.post("/addresses", payload);
+        await api.post('/addresses', payload);
       }
 
       setAddressModalMode(null);
@@ -302,7 +307,9 @@ export default function AccountPage() {
       setPageError(
         getApiErrorMessage(
           error,
-          addressModalMode === "edit" ? "Failed to update address." : "Failed to add address.",
+          addressModalMode === 'edit'
+            ? 'Failed to update address.'
+            : 'Failed to add address.',
         ),
       );
     } finally {
@@ -314,7 +321,7 @@ export default function AccountPage() {
     setPageError(null);
     setAddressForm(emptyAddressForm);
     setEditingAddressId(null);
-    setAddressModalMode("add");
+    setAddressModalMode('add');
   };
 
   const openEditAddressModal = (address: Address) => {
@@ -322,14 +329,14 @@ export default function AccountPage() {
     setEditingAddressId(address.id);
     setAddressForm({
       line1: address.line1,
-      line2: address.line2 ?? "",
+      line2: address.line2 ?? '',
       city: address.city,
-      state: address.state ?? "",
+      state: address.state ?? '',
       postalCode: address.postalCode,
       country: address.country,
       isDefault: address.isDefault,
     });
-    setAddressModalMode("edit");
+    setAddressModalMode('edit');
   };
 
   const onAddressModalOpenChange = (open: boolean) => {
@@ -342,13 +349,13 @@ export default function AccountPage() {
 
   const onLogout = async () => {
     try {
-      await api.post("/auth/logout");
+      await api.post('/auth/logout');
     } catch {
       // ignore logout API failures and clear local session anyway
     } finally {
-      localStorage.removeItem("accessToken");
+      localStorage.removeItem('accessToken');
       delete api.defaults.headers.common.Authorization;
-      router.replace("/auth");
+      router.replace('/auth');
     }
   };
 
@@ -365,45 +372,54 @@ export default function AccountPage() {
       <header className="mb-6 flex items-center justify-between border-b-2 border-secondary pb-4">
         <div className="flex items-center gap-15">
           <div className="flex lg:flex-1">
-            <Link href="/" className="text-2xl font-light tracking-[0.3em] text-foreground">
+            <Link
+              href="/"
+              className="text-2xl font-light tracking-[0.3em] text-foreground"
+            >
               DIVA
             </Link>
           </div>
           <nav className="flex items-center gap-6 text-sm mt-2">
             <button
               type="button"
-              className={tab === "orders" ? "underline underline-offset-4" : ""}
-              onClick={() => setTab("orders")}
+              className={tab === 'orders' ? 'underline underline-offset-4' : ''}
+              onClick={() => setTab('orders')}
             >
               Orders
             </button>
             <button
               type="button"
-              className={tab === "profile" ? "underline underline-offset-4" : ""}
-              onClick={() => setTab("profile")}
+              className={tab === 'profile' ? 'underline underline-offset-4' : ''}
+              onClick={() => setTab('profile')}
             >
               Profile
             </button>
           </nav>
         </div>
-        <CircleUserRound className="size-6 text-foreground/80 cursor-pointer" onClick={tab === "orders" ? () => setTab("profile") : undefined} />
+        <CircleUserRound
+          className="size-6 text-foreground/80 cursor-pointer"
+          onClick={tab === 'orders' ? () => setTab('profile') : undefined}
+        />
       </header>
 
-      {tab === "profile" ? (
+      {tab === 'profile' ? (
         <section className="space-y-4">
           <h1 className="text-lg font-bold">Profile</h1>
 
           <div className="rounded-xl p-4 bg-card/90 ">
             <p className="text-sm text-muted-foreground">Name</p>
-            <p className="text-sm">{user?.name ?? "Not available"}</p>
+            <p className="text-sm">{user?.name ?? 'Not available'}</p>
             <p className="mt-2 text-sm text-muted-foreground">Email</p>
-            <p className="text-sm">{user?.email ?? "Not available"}</p>
+            <p className="text-sm">{user?.email ?? 'Not available'}</p>
           </div>
 
           <div className="rounded-xl bg-card/90 p-4">
             <div className="mb-3 flex items-center justify-between ">
               <h2 className="font-semibold text-sm">Addresses</h2>
-              <Dialog open={addressModalMode !== null} onOpenChange={onAddressModalOpenChange}>
+              <Dialog
+                open={addressModalMode !== null}
+                onOpenChange={onAddressModalOpenChange}
+              >
                 <DialogTrigger asChild>
                   <button
                     type="button"
@@ -415,55 +431,75 @@ export default function AccountPage() {
                 </DialogTrigger>
                 <DialogContent className="max-w-xl bg-card p-6">
                   <DialogHeader>
-                    <DialogTitle>{addressModalMode === "edit" ? "Edit address" : "Add address"}</DialogTitle>
+                    <DialogTitle>
+                      {addressModalMode === 'edit' ? 'Edit address' : 'Add address'}
+                    </DialogTitle>
                     <DialogDescription>
-                      {addressModalMode === "edit"
-                        ? "Update this address and save your changes."
-                        : "Fill the fields below to save a new address."}
+                      {addressModalMode === 'edit'
+                        ? 'Update this address and save your changes.'
+                        : 'Fill the fields below to save a new address.'}
                     </DialogDescription>
                   </DialogHeader>
-                  <form id="address-form" className="grid gap-2 md:grid-cols-2" onSubmit={onSubmitAddress}>
+                  <form
+                    id="address-form"
+                    className="grid gap-2 md:grid-cols-2"
+                    onSubmit={onSubmitAddress}
+                  >
                     <input
                       placeholder="Line 1"
                       className="h-10 rounded-lg border border-border bg-background px-3 text-sm outline-none md:col-span-2"
                       value={addressForm.line1}
-                      onChange={(e) => setAddressForm((s) => ({ ...s, line1: e.target.value }))}
+                      onChange={(e) =>
+                        setAddressForm((s) => ({ ...s, line1: e.target.value }))
+                      }
                     />
                     <input
                       placeholder="Line 2 (optional)"
                       className="h-10 rounded-lg border border-border bg-background px-3 text-sm outline-none md:col-span-2"
                       value={addressForm.line2}
-                      onChange={(e) => setAddressForm((s) => ({ ...s, line2: e.target.value }))}
+                      onChange={(e) =>
+                        setAddressForm((s) => ({ ...s, line2: e.target.value }))
+                      }
                     />
                     <input
                       placeholder="City"
                       className="h-10 rounded-lg border border-border bg-background px-3 text-sm outline-none"
                       value={addressForm.city}
-                      onChange={(e) => setAddressForm((s) => ({ ...s, city: e.target.value }))}
+                      onChange={(e) =>
+                        setAddressForm((s) => ({ ...s, city: e.target.value }))
+                      }
                     />
                     <input
                       placeholder="State (optional)"
                       className="h-10 rounded-lg border border-border bg-background px-3 text-sm outline-none"
                       value={addressForm.state}
-                      onChange={(e) => setAddressForm((s) => ({ ...s, state: e.target.value }))}
+                      onChange={(e) =>
+                        setAddressForm((s) => ({ ...s, state: e.target.value }))
+                      }
                     />
                     <input
                       placeholder="Postal code"
                       className="h-10 rounded-lg border border-border bg-background px-3 text-sm outline-none"
                       value={addressForm.postalCode}
-                      onChange={(e) => setAddressForm((s) => ({ ...s, postalCode: e.target.value }))}
+                      onChange={(e) =>
+                        setAddressForm((s) => ({ ...s, postalCode: e.target.value }))
+                      }
                     />
                     <input
                       placeholder="Country"
                       className="h-10 rounded-lg border border-border bg-background px-3 text-sm outline-none"
                       value={addressForm.country}
-                      onChange={(e) => setAddressForm((s) => ({ ...s, country: e.target.value }))}
+                      onChange={(e) =>
+                        setAddressForm((s) => ({ ...s, country: e.target.value }))
+                      }
                     />
                     <label className="md:col-span-2 flex items-center gap-2 text-sm">
                       <input
                         type="checkbox"
                         checked={addressForm.isDefault}
-                        onChange={(e) => setAddressForm((s) => ({ ...s, isDefault: e.target.checked }))}
+                        onChange={(e) =>
+                          setAddressForm((s) => ({ ...s, isDefault: e.target.checked }))
+                        }
                       />
                       This is my default address
                     </label>
@@ -482,7 +518,7 @@ export default function AccountPage() {
                       disabled={isSavingAddress}
                       className="h-9 rounded-lg bg-black px-4 text-sm font-medium text-white disabled:opacity-70"
                     >
-                      {isSavingAddress ? "Saving..." : "Save"}
+                      {isSavingAddress ? 'Saving...' : 'Save'}
                     </button>
                   </DialogFooter>
                 </DialogContent>
@@ -491,7 +527,9 @@ export default function AccountPage() {
 
             <div className="mt-4 rounded-lg p-3">
               {isLoadingAddresses ? (
-                <p className="text-sm text-muted-foreground text-center">Loading addresses...</p>
+                <p className="text-sm text-muted-foreground text-center">
+                  Loading addresses...
+                </p>
               ) : addresses.length === 0 ? (
                 <p className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Info className="size-4" />
@@ -500,10 +538,13 @@ export default function AccountPage() {
               ) : (
                 <ul className="grid gap-3 md:grid-cols-2">
                   {addresses.map((address) => (
-                    <li key={address.id} className="rounded-md border border-border/80 bg-card p-3 text-sm">
+                    <li
+                      key={address.id}
+                      className="rounded-md border border-border/80 bg-card p-3 text-sm"
+                    >
                       <div className="mb-2 flex items-start justify-between gap-2 text-muted-foreground">
                         <p className="font-medium">
-                          {address.isDefault ? "Default address" : "Saved address"}
+                          {address.isDefault ? 'Default address' : 'Saved address'}
                         </p>
                         <button
                           type="button"
@@ -515,10 +556,8 @@ export default function AccountPage() {
                       </div>
                       <p className="font-medium">{address.line1}</p>
                       {address.line2 ? <p>{address.line2}</p> : null}
-                      <p>
-                        {address.city}
-                      </p>
-                      <p>{address.state ? `${address.state}` : ""} </p>
+                      <p>{address.city}</p>
+                      <p>{address.state ? `${address.state}` : ''} </p>
                       <p>{address.postalCode}</p>
                       <p>{address.country}</p>
                     </li>
@@ -555,7 +594,7 @@ export default function AccountPage() {
                       <p className="text-xs">{order.status}</p>
                     </div>
                     <p className="text-muted-foreground">
-                      Items: {order._count?.items ?? order.items?.length ?? 0} • Total:{" "}
+                      Items: {order._count?.items ?? order.items?.length ?? 0} • Total:{' '}
                       {formatPrice(order.totalAmount)}
                     </p>
                     <p className="text-xs text-muted-foreground">
@@ -568,7 +607,7 @@ export default function AccountPage() {
                         onClick={() => void loadOrderDetail(order.id)}
                         disabled={isLoadingOrderDetail}
                       >
-                        {isLoadingOrderDetail ? "Loading..." : "View details"}
+                        {isLoadingOrderDetail ? 'Loading...' : 'View details'}
                       </button>
                     </div>
                   </li>
@@ -581,10 +620,13 @@ export default function AccountPage() {
             <DialogContent className="max-w-2xl bg-card p-6">
               <DialogHeader>
                 <DialogTitle>
-                  {selectedOrder ? `Order #${selectedOrder.id.slice(0, 8)}` : "Order details"}
+                  {selectedOrder
+                    ? `Order #${selectedOrder.id.slice(0, 8)}`
+                    : 'Order details'}
                 </DialogTitle>
                 <DialogDescription>
-                  Review the products, payment status, and shipping address for this order.
+                  Review the products, payment status, and shipping address for this
+                  order.
                 </DialogDescription>
               </DialogHeader>
 
@@ -597,7 +639,9 @@ export default function AccountPage() {
                     </div>
                     <div>
                       <p className="text-xs text-muted-foreground">Total</p>
-                      <p className="font-medium">{formatPrice(selectedOrder.totalAmount)}</p>
+                      <p className="font-medium">
+                        {formatPrice(selectedOrder.totalAmount)}
+                      </p>
                     </div>
                     <div>
                       <p className="text-xs text-muted-foreground">Placed</p>
@@ -607,7 +651,9 @@ export default function AccountPage() {
                     </div>
                     <div>
                       <p className="text-xs text-muted-foreground">Tracking</p>
-                      <p className="font-medium">{selectedOrder.trackingNumber ?? "Not assigned"}</p>
+                      <p className="font-medium">
+                        {selectedOrder.trackingNumber ?? 'Not assigned'}
+                      </p>
                     </div>
                   </div>
 
@@ -615,14 +661,17 @@ export default function AccountPage() {
                     <h3 className="font-semibold">Items</h3>
                     <ul className="space-y-3">
                       {selectedOrder.items.map((item) => (
-                        <li key={item.id} className="rounded-xl border border-border bg-background p-4">
+                        <li
+                          key={item.id}
+                          className="rounded-xl border border-border bg-background p-4"
+                        >
                           <div className="flex items-start justify-between gap-3">
                             <div>
                               <p className="font-medium">{item.variant.product.name}</p>
                               <p className="text-xs text-muted-foreground">
                                 Qty {item.quantity}
-                                {item.variant.color ? ` • ${item.variant.color}` : ""}
-                                {item.variant.size ? ` • ${item.variant.size}` : ""}
+                                {item.variant.color ? ` • ${item.variant.color}` : ''}
+                                {item.variant.size ? ` • ${item.variant.size}` : ''}
                               </p>
                             </div>
                             <p className="font-medium">
@@ -638,10 +687,14 @@ export default function AccountPage() {
                     <div className="rounded-xl border border-border bg-background p-4">
                       <h3 className="mb-2 font-semibold">Shipping address</h3>
                       <p>{selectedOrder.address.line1}</p>
-                      {selectedOrder.address.line2 ? <p>{selectedOrder.address.line2}</p> : null}
+                      {selectedOrder.address.line2 ? (
+                        <p>{selectedOrder.address.line2}</p>
+                      ) : null}
                       <p>
                         {selectedOrder.address.city}
-                        {selectedOrder.address.state ? `, ${selectedOrder.address.state}` : ""}
+                        {selectedOrder.address.state
+                          ? `, ${selectedOrder.address.state}`
+                          : ''}
                       </p>
                       <p>{selectedOrder.address.postalCode}</p>
                       <p>{selectedOrder.address.country}</p>
@@ -656,15 +709,17 @@ export default function AccountPage() {
                             <p>Amount: {formatPrice(payment.amount)}</p>
                             <p>Currency: {payment.currency.toUpperCase()}</p>
                             <p>
-                              Paid at:{" "}
+                              Paid at:{' '}
                               {payment.paidAt
                                 ? new Date(payment.paidAt).toLocaleString()
-                                : "Pending confirmation"}
+                                : 'Pending confirmation'}
                             </p>
                           </div>
                         ))
                       ) : (
-                        <p className="text-muted-foreground">No payment records available.</p>
+                        <p className="text-muted-foreground">
+                          No payment records available.
+                        </p>
                       )}
                     </div>
                   </div>
