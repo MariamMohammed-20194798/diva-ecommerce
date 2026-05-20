@@ -1,6 +1,7 @@
 'use client';
 
 import { FormEvent, useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { CircleUserRound, Info, Pencil } from 'lucide-react';
@@ -168,6 +169,7 @@ const emptyAddressForm: AddressFormState = {
 
 export default function AccountPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [tab, setTab] = useState<Tab>('profile');
   const [user, setUser] = useState<UserState | null>(null);
   const [isBooting, setIsBooting] = useState(true);
@@ -258,6 +260,17 @@ export default function AccountPage() {
 
     void bootstrap();
   }, [router]);
+
+  useEffect(() => {
+    if (isBooting) return;
+    const tabParam = searchParams.get('tab');
+    const orderIdParam = searchParams.get('orderId');
+    if (tabParam === 'orders') setTab('orders');
+    if (orderIdParam) {
+      void loadOrderDetail(orderIdParam);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isBooting, searchParams]);
 
   const validateAddressForm = () => {
     if (

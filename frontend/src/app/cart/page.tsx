@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { FormEvent, useEffect, useMemo, useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import axios from "axios";
-import { Elements, PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
-import { Loader2, Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
+import { FormEvent, useEffect, useMemo, useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import axios from 'axios';
+import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+import { Loader2, Minus, Plus, ShoppingBag, Trash2 } from 'lucide-react';
+import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
 import {
   confirmCheckoutPayment,
   createCheckoutIntent,
@@ -23,8 +23,8 @@ import {
   type Address,
   type CartItem,
   type CartResponse,
-} from "@/lib/cart";
-import { formatPriceEgp } from "@/lib/products";
+} from '@/lib/cart';
+import { formatPriceEgp } from '@/lib/products';
 
 const stripePromise = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
   ? loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
@@ -34,9 +34,9 @@ function getApiErrorMessage(error: unknown, fallback: string) {
   if (axios.isAxiosError(error)) {
     const message = error.response?.data?.message;
     if (Array.isArray(message) && message.length > 0) {
-      return message.join(", ");
+      return message.join(', ');
     }
-    if (typeof message === "string" && message.trim()) {
+    if (typeof message === 'string' && message.trim()) {
       return message;
     }
   }
@@ -44,76 +44,12 @@ function getApiErrorMessage(error: unknown, fallback: string) {
   return fallback;
 }
 
-function CartCheckoutForm({
-  paymentIntentId,
-  onSuccess,
-  onFailure,
-}: {
-  paymentIntentId: string;
-  onSuccess: (orderId?: string) => void;
-  onFailure: (message: string) => void;
-}) {
-  const stripe = useStripe();
-  const elements = useElements();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    if (!stripe || !elements) {
-      return;
-    }
-
-    setIsSubmitting(true);
-
-    try {
-      const result = await stripe.confirmPayment({
-        elements,
-        redirect: "if_required",
-      });
-
-      if (result.error) {
-        onFailure(result.error.message ?? "Payment failed. Please try again.");
-        return;
-      }
-
-      const paymentIntent = result.paymentIntent;
-      const resolvedPaymentIntentId = paymentIntent?.id ?? paymentIntentId;
-
-      if (!resolvedPaymentIntentId) {
-        onFailure("Payment succeeded but confirmation details were missing.");
-        return;
-      }
-
-      const confirmation = await confirmCheckoutPayment(resolvedPaymentIntentId);
-      onSuccess(confirmation.orderId);
-    } catch (error) {
-      onFailure(getApiErrorMessage(error, "Payment confirmation failed."));
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  return (
-    <form className="space-y-4" onSubmit={onSubmit}>
-      <PaymentElement />
-      <Button
-        type="submit"
-        className="h-11 w-full rounded-full bg-foreground text-background hover:bg-foreground/90"
-        disabled={!stripe || !elements || isSubmitting}
-      >
-        {isSubmitting ? "Processing..." : "Pay now"}
-      </Button>
-    </form>
-  );
-}
-
 export default function CartPage() {
   const router = useRouter();
   const [cart, setCart] = useState<CartResponse | null>(null);
   const [addresses, setAddresses] = useState<Address[]>([]);
-  const [selectedAddressId, setSelectedAddressId] = useState("");
-  const [discountCode, setDiscountCode] = useState("");
+  const [selectedAddressId, setSelectedAddressId] = useState('');
+  const [discountCode, setDiscountCode] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [isCreatingIntent, setIsCreatingIntent] = useState(false);
   const [pendingItemId, setPendingItemId] = useState<string | null>(null);
@@ -127,7 +63,7 @@ export default function CartPage() {
   } | null>(null);
   const [pageError, setPageError] = useState<string | null>(null);
   const [paymentState, setPaymentState] = useState<{
-    type: "success" | "error";
+    type: 'success' | 'error';
     message: string;
   } | null>(null);
 
@@ -136,20 +72,7 @@ export default function CartPage() {
   const total = getCartTotal(subtotal);
   const hasCartItems = (cart?.items.length ?? 0) > 0;
   const isAuthenticated =
-    typeof window !== "undefined" && Boolean(window.localStorage.getItem("accessToken"));
-
-  const elementsOptions = useMemo(
-    () =>
-      clientSecret
-        ? {
-          clientSecret,
-          appearance: {
-            theme: "stripe" as const,
-          },
-        }
-        : undefined,
-    [clientSecret],
-  );
+    typeof window !== 'undefined' && Boolean(window.localStorage.getItem('accessToken'));
 
   const loadPageData = async () => {
     setIsLoading(true);
@@ -159,23 +82,25 @@ export default function CartPage() {
       const nextCart = await fetchCart();
       setCart(nextCart);
 
-      if (typeof window !== "undefined" && window.localStorage.getItem("accessToken")) {
+      if (typeof window !== 'undefined' && window.localStorage.getItem('accessToken')) {
         const nextAddresses = await fetchAddresses();
         setAddresses(nextAddresses);
-        const defaultAddress = nextAddresses.find((address) => address.isDefault) ?? nextAddresses[0];
-        setSelectedAddressId((current) => current || defaultAddress?.id || "");
+        const defaultAddress =
+          nextAddresses.find((address) => address.isDefault) ?? nextAddresses[0];
+        setSelectedAddressId((current) => current || defaultAddress?.id || '');
       } else {
         setAddresses([]);
-        setSelectedAddressId("");
+        setSelectedAddressId('');
       }
     } catch (error) {
-      setPageError(getApiErrorMessage(error, "Failed to load your cart."));
+      setPageError(getApiErrorMessage(error, 'Failed to load your cart.'));
     } finally {
       setIsLoading(false);
     }
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     void loadPageData();
   }, []);
 
@@ -196,7 +121,7 @@ export default function CartPage() {
       setPaymentIntentId(null);
       setCheckoutSummary(null);
     } catch (error) {
-      setPageError(getApiErrorMessage(error, "Unable to update this cart item."));
+      setPageError(getApiErrorMessage(error, 'Unable to update this cart item.'));
     } finally {
       setPendingItemId(null);
     }
@@ -204,22 +129,24 @@ export default function CartPage() {
 
   const startCheckout = async () => {
     if (!hasCartItems) {
-      setPageError("Your cart is empty.");
+      setPageError('Your cart is empty.');
       return;
     }
 
     if (!isAuthenticated) {
-      router.push("/auth");
+      router.push('/auth');
       return;
     }
 
     if (!selectedAddressId) {
-      setPageError("Select a shipping address before checkout.");
+      setPageError('Select a shipping address before checkout.');
       return;
     }
 
     if (!stripePromise) {
-      setPageError("Stripe is not configured. Add NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY to continue.");
+      setPageError(
+        'Stripe is not configured. Add NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY to continue.',
+      );
       return;
     }
 
@@ -241,9 +168,9 @@ export default function CartPage() {
         discount: response.discount,
         total: response.total,
       });
-      toast.success("Checkout is ready. Complete your test payment below.");
+      toast.success('Checkout is ready. Complete your test payment below.');
     } catch (error) {
-      setPageError(getApiErrorMessage(error, "Unable to start checkout."));
+      setPageError(getApiErrorMessage(error, 'Unable to start checkout.'));
     } finally {
       setIsCreatingIntent(false);
     }
@@ -251,21 +178,21 @@ export default function CartPage() {
 
   const onPaymentSuccess = async (orderId?: string) => {
     setPaymentState({
-      type: "success",
+      type: 'success',
       message: orderId
         ? `Payment succeeded. Order #${orderId.slice(0, 8)} has been created.`
-        : "Payment succeeded and your order was created.",
+        : 'Payment succeeded and your order was created.',
     });
     setClientSecret(null);
     setPaymentIntentId(null);
     setCheckoutSummary(null);
-    setDiscountCode("");
+    setDiscountCode('');
     await loadPageData();
-    toast.success("Payment successful");
+    toast.success('Payment successful');
   };
 
   const onPaymentFailure = (message: string) => {
-    setPaymentState({ type: "error", message });
+    setPaymentState({ type: 'error', message });
     toast.error(message);
   };
 
@@ -274,11 +201,13 @@ export default function CartPage() {
       <main className="mx-auto max-w-7xl px-4 pb-16 pt-24 sm:px-6 lg:px-8">
         <div className="mb-8 flex items-end justify-between gap-4 border-b border-border pb-5">
           <div>
-            <p className="text-sm uppercase tracking-[0.25em] text-muted-foreground">Shopping bag</p>
+            <p className="text-sm uppercase tracking-[0.25em] text-muted-foreground">
+              Shopping bag
+            </p>
             <h1 className="mt-2 text-3xl font-light text-foreground">Your cart</h1>
           </div>
           <p className="text-sm text-muted-foreground">
-            {cart?.itemCount ?? 0} item{(cart?.itemCount ?? 0) === 1 ? "" : "s"}
+            {cart?.itemCount ?? 0} item{(cart?.itemCount ?? 0) === 1 ? '' : 's'}
           </p>
         </div>
 
@@ -310,14 +239,19 @@ export default function CartPage() {
                 );
                 const lineTotal = unitPrice * item.quantity;
                 const previewImage =
-                  item.variant.images[0] ?? item.variant.product.images?.[0] ?? "/images/placeholder-product.jpg";
+                  item.variant.images[0] ??
+                  item.variant.product.images?.[0] ??
+                  '/images/placeholder-product.jpg';
 
                 return (
                   <article
                     key={item.id}
                     className="grid gap-4 rounded-3xl border border-border bg-card/70 p-4 sm:grid-cols-[120px_minmax(0,1fr)]"
                   >
-                    <Link href={`/products/${item.variant.product.slug}`} className="relative aspect-square overflow-hidden rounded-2xl bg-muted">
+                    <Link
+                      href={`/products/${item.variant.product.slug}`}
+                      className="relative aspect-square overflow-hidden rounded-2xl bg-muted"
+                    >
                       <Image
                         src={previewImage}
                         alt={item.variant.product.name}
@@ -337,8 +271,10 @@ export default function CartPage() {
                             {item.variant.product.name}
                           </Link>
                           <p className="mt-1 text-sm text-muted-foreground">
-                            {item.variant.color ? `Color: ${item.variant.color}` : "Default color"}
-                            {item.variant.size ? ` • Size: ${item.variant.size}` : ""}
+                            {item.variant.color
+                              ? `Color: ${item.variant.color}`
+                              : 'Default color'}
+                            {item.variant.size ? ` • Size: ${item.variant.size}` : ''}
                           </p>
                           <p className="mt-1 text-sm text-muted-foreground">
                             Unit price: {formatPriceEgp(unitPrice)}
@@ -358,7 +294,9 @@ export default function CartPage() {
                           >
                             <Minus className="h-4 w-4" />
                           </button>
-                          <span className="w-10 text-center text-sm">{item.quantity}</span>
+                          <span className="w-10 text-center text-sm">
+                            {item.quantity}
+                          </span>
                           <button
                             type="button"
                             className="p-3"
@@ -402,7 +340,7 @@ export default function CartPage() {
                     <span>Shipping</span>
                     <span>
                       {(checkoutSummary?.shipping ?? shipping) === 0
-                        ? "Free"
+                        ? 'Free'
                         : formatPriceEgp(checkoutSummary?.shipping ?? shipping)}
                     </span>
                   </div>
@@ -419,92 +357,49 @@ export default function CartPage() {
                 </div>
 
                 <p className="mt-4 text-xs text-muted-foreground">
-                  Shipping is free on orders over {formatPriceEgp(10000)}. Test card example: `4242 4242
-                  4242 4242`.
+                  Shipping is free on orders over {formatPriceEgp(10000)}. Test card
+                  example: `4242 4242 4242 4242`.
                 </p>
               </section>
 
               <section className="rounded-3xl border border-border bg-card/70 p-5">
                 <h2 className="text-lg font-medium">Checkout</h2>
-
-                {!isAuthenticated ? (
-                  <div className="mt-4 space-y-3">
-                    <p className="text-sm text-muted-foreground">
-                      Sign in to select a shipping address and complete payment.
-                    </p>
-                    <Button
-                      className="h-11 w-full rounded-full bg-foreground text-background hover:bg-foreground/90"
-                      onClick={() => router.push("/auth")}
-                    >
-                      Sign in to checkout
-                    </Button>
-                  </div>
-                ) : (
-                  <div className="mt-4 space-y-4">
-                    <label className="block">
-                      <span className="mb-2 block text-sm font-medium">Shipping address</span>
-                      <select
-                        value={selectedAddressId}
-                        onChange={(event) => setSelectedAddressId(event.target.value)}
-                        className="h-11 w-full rounded-2xl border border-border bg-background px-3 text-sm outline-none"
-                      >
-                        <option value="">Select an address</option>
-                        {addresses.map((address) => (
-                          <option key={address.id} value={address.id}>
-                            {address.line1}, {address.city}, {address.country}
-                            {address.isDefault ? " (Default)" : ""}
-                          </option>
-                        ))}
-                      </select>
-                    </label>
-
-                    {addresses.length === 0 ? (
+                <div className="mt-4 space-y-3">
+                  {!isAuthenticated ? (
+                    <div className="space-y-2">
                       <p className="text-sm text-muted-foreground">
-                        No saved addresses yet. Add one in{" "}
-                        <Link href="/account" className="underline">
-                          your account
-                        </Link>
-                        .
+                        Sign in to select a shipping address and complete payment.
                       </p>
-                    ) : null}
-
-                    <label className="block">
-                      <span className="mb-2 block text-sm font-medium">Discount code</span>
-                      <input
-                        value={discountCode}
-                        onChange={(event) => setDiscountCode(event.target.value)}
-                        placeholder="Optional"
-                        className="h-11 w-full rounded-2xl border border-border bg-background px-3 text-sm outline-none"
-                      />
-                    </label>
-
-                    {!clientSecret ? (
                       <Button
                         className="h-11 w-full rounded-full bg-foreground text-background hover:bg-foreground/90"
-                        disabled={isCreatingIntent || addresses.length === 0}
-                        onClick={() => void startCheckout()}
+                        onClick={() => router.push('/auth')}
                       >
-                        {isCreatingIntent ? "Preparing checkout..." : "Proceed to payment"}
+                        Sign in to checkout
                       </Button>
-                    ) : stripePromise && elementsOptions ? (
-                      <Elements stripe={stripePromise} options={elementsOptions}>
-                        <CartCheckoutForm
-                          paymentIntentId={paymentIntentId ?? ""}
-                          onSuccess={(orderId) => void onPaymentSuccess(orderId)}
-                          onFailure={onPaymentFailure}
-                        />
-                      </Elements>
-                    ) : null}
-                  </div>
-                )}
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      <p className="text-sm text-muted-foreground">
+                        Ready to checkout? Proceed to the secure checkout flow.
+                      </p>
+                      <Button
+                        className="h-11 w-full rounded-full bg-foreground text-background hover:bg-foreground/90"
+                        onClick={() => router.push('/checkout')}
+                      >
+                        Proceed to checkout
+                      </Button>
+                    </div>
+                  )}
+                </div>
               </section>
 
               {paymentState ? (
                 <section
-                  className={`rounded-3xl border p-4 text-sm ${paymentState.type === "success"
-                      ? "border-emerald-200 bg-emerald-50 text-emerald-800"
-                      : "border-red-200 bg-red-50 text-red-700"
-                    }`}
+                  className={`rounded-3xl border p-4 text-sm ${
+                    paymentState.type === 'success'
+                      ? 'border-emerald-200 bg-emerald-50 text-emerald-800'
+                      : 'border-red-200 bg-red-50 text-red-700'
+                  }`}
                 >
                   {paymentState.message}
                 </section>
