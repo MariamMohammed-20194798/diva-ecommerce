@@ -3,5 +3,8 @@
     "dev": "mintlify dev",
     "build": "mintlify build",
     "start": "mintlify preview"
+  },
+  "devDependencies": {
+    "mintlify": "^4.2.573"
   }
 }
