@@ -1,0 +1,7 @@
+{
+  "scripts": {
+    "dev": "mintlify dev",
+    "build": "mintlify build",
+    "start": "mintlify preview"
+  }
+}
