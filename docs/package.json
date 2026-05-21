@@ -1,9 +1,10 @@
 {
-  "scripts": {
+ "scripts": {
     "dev": "mintlify dev",
-    "build": "mintlify build",
-    "start": "mintlify preview"
-  },
+    "build": "mintlify export",
+    "start": "mintlify dev"
+  }
+,
   "devDependencies": {
     "mintlify": "^4.2.573"
   }
