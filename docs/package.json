@@ -1,10 +1,9 @@
-{ 
+{
   "scripts": {
-  "dev": "mintlify dev",
-  "build": "echo 'No build step required'",
-  "start": "mintlify dev --port 3000",
-  "vercel-build": "echo skipping static export"
-
+    "dev": "mintlify dev",
+    "build": "mintlify build",
+    "start": "mintlify dev --port 3000",
+    "vercel-build": "mintlify build"
   },
   "devDependencies": {
     "mintlify": "^4.2.573"
