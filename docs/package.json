@@ -1,10 +1,9 @@
-{
- "scripts": {
-    "dev": "mintlify dev",
-    "build": "mintlify export",
-    "start": "mintlify dev"
-  }
-,
+{ 
+  "scripts": {
+  "dev": "mintlify dev",
+  "build": "echo 'No build step required'",
+  "start": "mintlify dev --port 3000"
+  },
   "devDependencies": {
     "mintlify": "^4.2.573"
   }
