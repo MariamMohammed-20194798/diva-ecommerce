@@ -1,36 +1,80 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🎨 Frontend — DIVA Shop
+ 
+> Next.js 14 storefront with App Router, TypeScript, Tailwind CSS, and Stripe Elements.
+ 
+---
 
-## Getting Started
-
-First, run the development server:
-
+## Tech Stack
+ 
+| Tool | Purpose |
+|---|---|
+| **Next.js 14** (App Router) | SSR, SSG, ISR, React Server Components, streaming |
+| **TypeScript** | Strict type safety |
+| **Tailwind CSS** | Utility-first styling |
+| **shadcn/ui** | Accessible, unstyled component library |
+| **Zustand** | Client-side state (cart, UI) |
+| **TanStack Query** | Server state, caching, background sync |
+| **React Hook Form + Zod** | Form validation with shared schemas |
+| **Axios** | HTTP client with credential support |
+| **Stripe Elements** | Secure card payment UI |
+| **Lucide React** | Icon set |
+ 
+---
+---
+ 
+## Setup
+ 
+### Prerequisites
+ 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+node --version   # v20+
 ```
+ 
+### Install
+ 
+```bash
+cd frontend
+pnpm install
+cp .env.example .env.local    # fill in your values
+```
+ 
+### Start
+ 
+```bash
+pnpm run dev    # http://localhost:3000
+```
+ 
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Stripe Checkout Flow
+ 
+```
+1. User clicks "Pay Now"
+       ↓
+2. POST /checkout/intent  →  NestJS validates cart + calculates total
+       ↓
+3. NestJS creates Stripe PaymentIntent → returns clientSecret
+       ↓
+4. Frontend passes clientSecret to <Elements> provider
+       ↓
+5. User fills card details in Stripe Elements iframe
+       ↓
+6. stripe.confirmPayment() sends payment directly to Stripe
+       ↓
+7. Stripe calls POST /checkout/webhook (payment_intent.succeeded)
+       ↓
+8. NestJS creates order atomically → clears cart → sends email
+       ↓
+9. User redirected to /account/orders
+```
+ 
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Build for Production
+ 
+```bash
+pnpm run build      # type-check + build
+pnpm run start      # run production server locally
+```
+ 
+Deploy to **Vercel** — push to `main` branch, Vercel picks it up automatically with zero config.
