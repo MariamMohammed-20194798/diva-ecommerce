@@ -2,33 +2,75 @@
 
 A full-stack ecommerce storefront built with a modern Next.js frontend and NestJS backend. The repo includes frontend shop UI, backend API services, and API Reference docmentation.
 
-## Project overview
 
-This repository contains an ecommerce platform with product browsing, collections, wishlist, cart, checkout, user accounts, orders, and review capabilities. The backend is implemented in NestJS with Prisma and Stripe integration. The frontend uses a modern Next.js storefront architecture.
+---
+ 
+## Overview
+ 
+DIVA is a real-world e-commerce platform that lets customers browse products. It covers the complete commerce lifecycle — browsing, custom product design, cart, checkout, payment, order management, and user accounts.
 
-## Features
+**Why this project stands out:**
+ 
+- Clean, modular architecture following NestJS best practices (controllers → services → repositories)
+- JWT + refresh token auth with httpOnly cookies
+- Stripe integration with server-side total recalculation and webhook-driven order creation
+- PostgreSQL full-text search with `pg_trgm` fuzzy matching
+- Guest cart support with merge-on-login
+- Verified-purchase review system
+- Atomic order creation in a single database transaction
+---
 
-- Product catalog with categories and collections
-- Cart and wishlist support
-- Checkout flow with Stripe payment integration
-- User authentication and account management
-- Order history and order submission
-- Product reviews and ratings
-- Address management for shipping
-- Admin-friendly API surface with Swagger/OpenAPI support
-- Documentation site support via the `docs/` folder
-
-## Tech stack
-
-- Frontend: Next.js 16, React 19, Tailwind CSS, Framer Motion, React Query
-- Backend: NestJS 11, Prisma ORM, PostgreSQL-compatible databases, Stripe, Resend email
-- Dev tools: pnpm, ESLint, Prettier, Jest
+## Tech Stack
+ 
+### Frontend
+| Technology | Purpose |
+|---|---|
+| **Next.js 14** (App Router) | SSR, SSG, streaming, React Server Components |
+| **TypeScript** | Strict type safety across all components |
+| **Tailwind CSS** | Utility-first styling |
+| **shadcn/ui** | Headless, accessible component library |
+| **Zustand** | Client-side state (cart, UI) |
+| **TanStack Query** | Server state, caching, background sync |
+| **React Hook Form + Zod** | Form validation with shared schemas |
+| **Stripe Elements** | Secure payment UI |
+ 
+### Backend
+| Technology | Purpose |
+|---|---|
+| **NestJS** | Modular TypeScript framework (runs on Express) |
+| **Prisma ORM** | Type-safe DB queries, migrations, introspection |
+| **PostgreSQL 16** | Primary database with JSONB, full-text search |
+| **Redis (Upstash)** | Session cache, rate limiting, BullMQ queues |
+| **Passport.js + JWT** | Authentication strategies |
+| **Stripe** | Payment processing and webhook handling |
+ 
+---
 
 ## Project structure
 
 - `/backend` — NestJS backend API, Prisma schema, authentication, checkout, orders
 - `/frontend` — Next.js storefront, UI components, cart/wishlist logic, Stripe integration
 - `/docs` — project documentation written in MDX and Mintlify-ready docs site structure
+
+### Layer Responsibilities
+ 
+Every feature module follows the same three-layer pattern:
+ 
+```
+HTTP Request
+    ↓
+Controller        → routing, guards, validation pipes, Swagger docs
+    ↓
+Service           → business logic, validation, error throwing
+    ↓
+Repository        → all Prisma queries, DB transactions
+    ↓
+PostgreSQL
+```
+ 
+Services never call Prisma directly — they go through their repository. This makes every service unit-testable in isolation.
+ 
+---
 
 ## Setup and installation
 
@@ -59,30 +101,6 @@ pnpm install
 cd ..
 pnpm install
 ```
-
-## Environment variables
-
-### Backend
-
-Create a `backend/.env` file with values for:
-
-- `DATABASE_URL` or `DIRECT_URL`
-- `FRONTEND_URL` (frontend origin for CORS)
-- `PORT` (optional, defaults to `3001`)
-- `GOOGLE_CLIENT_ID`
-- `GOOGLE_CLIENT_SECRET`
-- `GOOGLE_CALLBACK_URL`
-- `RESEND_API_KEY`
-- `EMAIL_FROM`
-- `STRIPE_SECRET_KEY`
-- `STRIPE_WEBHOOK_SECRET`
-
-### Frontend
-
-Create a `.env.local` file in `frontend/` with:
-
-- `NEXT_PUBLIC_API_URL` — backend API base URL, e.g. `http://localhost:3001/api`
-- `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`
 
 ## Running the app
 
@@ -117,18 +135,3 @@ Build the docs site with:
 ```bash
 pnpm run docs:build
 ```
-
-## Screenshots / preview
-
-![ERD diagram](frontend/public/images/EcommerceSystemERD.png)
-
-## API / docs links
-
-- Backend API root: `/api`
-- Docs landing page in the frontend app: `/docs`
-- Project documentation folder: `/docs`
-
-## Notes
-
-- The frontend exposes a `/docs` page for quick documentation access inside the app.
-- The backend loads environment config from `backend/.env` or root-level `.env` when available.
