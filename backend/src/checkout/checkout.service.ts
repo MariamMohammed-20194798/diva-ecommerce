@@ -1,11 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import {
   Injectable,
   BadRequestException,
   NotFoundException,
-  InternalServerErrorException,
   ForbiddenException,
   Logger,
 } from '@nestjs/common';
@@ -16,9 +12,14 @@ import { CartRepository } from '../cart/cart.repository';
 import { CreatePaymentIntentDto } from './dto/checkout.dto';
 import Stripe from 'stripe';
 
+type StripeEvent = ReturnType<Stripe.Stripe['webhooks']['constructEvent']>;
+type StripePaymentIntent = Awaited<
+  ReturnType<Stripe.Stripe['paymentIntents']['retrieve']>
+>;
+
 @Injectable()
 export class CheckoutService {
-  private readonly stripe: any;
+  private readonly stripe: Stripe.Stripe;
   private readonly logger = new Logger(CheckoutService.name);
   private readonly freeShippingThreshold = 10000;
   private readonly standardShippingAmount = 80;
@@ -225,22 +226,25 @@ export class CheckoutService {
   async handleWebhook(rawBody: Buffer, signature: string) {
     const webhookSecret = this.config.get<string>('STRIPE_WEBHOOK_SECRET')!;
 
-    let event: any;
+    let event: StripeEvent;
     try {
       event = this.stripe.webhooks.constructEvent(
         rawBody,
         signature,
         webhookSecret,
       );
-    } catch (err: any) {
-      this.logger.error(
-        `Webhook signature verification failed: ${err.message}`,
-      );
-      throw new BadRequestException(`Webhook Error: ${err.message}`);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        this.logger.error(
+          `Webhook signature verification failed: ${err.message}`,
+        );
+        throw new BadRequestException(`Webhook Error: ${err.message}`);
+      }
+      throw new BadRequestException('Webhook signature verification failed.');
     }
 
     if (event.type === 'payment_intent.succeeded') {
-      const intent = event.data.object;
+      const intent = event.data.object as StripePaymentIntent;
       await this.createOrderFromIntent(intent);
     }
 
@@ -249,7 +253,7 @@ export class CheckoutService {
 
   // ─── Private: atomic order creation ──────────────────────────────────────────
 
-  private async createOrderFromIntent(intent: any) {
+  private async createOrderFromIntent(intent: StripePaymentIntent) {
     const {
       userId,
       cartId,
@@ -329,7 +333,12 @@ export class CheckoutService {
             data: {
               orderId: order.id,
               stripePaymentId: intent.id,
-              stripeChargeId: intent.latest_charge ?? null,
+              stripeChargeId:
+                intent.latest_charge == null
+                  ? null
+                  : typeof intent.latest_charge === 'string'
+                    ? intent.latest_charge
+                    : intent.latest_charge.id,
               status: 'SUCCEEDED',
               amount: intent.amount / 100,
               currency: intent.currency,
@@ -376,9 +385,12 @@ export class CheckoutService {
         },
         { timeout: 10000 }, // 10 second timeout to prevent premature closure
       );
-    } catch (err: any) {
-      this.logger.error(`Failed to create order: ${err.message}`, err.stack);
-      throw new InternalServerErrorException('Order creation failed.');
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        this.logger.error(`Failed to create order: ${err.message}`, err.stack);
+      } else {
+        this.logger.error('Failed to create order.');
+      }
     }
   }
 }
