@@ -179,7 +179,7 @@ psql $DATABASE_URL -f prisma/search-indexes.sql
 pnpm run start:dev    # API base: http://localhost:3001/api
 ```
 
-### Swagger / OpenAPI
+<!-- ### Swagger / OpenAPI
 
 Interactive API documentation is served at:
 
@@ -195,4 +195,4 @@ Interactive API documentation is served at:
 
 Swagger is configured in `src/common/swagger/swagger.config.ts` and respects the global `ValidationPipe`, JWT guards, and pagination query DTOs.
 
----
+--- -->
