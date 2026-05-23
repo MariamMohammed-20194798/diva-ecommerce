@@ -4,6 +4,7 @@ import { AppModule } from './app.module';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import * as express from 'express';
+import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
 
 function parseAllowedOrigins(): Set<string> {
   const raw = [
@@ -31,54 +32,58 @@ function isLocalDevOrigin(origin: string): boolean {
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
   app.enableShutdownHooks();
+
   const allowedOrigins = parseAllowedOrigins();
 
   app.use(helmet());
   app.use(cookieParser());
+
   app.use('/api/checkout/webhook', express.raw({ type: 'application/json' }));
-  app.enableCors({
-    origin: (origin, callback) => {
+
+  const corsOptions: CorsOptions = {
+    origin: (
+      origin: string | undefined,
+      callback: (err: Error | null, allow?: boolean | string) => void,
+    ) => {
       if (!origin) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         callback(null, true);
         return;
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       const normalized = origin.replace(/\/$/, '');
 
       if (
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         allowedOrigins.has(normalized) ||
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         isVercelDeploymentOrigin(normalized) ||
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         (process.env.NODE_ENV !== 'production' && isLocalDevOrigin(normalized))
       ) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         callback(null, origin);
         return;
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       callback(new Error(`Origin ${origin} not allowed by CORS`), false);
     },
     credentials: true,
     exposedHeaders: ['x-session-id'],
-  });
+  };
+
+  app.enableCors(corsOptions);
 
   app.useGlobalPipes(
     new ValidationPipe({
-      whitelist: true, // strip unknown fields
+      whitelist: true,
       forbidNonWhitelisted: true,
-      transform: true, // auto-convert types
+      transform: true,
     }),
   );
 
   app.setGlobalPrefix('api');
 
   await app.listen(process.env.PORT ?? 3001, '0.0.0.0');
+
   console.log(`Backend running on port ${process.env.PORT ?? 3001}`);
 }
+
 void bootstrap();
