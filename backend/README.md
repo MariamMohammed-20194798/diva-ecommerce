@@ -30,13 +30,6 @@ erDiagram
     timestamp created_at
   }
  
-  OAUTH_ACCOUNTS {
-    uuid id PK
-    uuid user_id FK
-    string provider
-    string provider_id
-  }
- 
   ADDRESSES {
     uuid id PK
     uuid user_id FK
@@ -117,23 +110,6 @@ erDiagram
     timestamp paid_at
   }
  
-  DISCOUNT_CODES {
-    uuid id PK
-    string code
-    enum type
-    decimal value
-    int max_uses
-    int used_count
-    timestamp expires_at
-  }
- 
-  ORDER_DISCOUNTS {
-    uuid id PK
-    uuid order_id FK
-    uuid discount_id FK
-    decimal applied_amount
-  }
- 
   REVIEWS {
     uuid id PK
     uuid product_id FK
@@ -150,7 +126,6 @@ erDiagram
     timestamp created_at
   }
  
-  USERS ||--o{ OAUTH_ACCOUNTS : "authenticates via"
   USERS ||--o{ ADDRESSES : "has"
   USERS ||--o| CARTS : "owns"
   USERS ||--o{ ORDERS : "places"
@@ -166,9 +141,7 @@ erDiagram
   CARTS ||--o{ CART_ITEMS : "contains"
   ORDERS ||--o{ ORDER_ITEMS : "includes"
   ORDERS ||--|| PAYMENTS : "paid via"
-  ORDERS ||--o{ ORDER_DISCOUNTS : "uses"
   ORDERS }o--|| ADDRESSES : "ships to"
-  DISCOUNT_CODES ||--o{ ORDER_DISCOUNTS : "applied in"
 ```
  
 ---
