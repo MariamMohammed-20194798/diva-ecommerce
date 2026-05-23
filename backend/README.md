@@ -14,7 +14,8 @@
 | **Redis** | Caching, rate limiting, BullMQ queues |
 | **Stripe** | Payment processing + webhooks |
 | **Passport.js + JWT** | Authentication |
- 
+| **Swagger** | Generating and Testing backend API |
+
 ---
 
 ## Database ERD
@@ -146,6 +147,37 @@ erDiagram
  
 ---
 
-## Screenshots / preview
+## Setup
+ 
+### Prerequisites
+ 
+```bash
+node --version   # v20+
+psql --version   # PostgreSQL 15+
+```
+ 
+### Install
+ 
+```bash
+cd backend
+pnpm install
+cp .env.example .env    # fill in your values
+```
 
-![ERD diagram](frontend/public/images/EcommerceSystemERD.png)
+### Database
+ 
+```bash
+# Run migrations + generate client
+npx prisma migrate dev --name init
+npx prisma generate
+
+# Enable full-text search indexes
+psql $DATABASE_URL -f prisma/search-indexes.sql
+```
+
+```bash
+pnpm run start:dev    # http://localhost:3001/api
+```
+Swagger docs → `http://localhost:3001/api/docs`
+ 
+---
