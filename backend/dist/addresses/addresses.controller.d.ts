@@ -8,10 +8,10 @@ export declare class AddressesController {
     findAll(req: Request): Promise<{
         id: string;
         userId: string;
-        state: string | null;
         line1: string;
         line2: string | null;
         city: string;
+        state: string | null;
         postalCode: string;
         country: string;
         isDefault: boolean;
@@ -19,10 +19,10 @@ export declare class AddressesController {
     findOne(id: string, req: Request): Promise<{
         id: string;
         userId: string;
-        state: string | null;
         line1: string;
         line2: string | null;
         city: string;
+        state: string | null;
         postalCode: string;
         country: string;
         isDefault: boolean;
@@ -30,10 +30,10 @@ export declare class AddressesController {
     create(dto: CreateAddressDto, req: Request): Promise<{
         id: string;
         userId: string;
-        state: string | null;
         line1: string;
         line2: string | null;
         city: string;
+        state: string | null;
         postalCode: string;
         country: string;
         isDefault: boolean;
@@ -41,10 +41,10 @@ export declare class AddressesController {
     update(id: string, dto: UpdateAddressDto, req: Request): Promise<{
         id: string;
         userId: string;
-        state: string | null;
         line1: string;
         line2: string | null;
         city: string;
+        state: string | null;
         postalCode: string;
         country: string;
         isDefault: boolean;
@@ -52,10 +52,10 @@ export declare class AddressesController {
     setDefault(id: string, req: Request): Promise<{
         id: string;
         userId: string;
-        state: string | null;
         line1: string;
         line2: string | null;
         city: string;
+        state: string | null;
         postalCode: string;
         country: string;
         isDefault: boolean;

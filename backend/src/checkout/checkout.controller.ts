@@ -85,7 +85,8 @@ export class CheckoutController {
       'Fetches a Stripe PaymentIntent after client-side confirmation, verifies that it belongs to the authenticated user, and creates the order if payment succeeded.',
   })
   @ApiOkResponse({
-    description: 'Returns confirmation status and the created order id when available',
+    description:
+      'Returns confirmation status and the created order id when available',
   })
   @ApiBadRequestResponse({
     description: 'Payment is not successful yet or does not belong to the user',

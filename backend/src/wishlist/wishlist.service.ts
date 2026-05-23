@@ -31,7 +31,10 @@ export class WishlistService {
   }
 
   async checkWishlistStatus(userId: string, variantId: string) {
-    const isWishlisted = await this.wishlistRepository.exists(userId, variantId);
+    const isWishlisted = await this.wishlistRepository.exists(
+      userId,
+      variantId,
+    );
     return { isWishlisted };
   }
 }

@@ -28,7 +28,9 @@ function appendQueryParams(
   const url = stripEnvQuotes(rawUrl);
   const qIndex = url.indexOf('?');
   const base = qIndex === -1 ? url : url.slice(0, qIndex);
-  const search = new URLSearchParams(qIndex === -1 ? '' : url.slice(qIndex + 1));
+  const search = new URLSearchParams(
+    qIndex === -1 ? '' : url.slice(qIndex + 1),
+  );
 
   for (const [key, value] of Object.entries(params)) {
     if (!search.has(key)) {
@@ -49,8 +51,7 @@ export function getPooledDatabaseUrl(): string {
     );
   }
 
-  const isPooled =
-    raw.includes(':6543/') || raw.includes('pgbouncer=true');
+  const isPooled = raw.includes(':6543/') || raw.includes('pgbouncer=true');
 
   return appendQueryParams(raw, {
     ...(isPooled ? { pgbouncer: 'true' } : {}),

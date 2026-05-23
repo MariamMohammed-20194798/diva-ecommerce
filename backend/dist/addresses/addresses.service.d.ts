@@ -6,10 +6,10 @@ export declare class AddressesService {
     findAll(userId: string): Promise<{
         id: string;
         userId: string;
-        state: string | null;
         line1: string;
         line2: string | null;
         city: string;
+        state: string | null;
         postalCode: string;
         country: string;
         isDefault: boolean;
@@ -17,10 +17,10 @@ export declare class AddressesService {
     findOne(id: string, userId: string): Promise<{
         id: string;
         userId: string;
-        state: string | null;
         line1: string;
         line2: string | null;
         city: string;
+        state: string | null;
         postalCode: string;
         country: string;
         isDefault: boolean;
@@ -28,10 +28,10 @@ export declare class AddressesService {
     create(userId: string, dto: CreateAddressDto): Promise<{
         id: string;
         userId: string;
-        state: string | null;
         line1: string;
         line2: string | null;
         city: string;
+        state: string | null;
         postalCode: string;
         country: string;
         isDefault: boolean;
@@ -39,10 +39,10 @@ export declare class AddressesService {
     update(id: string, userId: string, dto: UpdateAddressDto): Promise<{
         id: string;
         userId: string;
-        state: string | null;
         line1: string;
         line2: string | null;
         city: string;
+        state: string | null;
         postalCode: string;
         country: string;
         isDefault: boolean;
@@ -50,10 +50,10 @@ export declare class AddressesService {
     setDefault(id: string, userId: string): Promise<{
         id: string;
         userId: string;
-        state: string | null;
         line1: string;
         line2: string | null;
         city: string;
+        state: string | null;
         postalCode: string;
         country: string;
         isDefault: boolean;

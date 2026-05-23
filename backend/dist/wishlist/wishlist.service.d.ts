@@ -7,54 +7,54 @@ export declare class WishlistService {
     getWishlist(userId: string): Promise<({
         variant: {
             product: {
-                name: string;
                 id: string;
-                images: string[];
                 slug: string;
+                name: string;
+                images: string[];
                 basePrice: import("@prisma/client/runtime/library").Decimal;
             };
         } & {
             id: string;
-            size: string | null;
-            color: string | null;
-            sku: string;
-            priceOverride: import("@prisma/client/runtime/library").Decimal | null;
-            stockQuantity: number;
             images: string[];
             productId: string;
+            sku: string;
+            size: string | null;
+            color: string | null;
+            priceOverride: import("@prisma/client/runtime/library").Decimal | null;
+            stockQuantity: number;
         };
     } & {
         id: string;
-        createdAt: Date;
         userId: string;
         variantId: string;
         image: string | null;
+        createdAt: Date;
     })[]>;
     addToWishlist(userId: string, variantId: string, image?: string): Promise<{
         variant: {
             product: {
-                name: string;
                 id: string;
-                images: string[];
                 slug: string;
+                name: string;
+                images: string[];
                 basePrice: import("@prisma/client/runtime/library").Decimal;
             };
         } & {
             id: string;
-            size: string | null;
-            color: string | null;
-            sku: string;
-            priceOverride: import("@prisma/client/runtime/library").Decimal | null;
-            stockQuantity: number;
             images: string[];
             productId: string;
+            sku: string;
+            size: string | null;
+            color: string | null;
+            priceOverride: import("@prisma/client/runtime/library").Decimal | null;
+            stockQuantity: number;
         };
     } & {
         id: string;
-        createdAt: Date;
         userId: string;
         variantId: string;
         image: string | null;
+        createdAt: Date;
     }>;
     removeFromWishlist(userId: string, variantId: string): Promise<import("@prisma/client").Prisma.BatchPayload>;
     checkWishlistStatus(userId: string, variantId: string): Promise<{
