@@ -55,5 +55,4 @@ export class CreateAddressDto {
   isDefault?: boolean;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 export class UpdateAddressDto extends PartialType(CreateAddressDto) {}
