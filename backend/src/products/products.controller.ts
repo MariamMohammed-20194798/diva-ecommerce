@@ -17,10 +17,13 @@ import {
   ApiBearerAuth,
   ApiOkResponse,
   ApiCreatedResponse,
-  ApiForbiddenResponse,
   ApiNotFoundResponse,
   ApiQuery,
+  ApiBody,
+  ApiParam,
 } from '@nestjs/swagger';
+import { SWAGGER_BEARER_NAME } from '../common/swagger/swagger.config';
+import { ApiAdminEndpointErrors } from '../common/swagger/api-responses';
 
 import { ProductsService } from './products.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth-guard';
@@ -33,7 +36,7 @@ import {
   UpdateProductDto,
 } from './dto/product.dto';
 
-@ApiTags('products')
+@ApiTags('Products')
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
@@ -111,6 +114,11 @@ export class ProductsController {
   })
   @ApiOkResponse({ description: 'Product with variants and reviews' })
   @ApiNotFoundResponse({ description: 'Product not found' })
+  @ApiParam({
+    name: 'slug',
+    description: 'Product URL slug',
+    example: 'classic-black-tee',
+  })
   async findOne(@Param('slug') slug: string) {
     return this.productsService.findBySlug(slug);
   }
@@ -157,7 +165,8 @@ export class ProductsController {
   @Post()
   @UseGuards(JwtAuthGuard, AdminGuard)
   @HttpCode(HttpStatus.CREATED)
-  @ApiBearerAuth()
+  @ApiTags('Admin')
+  @ApiBearerAuth(SWAGGER_BEARER_NAME)
   @ApiOperation({
     summary: 'Create a product (admin)',
     description:
@@ -166,7 +175,30 @@ export class ProductsController {
       'Requires ADMIN role.',
   })
   @ApiCreatedResponse({ description: 'Product created successfully' })
-  @ApiForbiddenResponse({ description: 'Requires ADMIN role' })
+  @ApiAdminEndpointErrors()
+  @ApiBody({
+    type: CreateProductDto,
+    examples: {
+      default: {
+        summary: 'Create product with variants',
+        value: {
+          name: 'Classic Black Tee',
+          slug: 'classic-black-tee',
+          categoryId: '550e8400-e29b-41d4-a716-446655440003',
+          basePrice: 2999,
+          isActive: true,
+          variants: [
+            {
+              sku: 'TSHIRT-BLK-M',
+              size: 'M',
+              color: 'black',
+              stockQuantity: 100,
+            },
+          ],
+        },
+      },
+    },
+  })
   async create(@Body() dto: CreateProductDto) {
     return this.productsService.create(dto);
   }
@@ -181,7 +213,9 @@ export class ProductsController {
   @Put(':id')
   @UseGuards(JwtAuthGuard, AdminGuard)
   @HttpCode(HttpStatus.OK)
-  @ApiBearerAuth()
+  @ApiTags('Admin')
+  @ApiBearerAuth(SWAGGER_BEARER_NAME)
+  @ApiParam({ name: 'id', description: 'Product UUID' })
   @ApiOperation({
     summary: 'Update a product (admin)',
     description:
@@ -190,8 +224,7 @@ export class ProductsController {
       'Requires ADMIN role.',
   })
   @ApiOkResponse({ description: 'Product updated successfully' })
-  @ApiNotFoundResponse({ description: 'Product not found' })
-  @ApiForbiddenResponse({ description: 'Requires ADMIN role' })
+  @ApiAdminEndpointErrors()
   async update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: UpdateProductDto,

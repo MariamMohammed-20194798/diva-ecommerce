@@ -18,11 +18,12 @@ import {
   ApiBearerAuth,
   ApiOkResponse,
   ApiCreatedResponse,
-  ApiForbiddenResponse,
   ApiNotFoundResponse,
   ApiConflictResponse,
   ApiUnprocessableEntityResponse,
   ApiQuery,
+  ApiBody,
+  ApiParam,
 } from '@nestjs/swagger';
 
 import { CategoriesService } from './categories.service';
@@ -34,8 +35,10 @@ import {
   CreateCategoryDto,
   UpdateCategoryDto,
 } from './dto/category.dto';
+import { SWAGGER_BEARER_NAME } from '../common/swagger/swagger.config';
+import { ApiAdminEndpointErrors } from '../common/swagger/api-responses';
 
-@ApiTags('categories')
+@ApiTags('Categories')
 @Controller('categories')
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
@@ -158,7 +161,8 @@ export class CategoriesController {
   @Post()
   @UseGuards(JwtAuthGuard, AdminGuard)
   @HttpCode(HttpStatus.CREATED)
-  @ApiBearerAuth()
+  @ApiTags('Admin')
+  @ApiBearerAuth(SWAGGER_BEARER_NAME)
   @ApiOperation({
     summary: 'Create a category (admin)',
     description:
@@ -166,9 +170,17 @@ export class CategoriesController {
       'Slug is auto-generated from name if not provided. Requires ADMIN role.',
   })
   @ApiCreatedResponse({ description: 'Category created successfully' })
+  @ApiAdminEndpointErrors()
   @ApiConflictResponse({ description: 'Slug already exists' })
-  @ApiNotFoundResponse({ description: 'Parent category not found' })
-  @ApiForbiddenResponse({ description: 'Requires ADMIN role' })
+  @ApiBody({
+    type: CreateCategoryDto,
+    examples: {
+      default: {
+        summary: 'Create root category',
+        value: { name: 'T-Shirts', description: 'Custom printed tees' },
+      },
+    },
+  })
   async create(@Body() dto: CreateCategoryDto) {
     return this.categoriesService.create(dto);
   }
@@ -182,7 +194,9 @@ export class CategoriesController {
   @Put(':id')
   @UseGuards(JwtAuthGuard, AdminGuard)
   @HttpCode(HttpStatus.OK)
-  @ApiBearerAuth()
+  @ApiTags('Admin')
+  @ApiBearerAuth(SWAGGER_BEARER_NAME)
+  @ApiParam({ name: 'id', description: 'Category UUID' })
   @ApiOperation({
     summary: 'Update a category (admin)',
     description:
@@ -191,9 +205,8 @@ export class CategoriesController {
       'Requires ADMIN role.',
   })
   @ApiOkResponse({ description: 'Category updated successfully' })
-  @ApiNotFoundResponse({ description: 'Category or parent not found' })
+  @ApiAdminEndpointErrors()
   @ApiConflictResponse({ description: 'New slug already in use' })
-  @ApiForbiddenResponse({ description: 'Requires ADMIN role' })
   async update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: UpdateCategoryDto,
@@ -210,7 +223,9 @@ export class CategoriesController {
   @Delete(':id')
   @UseGuards(JwtAuthGuard, AdminGuard)
   @HttpCode(HttpStatus.OK)
-  @ApiBearerAuth()
+  @ApiTags('Admin')
+  @ApiBearerAuth(SWAGGER_BEARER_NAME)
+  @ApiParam({ name: 'id', description: 'Category UUID' })
   @ApiOperation({
     summary: 'Delete a category (admin)',
     description:
@@ -223,7 +238,7 @@ export class CategoriesController {
   @ApiUnprocessableEntityResponse({
     description: 'Category has products or subcategories',
   })
-  @ApiForbiddenResponse({ description: 'Requires ADMIN role' })
+  @ApiAdminEndpointErrors()
   async delete(@Param('id', ParseUUIDPipe) id: string) {
     return this.categoriesService.delete(id);
   }

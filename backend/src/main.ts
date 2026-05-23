@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import * as express from 'express';
 import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
+import { setupSwagger } from './common/swagger/swagger.config';
 
 function parseAllowedOrigins(): Set<string> {
   const raw = [
@@ -37,7 +38,18 @@ async function bootstrap() {
 
   const allowedOrigins = parseAllowedOrigins();
 
-  app.use(helmet());
+  app.use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: [`'self'`],
+          styleSrc: [`'self'`, `'unsafe-inline'`],
+          imgSrc: [`'self'`, 'data:', 'https://validator.swagger.io'],
+          scriptSrc: [`'self'`, `'unsafe-inline'`],
+        },
+      },
+    }),
+  );
   app.use(cookieParser());
 
   app.use('/api/checkout/webhook', express.raw({ type: 'application/json' }));
@@ -80,6 +92,8 @@ async function bootstrap() {
   );
 
   app.setGlobalPrefix('api');
+
+  setupSwagger(app);
 
   await app.listen(process.env.PORT ?? 3001, '0.0.0.0');
 

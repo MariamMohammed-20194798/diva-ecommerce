@@ -176,8 +176,23 @@ psql $DATABASE_URL -f prisma/search-indexes.sql
 ```
 
 ```bash
-pnpm run start:dev    # http://localhost:3001/api
+pnpm run start:dev    # API base: http://localhost:3001/api
 ```
-Swagger docs → `http://localhost:3001/api/docs`
- 
+
+### Swagger / OpenAPI
+
+Interactive API documentation is served at:
+
+| Environment | URL |
+|---|---|
+| Local | [http://localhost:3001/api/docs](http://localhost:3001/api/docs) |
+| OpenAPI JSON | [http://localhost:3001/api/docs-json](http://localhost:3001/api/docs-json) |
+| Production | `https://<your-api-host>/api/docs` |
+
+1. Call **Auth → POST /auth/verify-otp** (or refresh) to obtain an `accessToken`.
+2. Click **Authorize** in Swagger UI and paste: `Bearer <accessToken>`.
+3. Protected routes (cart with JWT, orders, payments, admin, etc.) will send the token automatically.
+
+Swagger is configured in `src/common/swagger/swagger.config.ts` and respects the global `ValidationPipe`, JWT guards, and pagination query DTOs.
+
 ---

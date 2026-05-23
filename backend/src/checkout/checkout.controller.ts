@@ -7,14 +7,17 @@ import {
   ApiCreatedResponse,
   ApiBadRequestResponse,
   ApiQuery,
+  ApiBody,
 } from '@nestjs/swagger';
 import type { Request } from 'express';
 
 import { CheckoutService } from './checkout.service';
 import { ConfirmPaymentDto, CreatePaymentIntentDto } from './dto/checkout.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth-guard';
+import { SWAGGER_BEARER_NAME } from '../common/swagger/swagger.config';
+import { ApiProtectedEndpointErrors } from '../common/swagger/api-responses';
 
-@ApiTags('checkout')
+@ApiTags('Payments')
 @common.Controller('checkout')
 export class CheckoutController {
   constructor(private readonly checkoutService: CheckoutService) {}
@@ -24,19 +27,10 @@ export class CheckoutController {
     return user.user?.sub ?? user.user?.id;
   }
 
-  // ─────────────────────────────────────────────────────────────────────────────
-  // POST /checkout/intent
-  //
-  // Protected — user must be logged in.
-  // Validates the cart, recalculates total server-side, applies any discount,
-  // then creates a Stripe PaymentIntent and returns the client_secret to the
-  // frontend so it can render Stripe Elements and complete payment.
-  // ─────────────────────────────────────────────────────────────────────────────
-
   @common.Post('intent')
   @common.UseGuards(JwtAuthGuard)
   @common.HttpCode(common.HttpStatus.CREATED)
-  @ApiBearerAuth()
+  @ApiBearerAuth(SWAGGER_BEARER_NAME)
   @ApiOperation({
     summary: 'Create Stripe PaymentIntent',
     description:
@@ -48,16 +42,45 @@ export class CheckoutController {
   @ApiCreatedResponse({
     description:
       'Returns clientSecret, subtotal, discount, and total (all in cents)',
+    schema: {
+      example: {
+        clientSecret: 'pi_3Qexample_secret_abc',
+        paymentIntentId: 'pi_3QexampleStripePaymentIntentId',
+        subtotal: 5998,
+        discount: 500,
+        total: 5498,
+        currency: 'eur',
+      },
+    },
   })
   @ApiBadRequestResponse({
     description: 'Empty cart, invalid address, or invalid discount code',
   })
+  @ApiProtectedEndpointErrors()
   @ApiQuery({
     name: 'autoCreateOrder',
     required: false,
     type: Boolean,
     description:
       'Testing only: if true, creates order immediately from the PaymentIntent without waiting for Stripe webhook.',
+  })
+  @ApiBody({
+    type: CreatePaymentIntentDto,
+    examples: {
+      default: {
+        summary: 'Checkout with saved address',
+        value: {
+          addressId: '550e8400-e29b-41d4-a716-446655440001',
+        },
+      },
+      withDiscount: {
+        summary: 'Checkout with discount code',
+        value: {
+          addressId: '550e8400-e29b-41d4-a716-446655440001',
+          discountCode: 'SUMMER20',
+        },
+      },
+    },
   })
   async createIntent(
     @common.Body() dto: CreatePaymentIntentDto,
@@ -78,7 +101,7 @@ export class CheckoutController {
   @common.Post('confirm')
   @common.UseGuards(JwtAuthGuard)
   @common.HttpCode(common.HttpStatus.OK)
-  @ApiBearerAuth()
+  @ApiBearerAuth(SWAGGER_BEARER_NAME)
   @ApiOperation({
     summary: 'Finalize a successful Stripe payment',
     description:
@@ -87,9 +110,25 @@ export class CheckoutController {
   @ApiOkResponse({
     description:
       'Returns confirmation status and the created order id when available',
+    schema: {
+      example: {
+        status: 'succeeded',
+        orderId: '550e8400-e29b-41d4-a716-446655440099',
+      },
+    },
   })
   @ApiBadRequestResponse({
     description: 'Payment is not successful yet or does not belong to the user',
+  })
+  @ApiProtectedEndpointErrors()
+  @ApiBody({
+    type: ConfirmPaymentDto,
+    examples: {
+      default: {
+        summary: 'Confirm PaymentIntent after Stripe Elements',
+        value: { paymentIntentId: 'pi_3QexampleStripePaymentIntentId' },
+      },
+    },
   })
   async confirmPayment(
     @common.Body() dto: ConfirmPaymentDto,
@@ -102,23 +141,6 @@ export class CheckoutController {
 
     return this.checkoutService.confirmPayment(userId, dto.paymentIntentId);
   }
-
-  // ─────────────────────────────────────────────────────────────────────────────
-  // POST /checkout/webhook
-  //
-  // Public — called by Stripe, NOT by your frontend.
-  // Stripe signature is verified inside the service using the raw body.
-  //
-  // IMPORTANT: This route must receive the raw request body (Buffer), not the
-  // parsed JSON body. In main.ts, exclude this route from the global
-  // bodyParser JSON middleware:
-  //
-  //   app.use('/api/checkout/webhook', express.raw({ type: 'application/json' }));
-  //   await app.listen(3001);
-  //
-  // On payment_intent.succeeded: atomically creates order, decrements stock,
-  // records payment, clears cart, and applies discount usage.
-  // ─────────────────────────────────────────────────────────────────────────────
 
   @common.Post('webhook')
   @common.HttpCode(common.HttpStatus.OK)

@@ -18,9 +18,10 @@ import {
   ApiBearerAuth,
   ApiOkResponse,
   ApiNotFoundResponse,
-  ApiForbiddenResponse,
   ApiBadRequestResponse,
   ApiQuery,
+  ApiBody,
+  ApiParam,
 } from '@nestjs/swagger';
 import type { Request } from 'express';
 
@@ -32,8 +33,13 @@ import {
 } from './dto/order.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth-guard';
 import { AdminGuard } from '../products/guards/admin.guard';
+import { SWAGGER_BEARER_NAME } from '../common/swagger/swagger.config';
+import {
+  ApiAdminEndpointErrors,
+  ApiProtectedEndpointErrors,
+} from '../common/swagger/api-responses';
 
-@ApiTags('orders')
+@ApiTags('Orders')
 @Controller()
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
@@ -53,7 +59,7 @@ export class OrdersController {
   @Get('orders')
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
-  @ApiBearerAuth()
+  @ApiBearerAuth(SWAGGER_BEARER_NAME)
   @ApiOperation({
     summary: "Get user's order history",
     description:
@@ -61,7 +67,24 @@ export class OrdersController {
       'Each order includes a summary of items, total, status, and item count. ' +
       'Filter by status to show only active, shipped, or completed orders.',
   })
-  @ApiOkResponse({ description: 'Paginated order list' })
+  @ApiOkResponse({
+    description: 'Paginated order list',
+    schema: {
+      example: {
+        data: [
+          {
+            id: '550e8400-e29b-41d4-a716-446655440099',
+            status: 'PAID',
+            total: 5498,
+            itemCount: 2,
+            createdAt: '2026-05-23T10:00:00.000Z',
+          },
+        ],
+        meta: { page: 1, limit: 10, total: 1, totalPages: 1 },
+      },
+    },
+  })
+  @ApiProtectedEndpointErrors()
   @ApiQuery({ name: 'page', required: false, type: Number })
   @ApiQuery({ name: 'limit', required: false, type: Number })
   @ApiQuery({ name: 'status', required: false, enum: OrderStatusEnum })
@@ -84,7 +107,8 @@ export class OrdersController {
   @Get('orders/:id')
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
-  @ApiBearerAuth()
+  @ApiBearerAuth(SWAGGER_BEARER_NAME)
+  @ApiParam({ name: 'id', description: 'Order UUID' })
   @ApiOperation({
     summary: 'Get order detail',
     description:
@@ -96,6 +120,7 @@ export class OrdersController {
   @ApiNotFoundResponse({
     description: 'Order not found or does not belong to user',
   })
+  @ApiProtectedEndpointErrors()
   async findOne(@Param('id', ParseUUIDPipe) id: string, @Req() req: Request) {
     const userId = this.getAuthUserId(req);
     if (!userId) {
@@ -115,7 +140,9 @@ export class OrdersController {
   @Patch('admin/orders/:id/status')
   @UseGuards(JwtAuthGuard, AdminGuard)
   @HttpCode(HttpStatus.OK)
-  @ApiBearerAuth()
+  @ApiTags('Admin')
+  @ApiBearerAuth(SWAGGER_BEARER_NAME)
+  @ApiParam({ name: 'id', description: 'Order UUID' })
   @ApiOperation({
     summary: 'Update order status (admin)',
     description:
@@ -130,7 +157,16 @@ export class OrdersController {
   @ApiBadRequestResponse({
     description: 'Invalid status transition or missing tracking number',
   })
-  @ApiForbiddenResponse({ description: 'Requires ADMIN role' })
+  @ApiAdminEndpointErrors()
+  @ApiBody({
+    type: UpdateOrderStatusDto,
+    examples: {
+      shipped: {
+        summary: 'Mark order as shipped',
+        value: { status: 'SHIPPED', trackingNumber: 'DHL-123456789' },
+      },
+    },
+  })
   async updateStatus(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: UpdateOrderStatusDto,
