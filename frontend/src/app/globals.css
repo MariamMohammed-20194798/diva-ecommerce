@@ -222,11 +222,55 @@
     overflow-x: hidden;
   }
 
-  /* Hide default cursor globally — replaced by custom cursor component */
-  * {}
+  /* Restore native cursor on touch/coarse-pointer devices */
+  @media (hover: none), (pointer: coarse) {
+    body {
+      cursor: auto;
+    }
+  }
 }
 
 @layer components {
+
+  .section-label {
+    @apply block mb-4 text-2xs tracking-[0.3em] uppercase text-rose-gold;
+  }
+
+  /* Touch-friendly minimum targets (44×44px) */
+  .touch-target {
+    @apply inline-flex min-h-11 min-w-11 items-center justify-center;
+  }
+
+  /* Custom cursor — desktop pointer devices only */
+  .cursor-dot,
+  .cursor-ring {
+    @apply pointer-events-none fixed z-[9999] hidden -translate-x-1/2 -translate-y-1/2 rounded-full;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .cursor-dot {
+      @apply block h-1.5 w-1.5 bg-rose-gold;
+    }
+
+    .cursor-ring {
+      @apply block h-8 w-8 border border-rose-gold/40;
+      transition: width 0.25s ease, height 0.25s ease, border-color 0.25s ease;
+    }
+
+    .cursor-dot.is-hovered {
+      @apply scale-150 bg-rose-gold-deep;
+    }
+
+    .cursor-ring.is-hovered {
+      @apply h-12 w-12 border-rose-gold/70;
+    }
+  }
+
+  /* Horizontal scroll container for wide tables/content */
+  .responsive-table-wrap {
+    @apply -mx-4 w-[calc(100%+2rem)] overflow-x-auto px-4 sm:mx-0 sm:w-full sm:px-0;
+    -webkit-overflow-scrolling: touch;
+  }
 
   /* ──────────────────────────────────────────────
      MARQUEE
@@ -245,7 +289,7 @@
      BUTTONS
   ────────────────────────────────────────────── */
   .btn-primary {
-    @apply inline-block px-10 py-4 bg-rose-gold text-ivory text-2xs tracking-[0.25em] uppercase font-normal no-underline transition-all duration-300;
+    @apply inline-flex min-h-11 items-center justify-center px-6 py-3 sm:px-10 sm:py-4 bg-rose-gold text-ivory text-2xs tracking-[0.25em] uppercase font-normal no-underline transition-all duration-300;
   }
 
   .btn-primary:hover {

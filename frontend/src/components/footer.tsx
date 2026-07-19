@@ -116,9 +116,9 @@ export function Footer() {
   // )
 
   return (
-    <footer className="bg-charcoal px-16 pt-20 pb-12">
+    <footer className="bg-charcoal px-4 pb-10 pt-16 sm:px-8 sm:pb-12 sm:pt-20 lg:px-16">
       {/* Top grid */}
-      <div className="grid grid-cols-[2fr_1fr_1fr_1fr] gap-16 mb-16 pb-16 border-b border-white/10">
+      <div className="mb-12 grid grid-cols-1 gap-10 border-b border-white/10 pb-12 sm:grid-cols-2 sm:gap-12 lg:mb-16 lg:grid-cols-[2fr_1fr_1fr_1fr] lg:gap-16 lg:pb-16">
         {/* Brand */}
         <div>
           <Link
@@ -176,11 +176,11 @@ export function Footer() {
       </div>
 
       {/* Bottom */}
-      <div className="flex justify-between items-center">
-        <p className="text-2xs text-white/20 tracking-wide">
+      <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-center">
+        <p className="text-2xs tracking-wide text-white/20">
           © 2026 DIVA. All rights reserved.
         </p>
-        <div className="flex gap-6">
+        <div className="flex flex-wrap gap-4 sm:gap-6">
           {["Instagram", "Pinterest", "TikTok"].map((s) => (
             <Link
               key={s}

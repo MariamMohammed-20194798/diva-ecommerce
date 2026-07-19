@@ -29,13 +29,13 @@ const pillars = [
 
 export default function Philosophy() {
     return (
-        <section className="mx-auto max-w-7xl px-16 py-28 grid grid-cols-[1fr_2fr] gap-24 items-center">
+        <section className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 px-4 py-16 sm:px-8 sm:py-20 lg:grid-cols-[1fr_2fr] lg:gap-24 lg:px-16 lg:py-28">
             {/* Left */}
             <div className="reveal">
                 <span className="text-2xs tracking-[0.3em] uppercase text-rose-gold block mb-4">
                     Our Philosophy
                 </span>
-                <h2 className="font-cormorant text-display-md font-light leading-tight text-foreground">
+                <h2 className="font-cormorant text-[clamp(2rem,6vw,3rem)] font-light leading-tight text-foreground">
                     Craft that
                     <br />
                     <em className="italic text-rose-gold" style={{ fontStyle: "italic" }}>
@@ -47,7 +47,7 @@ export default function Philosophy() {
             </div>
 
             {/* Right — 2×2 grid */}
-            <div className="grid grid-cols-2 gap-12">
+            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 sm:gap-10 lg:gap-12">
                 {pillars.map((p) => (
                     <div
                         key={p.num}

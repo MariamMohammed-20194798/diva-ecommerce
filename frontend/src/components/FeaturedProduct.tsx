@@ -15,7 +15,7 @@ export default async function FeaturedProduct() {
     ];
 
     return (
-        <section className="mx-auto max-w-7xl px-16 py-36 grid grid-cols-2 gap-32 items-center">
+        <section className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 px-4 py-16 sm:px-8 sm:py-24 lg:grid-cols-2 lg:gap-32 lg:px-16 lg:py-36">
             {/* Visual */}
             <div className="relative reveal">
                 {/* Main image placeholder */}
@@ -31,11 +31,11 @@ export default async function FeaturedProduct() {
                 </div>
 
                 {/* Accent border */}
-                <div className="absolute -bottom-8 -right-8 w-48 h-48 border border-rose-gold-light -z-10" />
+                <div className="absolute -bottom-4 -right-4 -z-10 hidden h-32 w-32 border border-rose-gold-light sm:block sm:-bottom-8 sm:-right-8 sm:h-48 sm:w-48" />
 
                 {/* Side badge */}
                 <div
-                    className="absolute top-8 -right-6 bg-rose-gold text-ivory px-3 py-4 text-2xs tracking-[0.25em] uppercase"
+                    className="absolute top-4 right-2 bg-rose-gold px-2 py-3 text-2xs uppercase tracking-[0.25em] text-ivory sm:top-8 sm:-right-6 sm:px-3 sm:py-4"
                     style={{ writingMode: "vertical-rl" }}
                 >
                     New Season
@@ -48,7 +48,7 @@ export default async function FeaturedProduct() {
                     Editor's Pick
                 </span>
 
-                <h2 className="font-cormorant text-display-md font-light leading-tight text-charcoal mb-6">
+                <h2 className="mb-6 font-cormorant text-[clamp(2rem,6vw,3rem)] font-light leading-tight text-charcoal">
                     {product.name.split(" ").map((word, i) => (
                         <span key={i}>
                             {word.toLowerCase() === "soleil" ? (

@@ -1,125 +1,10 @@
-'use client';
-
-// import Image from "next/image"
-// import { motion } from "framer-motion"
-// import { ArrowRight } from "lucide-react"
-// import { useRouter } from "next/navigation"
-
-// export function Hero() {
-//   const router = useRouter()
-
-//   return (
-//     <section className="relative min-h-screen flex items-center overflow-hidden">
-//       {/* Background Image */}
-//       <div className="absolute inset-0 z-0">
-//         <Image
-//           src="/images/hero-fashion.jpg"
-//           alt="Fashion model in elegant attire"
-//           fill
-//           className="object-cover object-center"
-//           priority
-//         />
-//         <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/60 to-transparent" />
-//       </div>
-
-//       {/* Content */}
-//       <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 w-full pt-20">
-//         <div className="max-w-2xl">
-//           <motion.div
-//             initial={{ opacity: 0, y: 30 }}
-//             animate={{ opacity: 1, y: 0 }}
-//             transition={{ duration: 0.8, delay: 0.2 }}
-//           >
-//             <span className="text-sm tracking-[0.3em] uppercase text-muted-foreground">
-//               Spring/Summer 2026
-//             </span>
-//           </motion.div>
-
-//           <motion.h1
-//             initial={{ opacity: 0, y: 40 }}
-//             animate={{ opacity: 1, y: 0 }}
-//             transition={{ duration: 0.8, delay: 0.4 }}
-//             className="font-serif text-4xl md:text-5xl lg:text-6xl font-light leading-[0.95] mt-6 text-balance"
-//           >
-//             Timeless elegance
-//             <br />
-//             <span className="italic font-normal">redefined</span>
-//           </motion.h1>
-
-//           <motion.p
-//             initial={{ opacity: 0, y: 30 }}
-//             animate={{ opacity: 1, y: 0 }}
-//             transition={{ duration: 0.8, delay: 0.6 }}
-//             className="text-md md:text-lg text-muted-foreground mt-8 max-w-md leading-relaxed"
-//           >
-//             Discover our curated collection of contemporary silhouettes crafted
-//             for the modern woman.
-//           </motion.p>
-
-//           <motion.div
-//             initial={{ opacity: 0, y: 30 }}
-//             animate={{ opacity: 1, y: 0 }}
-//             transition={{ duration: 0.8, delay: 0.8 }}
-//             className="flex flex-col sm:flex-row gap-4 mt-10"
-//           >
-//             <motion.button
-//               whileHover={{ scale: 1.02 }}
-//               whileTap={{ scale: 0.98 }}
-//               className="group rounded-md flex items-center justify-center gap-3 bg-primary text-primary-foreground px-4 py-3 text-sm tracking-widest uppercase transition-all duration-300"
-//               onClick={() => router.push("/collections")}
-//               suppressHydrationWarning
-//             >
-//               Explore Collection
-//               <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
-//             </motion.button>
-//             <motion.button
-//               whileHover={{ scale: 1.02 }}
-//               whileTap={{ scale: 0.98 }}
-//               className="flex items-center justify-center gap-3 border border-foreground/20 px-4 py-4 rounded-md text-sm tracking-widest uppercase hover:bg-foreground hover:text-background transition-all duration-300"
-//               onClick={() => router.push("/lookbook")}
-//               suppressHydrationWarning
-//             >
-//               View Lookbook
-//             </motion.button>
-//           </motion.div>
-//         </div>
-//       </div>
-
-//       {/* Scroll Indicator */}
-//       <motion.div
-//         initial={{ opacity: 0 }}
-//         animate={{ opacity: 1 }}
-//         transition={{ duration: 1, delay: 1.2 }}
-//         className="absolute bottom-10 left-1/2 -translate-x-1/2"
-//       >
-//         <motion.div
-//           animate={{ y: [0, 10, 0] }}
-//           transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-//           className="flex flex-col items-center gap-2"
-//         >
-//           <span className="text-xs tracking-[0.3em] uppercase text-muted-foreground">
-//             Scroll
-//           </span>
-//           <div className="w-px h-12 bg-foreground/30 relative overflow-hidden">
-//             <motion.div
-//               animate={{ y: [-48, 48] }}
-//               transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-//               className="absolute w-full h-1/2 bg-foreground"
-//             />
-//           </div>
-//         </motion.div>
-//       </motion.div>
-//     </section>
-//   );
-// }
-
 import Link from 'next/link';
 
 export default function Hero() {
   return (
-    <section className="min-h-screen grid grid-cols-2 relative overflow-hidden">
+    <section className="relative grid min-h-screen grid-cols-1 overflow-hidden lg:grid-cols-2">
       {/* ── LEFT ── */}
-      <div className="flex flex-col justify-center px-16 pt-40 pb-24 relative z-10">
+      <div className="relative z-10 flex flex-col justify-center px-4 pb-16 pt-28 sm:px-8 sm:pt-32 sm:pb-20 lg:px-16 lg:pt-40 lg:pb-24">
         <p
           className="section-label opacity-0"
           style={{ animation: 'fadeUp 0.9s ease 0.3s forwards' }}
@@ -128,7 +13,7 @@ export default function Hero() {
         </p>
 
         <h1
-          className="font-cormorant text-display-xl font-light leading-none text-charcoal mb-12 opacity-0"
+          className="mb-8 font-cormorant text-[clamp(2.5rem,10vw,6rem)] font-light leading-[0.95] text-charcoal opacity-0 sm:mb-10 lg:mb-12"
           style={{ animation: 'fadeUp 1s ease 0.5s forwards' }}
         >
           Dressed
@@ -145,7 +30,7 @@ export default function Hero() {
         </h1>
 
         <p
-          className="text-sm leading-relaxed text-warm-gray max-w-xs mb-14 opacity-0"
+          className="mb-10 max-w-xs text-sm leading-relaxed text-warm-gray opacity-0 sm:mb-12 lg:mb-14"
           style={{ animation: 'fadeUp 1s ease 0.75s forwards' }}
         >
           Each piece in our collection is a meditation on femininity — crafted for the
@@ -153,20 +38,20 @@ export default function Hero() {
         </p>
 
         <div
-          className="flex items-center gap-10 opacity-0"
+          className="flex flex-wrap items-center gap-4 opacity-0 sm:gap-10"
           style={{ animation: 'fadeUp 1s ease 1s forwards' }}
         >
-          <Link href="/collections" className="btn-primary">
+          <Link href="/collections" className="btn-primary w-full sm:w-auto">
             Explore Collection
           </Link>
         </div>
       </div>
 
       {/* ── RIGHT — abstract art panel ── */}
-      <div className="relative bg-rose-gold-pale overflow-hidden">
+      <div className="relative min-h-[280px] overflow-hidden bg-rose-gold-pale sm:min-h-[360px] lg:min-h-0">
         {/* Pulsing circles */}
         <div
-          className="absolute w-96 h-96 rounded-full bg-rose-gold-light opacity-50"
+          className="absolute h-48 w-48 rounded-full bg-rose-gold-light opacity-50 sm:h-72 sm:w-72 lg:h-96 lg:w-96"
           style={{
             top: '50%',
             left: '50%',
@@ -174,7 +59,7 @@ export default function Hero() {
           }}
         />
         <div
-          className="absolute w-64 h-64 rounded-full bg-rose-gold opacity-20"
+          className="absolute h-32 w-32 rounded-full bg-rose-gold opacity-20 sm:h-48 sm:w-48 lg:h-64 lg:w-64"
           style={{
             top: '50%',
             left: '50%',
@@ -182,7 +67,7 @@ export default function Hero() {
           }}
         />
         <div
-          className="absolute w-36 h-36 rounded-full bg-rose-gold-deep opacity-15"
+          className="absolute h-20 w-20 rounded-full bg-rose-gold-deep opacity-15 sm:h-28 sm:w-28 lg:h-36 lg:w-36"
           style={{
             top: '50%',
             left: '50%',
@@ -192,7 +77,7 @@ export default function Hero() {
 
         {/* Silhouette line art */}
         <svg
-          className="absolute inset-0 w-full h-full opacity-20"
+          className="absolute inset-0 h-full w-full opacity-20"
           viewBox="0 0 500 700"
           preserveAspectRatio="xMidYMid meet"
           aria-hidden="true"
@@ -239,28 +124,31 @@ export default function Hero() {
           />
         </svg>
 
-        {/* Floating info tags */}
+        {/* Floating info tags — hidden on very small screens to avoid overlap */}
         <div
-          className="floating-tag bottom-1/4 -left-2"
+          className="floating-tag bottom-1/4 left-2 hidden sm:block sm:-left-2"
           style={{ animationDelay: '1.5s' }}
         >
-          <div className="text-2xs tracking-[0.2em] uppercase text-rose-gold mb-1">
+          <div className="mb-1 text-2xs tracking-[0.2em] uppercase text-rose-gold">
             New Arrival
           </div>
-          <div className="font-cormorant text-lg text-charcoal">The Soleil Dress</div>
+          <div className="font-cormorant text-base text-charcoal sm:text-lg">The Soleil Dress</div>
         </div>
 
-        <div className="floating-tag top-1/4 right-8" style={{ animationDelay: '2s' }}>
-          <div className="text-2xs tracking-[0.2em] uppercase text-rose-gold mb-1">
+        <div
+          className="floating-tag right-4 top-1/4 hidden sm:block sm:right-8"
+          style={{ animationDelay: '2s' }}
+        >
+          <div className="mb-1 text-2xs tracking-[0.2em] uppercase text-rose-gold">
             Starting from
           </div>
-          <div className="font-cormorant text-lg text-charcoal">EGP 500</div>
+          <div className="font-cormorant text-base text-charcoal sm:text-lg">EGP 500</div>
         </div>
       </div>
 
-      {/* Vertical text */}
+      {/* Vertical text — desktop only */}
       <p
-        className="absolute right-0 top-1/2 z-10 text-2xs tracking-[0.35em] uppercase text-warm-gray opacity-0"
+        className="absolute right-2 top-1/2 z-10 hidden text-2xs tracking-[0.35em] uppercase text-warm-gray opacity-0 xl:block"
         style={{
           transform: 'translateY(-50%) rotate(90deg)',
           transformOrigin: 'center',
