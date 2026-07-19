@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "dev": "next dev --webpack",
     "test": "echo \"Error: no test specified\" && exit 1",
     "docs:dev": "cd docs && pnpm dlx mintlify dev",
     "docs:build": "cd docs && pnpm dlx mintlify build"
