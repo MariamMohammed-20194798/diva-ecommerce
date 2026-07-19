@@ -138,10 +138,10 @@ export function Header() {
 
             {/* Right side icons */}
             <div className="flex flex-1 items-center justify-end gap-2">
-              <Button variant="ghost" size="icon" aria-label="Search">
+              {/* <Button variant="ghost" size="icon" aria-label="Search" className="hidden sm:block">
                 <Search className="h-5 w-5" />
-              </Button>
-              <Link href="/wishlist" className="hidden sm:block">
+              </Button> */}
+              <Link href="/wishlist" >
                 <Button
                   variant="ghost"
                   size="icon"
@@ -156,6 +156,7 @@ export function Header() {
                   )}
                 </Button>
               </Link>
+              
               <Link href={accountHref}>
                 <Button variant="ghost" size="icon" aria-label="Account">
                   <User className="h-5 w-5" />
