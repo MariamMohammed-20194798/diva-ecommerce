@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -167,7 +167,7 @@ const emptyAddressForm: AddressFormState = {
   isDefault: false,
 };
 
-export default function AccountPage() {
+function AccountContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [tab, setTab] = useState<Tab>('profile');
@@ -748,5 +748,13 @@ export default function AccountPage() {
 
       {pageError ? <p className="mt-4 text-sm text-red-600">{pageError}</p> : null}
     </main>
+  );
+}
+
+export default function AccountPage() {
+  return (
+    <Suspense fallback={<div>Loading account...</div>}>
+      <AccountContent />
+    </Suspense>
   );
 }
