@@ -265,6 +265,7 @@ export default function AccountPage() {
     if (isBooting) return;
     const tabParam = searchParams.get('tab');
     const orderIdParam = searchParams.get('orderId');
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (tabParam === 'orders') setTab('orders');
     if (orderIdParam) {
       void loadOrderDetail(orderIdParam);
