@@ -15,7 +15,7 @@ const navigation = [
   // { name: "New Arrivals", href: "/collection" },
   { name: 'Collections', href: '/collections' },
   // { name: 'Docs', href: '/docs' },
-  // { name: "Size Guide", href: "/size-guide" },
+  { name: "Size Guide", href: "/size-guide" },
   { name: 'Our Story', href: '/our-story' },
 ];
 
@@ -155,7 +155,7 @@ export function Header() {
                 >
                   <Heart className="h-5 w-5" />
                   {wishlistedProductIds.length > 0 && (
-                    <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-accent text-[10px] font-medium text-accent-foreground flex items-center justify-center">
+                    <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-rose-gold text-[10px] font-medium text-accent-foreground flex items-center justify-center">
                       {wishlistedProductIds.length}
                     </span>
                   )}
@@ -177,7 +177,7 @@ export function Header() {
                 >
                   <ShoppingBag className="h-5 w-5" />
                   {cartItemCount > 0 && (
-                    <span className="absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 text-[10px] font-medium text-accent-foreground">
+                    <span className="absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-rose-gold px-1 text-[10px] font-medium text-accent-foreground">
                       {cartItemCount}
                     </span>
                   )}
