@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../database/prisma.service';
 import { Prisma } from '@prisma/client';
-import { OrdersQueryDto, OrderStatusEnum } from './dto/order.dto';
+import { OrdersQueryDto, OrderStatusEnum } from './order.dto';
 
 // Full order detail include — used for single order queries
 const ORDER_DETAIL_INCLUDE = {

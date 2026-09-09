@@ -10,7 +10,7 @@ import {
   ReviewsQueryDto,
   CreateProductDto,
   UpdateProductDto,
-} from './dto/product.dto';
+} from './product.dto';
 
 @Injectable()
 export class ProductsService {

@@ -12,7 +12,7 @@ import {
   OrdersQueryDto,
   UpdateOrderStatusDto,
   OrderStatusEnum,
-} from './dto/order.dto';
+} from './order.dto';
 
 // Valid status transitions — prevents nonsensical moves like DELIVERED → PENDING
 const ALLOWED_TRANSITIONS: Record<OrderStatusEnum, OrderStatusEnum[]> = {

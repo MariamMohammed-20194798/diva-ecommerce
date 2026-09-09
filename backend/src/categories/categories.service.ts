@@ -11,7 +11,7 @@ import {
   CategoryProductsQueryDto,
   CreateCategoryDto,
   UpdateCategoryDto,
-} from './dto/category.dto';
+} from './category.dto';
 
 @Injectable()
 export class CategoriesService {

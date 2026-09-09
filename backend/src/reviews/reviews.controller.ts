@@ -28,7 +28,7 @@ import {
 } from '@nestjs/swagger';
 import type { Request } from 'express';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth-guard';
-import { CreateReviewDto, UpdateReviewDto } from './dto/review.dto';
+import { CreateReviewDto, UpdateReviewDto } from './review.dto';
 import { ReviewsService } from './reviews.service';
 import { SWAGGER_BEARER_NAME } from '../common/swagger/swagger.config';
 import {

@@ -30,7 +30,7 @@ import {
   OrdersQueryDto,
   UpdateOrderStatusDto,
   OrderStatusEnum,
-} from './dto/order.dto';
+} from './order.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth-guard';
 import { AdminGuard } from '../products/guards/admin.guard';
 import { SWAGGER_BEARER_NAME } from '../common/swagger/swagger.config';

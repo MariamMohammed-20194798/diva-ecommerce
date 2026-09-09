@@ -4,7 +4,7 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { AddressesRepository } from './address.repository';
-import { CreateAddressDto, UpdateAddressDto } from './dto/address.dto';
+import { CreateAddressDto, UpdateAddressDto } from './address.dto';
 
 @Injectable()
 export class AddressesService {

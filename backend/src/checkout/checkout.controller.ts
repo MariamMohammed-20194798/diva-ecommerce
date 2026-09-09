@@ -12,7 +12,7 @@ import {
 import type { Request } from 'express';
 
 import { CheckoutService } from './checkout.service';
-import { ConfirmPaymentDto, CreatePaymentIntentDto } from './dto/checkout.dto';
+import { ConfirmPaymentDto, CreatePaymentIntentDto } from './checkout.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth-guard';
 import { SWAGGER_BEARER_NAME } from '../common/swagger/swagger.config';
 import { ApiProtectedEndpointErrors } from '../common/swagger/api-responses';

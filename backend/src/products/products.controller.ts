@@ -34,7 +34,7 @@ import {
   ReviewsQueryDto,
   CreateProductDto,
   UpdateProductDto,
-} from './dto/product.dto';
+} from './product.dto';
 
 @ApiTags('Products')
 @Controller('products')

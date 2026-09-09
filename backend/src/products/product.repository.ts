@@ -8,7 +8,7 @@ import {
   CreateProductDto,
   UpdateProductDto,
   SortField,
-} from './dto/product.dto';
+} from './product.dto';
 
 @Injectable()
 export class ProductRepository {

@@ -29,7 +29,7 @@ import {
 import { randomUUID } from 'crypto';
 
 import { CartService } from './cart.service';
-import { AddCartItemDto, UpdateCartItemDto } from './dto/cart.dto';
+import { AddCartItemDto, UpdateCartItemDto } from './cart.dto';
 import { OptionalJwtAuthGuard } from '../auth/guards/optional-jwt-auth.guard';
 
 import * as authRequest from '../common/types/auth-request';

@@ -9,7 +9,7 @@ import { ConfigService } from '@nestjs/config';
 import type { Prisma } from '@prisma/client';
 import { PrismaService } from '../database/prisma.service';
 import { CartRepository } from '../cart/cart.repository';
-import { CreatePaymentIntentDto } from './dto/checkout.dto';
+import { CreatePaymentIntentDto } from './checkout.dto';
 import Stripe from 'stripe';
 
 type StripeEvent = ReturnType<Stripe.Stripe['webhooks']['constructEvent']>;

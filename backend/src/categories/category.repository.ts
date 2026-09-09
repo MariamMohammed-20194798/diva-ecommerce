@@ -6,7 +6,7 @@ import {
   CategoryProductsQueryDto,
   CreateCategoryDto,
   UpdateCategoryDto,
-} from './dto/category.dto';
+} from './category.dto';
 import { Category } from '@prisma/client';
 
 @Injectable()

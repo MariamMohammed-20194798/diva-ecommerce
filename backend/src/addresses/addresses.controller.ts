@@ -29,7 +29,7 @@ import type { Request } from 'express';
 
 import { JwtAuthGuard } from '../auth/guards/jwt-auth-guard';
 import { AddressesService } from './addresses.service';
-import { CreateAddressDto, UpdateAddressDto } from './dto/address.dto';
+import { CreateAddressDto, UpdateAddressDto } from './address.dto';
 import { SWAGGER_BEARER_NAME } from '../common/swagger/swagger.config';
 import { ApiProtectedEndpointErrors } from '../common/swagger/api-responses';
 

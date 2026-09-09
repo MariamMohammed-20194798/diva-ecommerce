@@ -34,7 +34,7 @@ import {
   CategoryProductsQueryDto,
   CreateCategoryDto,
   UpdateCategoryDto,
-} from './dto/category.dto';
+} from './category.dto';
 import { SWAGGER_BEARER_NAME } from '../common/swagger/swagger.config';
 import { ApiAdminEndpointErrors } from '../common/swagger/api-responses';
 
