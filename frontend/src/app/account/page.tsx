@@ -7,7 +7,8 @@ import { useRouter } from 'next/navigation';
 import { CircleUserRound, Info, Pencil } from 'lucide-react';
 import axios from 'axios';
 import api from '@/lib/api';
-import { isTokenExpired } from '@/lib/jwt';
+import { ACCESS_TOKEN_KEY, clearAccessToken } from '@/lib/auth-storage';
+import { restoreSession } from '@/lib/auth-session';
 import {
   Dialog,
   DialogContent,
@@ -145,11 +146,11 @@ function decodeToken(token: string): UserState | null {
       name?: string;
       role?: string;
     };
-    if (!decoded.sub || !decoded.email || !decoded.name) return null;
+    if (!decoded.sub || !decoded.email) return null;
     return {
       id: decoded.sub,
       email: decoded.email,
-      name: decoded.name,
+      name: decoded.name ?? '',
       role: decoded.role ?? 'CUSTOMER',
     };
   } catch {
@@ -229,9 +230,9 @@ function AccountContent() {
 
   useEffect(() => {
     const bootstrap = async () => {
-      const token = localStorage.getItem('accessToken');
-      if (!token || isTokenExpired(token)) {
-        localStorage.removeItem('accessToken');
+      const restored = await restoreSession();
+      const token = restored ? localStorage.getItem(ACCESS_TOKEN_KEY) : null;
+      if (!token) {
         router.replace('/auth');
         return;
       }
@@ -249,7 +250,7 @@ function AccountContent() {
         await Promise.all([loadAddresses(), loadOrders()]);
       } catch (err) {
         if (axios.isAxiosError(err) && err.response?.status === 401) {
-          localStorage.removeItem('accessToken');
+          clearAccessToken();
           router.replace('/auth');
         }
         return;
@@ -367,7 +368,7 @@ function AccountContent() {
     } catch {
       // ignore logout API failures and clear local session anyway
     } finally {
-      localStorage.removeItem('accessToken');
+      clearAccessToken();
       delete api.defaults.headers.common.Authorization;
       router.replace('/auth');
     }

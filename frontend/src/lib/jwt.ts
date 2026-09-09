@@ -3,6 +3,8 @@
  * Handles token validation, decoding, and expiry checks
  */
 
+import { ACCESS_TOKEN_KEY } from '@/lib/auth-storage';
+
 export interface TokenPayload {
   sub: string;
   email: string;
@@ -66,7 +68,7 @@ export function hasValidAccessToken(): boolean {
     return false;
   }
 
-  const token = window.localStorage.getItem('accessToken');
+  const token = window.localStorage.getItem(ACCESS_TOKEN_KEY);
   if (!token) {
     return false;
   }

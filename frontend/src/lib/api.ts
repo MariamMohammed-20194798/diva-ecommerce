@@ -1,4 +1,5 @@
 import axios from "axios";
+import { ACCESS_TOKEN_KEY, clearAccessToken, persistAccessToken } from "@/lib/auth-storage";
 
 const fallbackApiBaseUrl =
   "https://ecommerce-app-production-30a0.up.railway.app/api";
@@ -47,7 +48,7 @@ const api = axios.create({
 
 api.interceptors.request.use((config) => {
   if (typeof window !== "undefined") {
-    const token = window.localStorage.getItem("accessToken");
+    const token = window.localStorage.getItem(ACCESS_TOKEN_KEY);
     const sessionId = getStoredCartSessionId();
 
     if (token) {
@@ -80,7 +81,7 @@ api.interceptors.response.use(
       const isAuthRoute = requestUrl.includes("/auth/");
       const hasStoredAccessToken =
         typeof window !== "undefined" &&
-        Boolean(window.localStorage.getItem("accessToken"));
+        Boolean(window.localStorage.getItem(ACCESS_TOKEN_KEY));
 
       if (isAuthRoute || !hasStoredAccessToken) {
         return Promise.reject(error);
@@ -90,7 +91,7 @@ api.interceptors.response.use(
       if (requestUrl.includes("/auth/refresh")) {
         isRefreshing = false;
         if (typeof window !== "undefined") {
-          window.localStorage.removeItem("accessToken");
+          clearAccessToken();
         }
         return Promise.reject(error);
       }
@@ -122,7 +123,7 @@ api.interceptors.response.use(
 
         if (accessToken) {
           if (typeof window !== "undefined") {
-            window.localStorage.setItem("accessToken", accessToken);
+            persistAccessToken(accessToken);
           }
           api.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
           originalRequest.headers.Authorization = `Bearer ${accessToken}`;
@@ -132,7 +133,7 @@ api.interceptors.response.use(
       } catch (refreshError) {
         processQueue(refreshError, null);
         if (typeof window !== "undefined") {
-          window.localStorage.removeItem("accessToken");
+          clearAccessToken();
         }
         return Promise.reject(refreshError);
       } finally {

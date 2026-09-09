@@ -1,9 +1,11 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import api from "@/lib/api";
+import { persistAccessToken } from "@/lib/auth-storage";
+import { hasValidAccessToken } from "@/lib/jwt";
 
 type Mode = "signin" | "signup";
 type Step = "email" | "otp";
@@ -38,6 +40,12 @@ export default function AuthPage() {
     if (step === "otp") return "Enter OTP";
     return mode === "signin" ? "Signin" : "Signup";
   }, [mode, step]);
+
+  useEffect(() => {
+    if (hasValidAccessToken()) {
+      router.replace("/account");
+    }
+  }, [router]);
 
   const validateEmailStep = () => {
     if (!emailPattern.test(email)) {
@@ -103,7 +111,7 @@ export default function AuthPage() {
       const accessToken = response.data?.accessToken as string | undefined;
 
       if (accessToken) {
-        localStorage.setItem("accessToken", accessToken);
+        persistAccessToken(accessToken);
         api.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
       }
 

@@ -1,39 +1,50 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { AUTH_CHANGED_EVENT } from '@/lib/auth-storage';
+import { restoreSession } from '@/lib/auth-session';
 import { hasValidAccessToken } from '@/lib/jwt';
 
 /**
- * Hook to check if user is authenticated
- * Reactive to localStorage changes and storage events
- * Validates that the access token exists and is not expired
+ * Hook to check if user is authenticated.
+ * Same-tab updates come from AUTH_CHANGED_EVENT (storage events only fire across tabs).
+ * Expired access tokens are restored via the httpOnly refresh cookie when present.
  */
 export function useAuth() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check initial auth state
-    const checkAuth = () => {
-      if (typeof window !== 'undefined') {
-        const isValid = hasValidAccessToken();
-        setIsAuthenticated(isValid);
+    let cancelled = false;
+
+    const syncAuth = () => {
+      if (cancelled) {
+        return;
       }
+      setIsAuthenticated(hasValidAccessToken());
       setIsLoading(false);
     };
 
-    checkAuth();
+    const bootstrap = async () => {
+      await restoreSession();
+      syncAuth();
+    };
 
-    // Listen for storage changes (e.g., from other tabs/windows or logout in another tab)
+    void bootstrap();
+
     const handleStorageChange = (e: StorageEvent) => {
-      // If accessToken was removed or changed, update auth state
       if (e.key === 'accessToken' || e.key === null) {
-        checkAuth();
+        syncAuth();
       }
     };
 
     window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
+    window.addEventListener(AUTH_CHANGED_EVENT, syncAuth);
+    return () => {
+      cancelled = true;
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener(AUTH_CHANGED_EVENT, syncAuth);
+    };
   }, []);
 
   return { isAuthenticated, isLoading };

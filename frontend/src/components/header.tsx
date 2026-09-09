@@ -81,7 +81,12 @@ export function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  if (pathname === '/auth' || pathname === '/verify-email' || pathname === '/account') {
+  if (
+    pathname === '/auth' ||
+    pathname?.startsWith('/auth/') ||
+    pathname === '/verify-email' ||
+    pathname === '/account'
+  ) {
     return null;
   }
 
