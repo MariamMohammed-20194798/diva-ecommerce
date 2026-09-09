@@ -5,14 +5,14 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 export class AddCartItemDto {
   @ApiProperty({ description: 'Product variant UUID' })
   @IsUUID()
-  variantId: string;
+  variantId!: string;
 
   @ApiProperty({ description: 'Quantity to add', example: 1 })
   @Type(() => Number)
   @IsInt()
   @Min(1)
   @Max(99)
-  quantity: number;
+  quantity!: number;
 
   @ApiPropertyOptional({
     description: 'Custom print data: text, design, position, colors',
@@ -29,5 +29,5 @@ export class UpdateCartItemDto {
   @IsInt()
   @Min(0)
   @Max(99)
-  quantity: number;
+  quantity!: number;
 }

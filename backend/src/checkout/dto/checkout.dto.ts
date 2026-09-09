@@ -13,7 +13,7 @@ export class CreatePaymentIntentDto {
     example: '550e8400-e29b-41d4-a716-446655440001',
   })
   @IsUUID()
-  addressId: string;
+  addressId!: string;
 
   @ApiPropertyOptional({
     description: 'Optional discount code to apply at checkout',
@@ -34,5 +34,5 @@ export class ConfirmPaymentDto {
   })
   @IsString()
   @MinLength(3)
-  paymentIntentId: string;
+  paymentIntentId!: string;
 }

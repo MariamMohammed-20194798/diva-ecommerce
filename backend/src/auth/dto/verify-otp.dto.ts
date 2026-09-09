@@ -8,7 +8,7 @@ export class VerifyOtpDto {
     example: 'customer@diva.shop',
   })
   @IsEmail()
-  email: string;
+  email!: string;
 
   @ApiProperty({
     description: 'Six-digit OTP code from email',
@@ -18,7 +18,7 @@ export class VerifyOtpDto {
   })
   @IsString()
   @Length(6, 6)
-  code: string;
+  code!: string;
 
   @ApiProperty({
     description: 'Must match the type used in send-otp',
@@ -26,7 +26,7 @@ export class VerifyOtpDto {
     example: OtpType.LOGIN,
   })
   @IsEnum(OtpType)
-  type: OtpType;
+  type!: OtpType;
 
   @ApiPropertyOptional({
     description: 'Display name when completing SIGNUP',

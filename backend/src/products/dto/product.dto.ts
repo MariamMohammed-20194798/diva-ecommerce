@@ -93,7 +93,7 @@ export class SearchQueryDto {
   @IsString()
   @MinLength(1)
   @MaxLength(100)
-  q: string;
+  q!: string;
 
   @ApiPropertyOptional({ default: 1 })
   @IsOptional()
@@ -143,7 +143,7 @@ export class CreateVariantDto {
   @IsString()
   @MinLength(2)
   @MaxLength(100)
-  sku: string;
+  sku!: string;
 
   @ApiPropertyOptional({ example: 'M' })
   @IsOptional()
@@ -164,7 +164,7 @@ export class CreateVariantDto {
   @ApiProperty({ example: 100 })
   @IsNumber()
   @Min(0)
-  stockQuantity: number;
+  stockQuantity!: number;
 
   @ApiPropertyOptional({
     type: [String],
@@ -181,7 +181,7 @@ export class CreateProductDto {
   @IsString()
   @MinLength(2)
   @MaxLength(200)
-  name: string;
+  name!: string;
 
   @ApiPropertyOptional({ example: 'classic-black-tee' })
   @IsOptional()
@@ -190,7 +190,7 @@ export class CreateProductDto {
 
   @ApiProperty({ description: 'Category UUID' })
   @IsUUID()
-  categoryId: string;
+  categoryId!: string;
 
   @ApiPropertyOptional()
   @IsOptional()
@@ -201,7 +201,7 @@ export class CreateProductDto {
   @ApiProperty({ description: 'Base price in cents', example: 2999 })
   @IsNumber()
   @IsPositive()
-  basePrice: number;
+  basePrice!: number;
 
   @ApiPropertyOptional({
     type: [String],

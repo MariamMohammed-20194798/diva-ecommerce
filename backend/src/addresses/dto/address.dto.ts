@@ -13,7 +13,7 @@ export class CreateAddressDto {
   @IsString()
   @MinLength(2)
   @MaxLength(200)
-  line1: string;
+  line1!: string;
 
   @ApiPropertyOptional({ example: 'Apt 5B' })
   @IsOptional()
@@ -25,7 +25,7 @@ export class CreateAddressDto {
   @IsString()
   @MinLength(2)
   @MaxLength(100)
-  city: string;
+  city!: string;
 
   @ApiPropertyOptional({ example: 'Ile-de-France' })
   @IsOptional()
@@ -37,13 +37,13 @@ export class CreateAddressDto {
   @IsString()
   @MinLength(2)
   @MaxLength(20)
-  postalCode: string;
+  postalCode!: string;
 
   @ApiProperty({ example: 'France' })
   @IsString()
   @MinLength(2)
   @MaxLength(100)
-  country: string;
+  country!: string;
 
   @ApiPropertyOptional({
     example: false,

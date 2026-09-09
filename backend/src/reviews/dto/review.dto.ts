@@ -15,14 +15,14 @@ import {
 export class CreateReviewDto {
   @ApiProperty({ description: 'Product UUID to review' })
   @IsUUID()
-  productId: string;
+  productId!: string;
 
   @ApiProperty({ description: 'Rating from 1 to 5', example: 5 })
   @Type(() => Number)
   @IsInt()
   @Min(1)
   @Max(5)
-  rating: number;
+  rating!: number;
 
   @ApiPropertyOptional({
     description: 'Optional written feedback',
@@ -35,7 +35,6 @@ export class CreateReviewDto {
   body?: string;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 export class UpdateReviewDto extends PartialType(
   OmitType(CreateReviewDto, ['productId'] as const),
 ) {

@@ -44,7 +44,7 @@ export class OrdersQueryDto {
 export class UpdateOrderStatusDto {
   @ApiProperty({ enum: OrderStatusEnum, example: 'SHIPPED' })
   @IsEnum(OrderStatusEnum)
-  status: OrderStatusEnum;
+  status!: OrderStatusEnum;
 
   @ApiPropertyOptional({
     description: 'Optional tracking number shown in the shipping email',

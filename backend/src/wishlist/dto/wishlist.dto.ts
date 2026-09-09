@@ -8,7 +8,7 @@ export class AddToWishlistDto {
   })
   @IsUUID()
   @IsNotEmpty()
-  variantId: string;
+  variantId!: string;
 
   @ApiProperty({
     description: 'The image URL of the product at the time of wishlisting',

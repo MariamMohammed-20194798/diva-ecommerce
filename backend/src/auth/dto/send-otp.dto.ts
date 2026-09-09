@@ -8,7 +8,7 @@ export class SendOtpDto {
     example: 'customer@diva.shop',
   })
   @IsEmail()
-  email: string;
+  email!: string;
 
   @ApiProperty({
     description:
@@ -17,7 +17,7 @@ export class SendOtpDto {
     example: OtpType.LOGIN,
   })
   @IsEnum(OtpType)
-  type: OtpType;
+  type!: OtpType;
 
   @ApiPropertyOptional({
     description: 'Display name (required for SIGNUP)',

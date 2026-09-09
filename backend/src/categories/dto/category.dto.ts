@@ -83,7 +83,7 @@ export class CreateCategoryDto {
   @IsString()
   @MinLength(2)
   @MaxLength(100)
-  name: string;
+  name!: string;
 
   @ApiPropertyOptional({
     example: 't-shirts',
