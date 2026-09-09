@@ -23,7 +23,7 @@ import {
 } from '@nestjs/swagger';
 import express from 'express';
 import { WishlistService } from './wishlist.service';
-import { AddToWishlistDto } from './dto/wishlist.dto';
+import { AddToWishlistDto } from './wishlist.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth-guard';
 import { SWAGGER_BEARER_NAME } from '../common/swagger/swagger.config';
 import {
