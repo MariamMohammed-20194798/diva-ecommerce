@@ -40,11 +40,11 @@ export default function FeaturedProductActions({ product }: FeaturedProductActio
     };
 
     return (
-        <div className="flex gap-4 items-center">
+        <div className="flex w-full flex-col items-stretch gap-4 sm:flex-row sm:items-center">
             <button
                 onClick={handleAddToCart}
                 disabled={isAddingToCart}
-                className="btn-primary flex items-center justify-center gap-2 min-w-[200px]"
+                className="btn-primary flex min-h-11 w-full items-center justify-center gap-2 sm:w-auto sm:min-w-[200px]"
                 suppressHydrationWarning
             >
                 {isAddingToCart ? (
@@ -58,7 +58,7 @@ export default function FeaturedProductActions({ product }: FeaturedProductActio
             <button
                 onClick={handleAddToWishlist}
                 disabled={isAddingToWishlist}
-                className="btn-ghost flex items-center gap-2"
+                className="btn-ghost flex min-h-11 items-center justify-center gap-2 sm:justify-start"
                 suppressHydrationWarning
             >
                 {isAddingToWishlist ? (

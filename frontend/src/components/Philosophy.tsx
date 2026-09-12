@@ -29,7 +29,7 @@ const pillars = [
 
 export default function Philosophy() {
     return (
-        <section className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 px-4 py-16 sm:px-8 sm:py-20 lg:grid-cols-[1fr_2fr] lg:gap-24 lg:px-16 lg:py-28">
+        <section className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-10 px-4 py-14 sm:gap-12 sm:px-8 sm:py-20 lg:grid-cols-[1fr_2fr] lg:gap-24 lg:px-16 lg:py-28">
             {/* Left */}
             <div className="reveal">
                 <span className="text-2xs tracking-[0.3em] uppercase text-rose-gold block mb-4">

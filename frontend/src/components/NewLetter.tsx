@@ -11,7 +11,7 @@ export default function Newsletter() {
   };
 
   return (
-    <section className="relative overflow-hidden bg-rose-gold-pale px-4 py-16 text-center sm:px-8 sm:py-20 lg:px-16 lg:py-24">
+    <section className="relative overflow-hidden bg-rose-gold-pale px-4 py-14 text-center sm:px-8 sm:py-20 lg:px-16 lg:py-24">
       {/* Watermark */}
       <span
         className="pointer-events-none absolute left-1/2 top-1/2 select-none whitespace-nowrap font-cormorant font-semibold text-rose-gold"
@@ -35,7 +35,7 @@ export default function Newsletter() {
         </em>
       </h2>
 
-      <p className="relative mb-10 text-sm text-warm-gray sm:mb-12">
+      <p className="relative mb-8 text-sm text-warm-gray sm:mb-12">
         Private previews, early access & curated inspiration — for those who
         refuse to follow.
       </p>
@@ -51,12 +51,12 @@ export default function Newsletter() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Your email address"
-            className="min-h-11 flex-1 border-none bg-ivory px-4 py-3 font-jost text-sm text-charcoal outline-none placeholder:text-warm-gray-light focus-visible:ring-2 focus-visible:ring-rose-gold/40 sm:px-6 sm:py-4"
+            className="min-h-12 w-full min-w-0 flex-1 border-none bg-ivory px-4 py-3 font-jost text-sm text-charcoal outline-none placeholder:text-warm-gray-light focus-visible:ring-2 focus-visible:ring-rose-gold/40 sm:px-6 sm:py-4"
             suppressHydrationWarning
           />
           <button
             onClick={handleSubmit}
-            className="min-h-11 px-6 py-3 font-jost text-2xs uppercase tracking-[0.2em] text-ivory transition-colors duration-300 bg-charcoal hover:bg-rose-gold-deep sm:px-8 sm:py-4"
+            className="min-h-12 px-6 py-3 font-jost text-2xs uppercase tracking-[0.2em] text-ivory transition-colors duration-300 bg-charcoal hover:bg-rose-gold-deep sm:px-8 sm:py-4"
             suppressHydrationWarning
           >
             Join

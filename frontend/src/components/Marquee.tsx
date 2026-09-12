@@ -17,7 +17,7 @@ export default function Marquee() {
                 {allItems.map((item, i) => (
                     <span
                         key={i}
-                        className="font-cormorant text-base italic text-warm-gray px-12"
+                        className="px-6 font-cormorant text-base italic text-warm-gray sm:px-12"
                     >
                         {item}{" "}
                         <span className="text-rose-gold not-italic" style={{ fontStyle: "normal" }}>

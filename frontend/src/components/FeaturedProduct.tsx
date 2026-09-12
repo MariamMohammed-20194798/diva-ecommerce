@@ -15,7 +15,7 @@ export default async function FeaturedProduct() {
   ];
 
   return (
-    <section className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 px-4 py-16 sm:px-8 sm:py-24 lg:grid-cols-2 lg:gap-32 lg:px-16 lg:py-36">
+    <section className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-10 px-4 py-14 sm:gap-12 sm:px-8 sm:py-24 lg:grid-cols-2 lg:gap-32 lg:px-16 lg:py-36">
       {/* Visual */}
       <div className="relative reveal">
         {/* Main image placeholder */}
@@ -24,7 +24,7 @@ export default async function FeaturedProduct() {
             src={product.image}
             alt={product.name}
             fill
-            sizes="(max-width: 640px) 70vw, (max-width: 1024px) 45vw, 24vw"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 45vw, 40vw"
             className="object-cover"
             priority
           />
@@ -35,7 +35,7 @@ export default async function FeaturedProduct() {
 
         {/* Side badge */}
         <div
-          className="absolute top-4 right-2 bg-rose-gold px-2 py-3 text-2xs uppercase tracking-[0.25em] text-ivory sm:top-8 sm:-right-6 sm:px-3 sm:py-4"
+          className="absolute right-2 top-4 bg-rose-gold px-2 py-3 text-2xs uppercase tracking-[0.2em] text-ivory sm:-right-6 sm:top-8 sm:px-3 sm:py-4 sm:tracking-[0.25em]"
           style={{ writingMode: 'vertical-rl' }}
         >
           New Season
@@ -44,7 +44,7 @@ export default async function FeaturedProduct() {
 
       {/* Content */}
       <div className="reveal" style={{ transitionDelay: '0.15s' }}>
-        <span className="inline-block text-2xs tracking-[0.25em] uppercase text-rose-gold border border-rose-gold-light px-4 py-1.5 mb-8">
+        <span className="mb-6 inline-block border border-rose-gold-light px-4 py-1.5 text-2xs uppercase tracking-[0.2em] text-rose-gold sm:mb-8 sm:tracking-[0.25em]">
           Editor&apos;s Pick
         </span>
 
@@ -64,12 +64,12 @@ export default async function FeaturedProduct() {
           ))}
         </h2>
 
-        <p className="text-sm leading-loose text-warm-gray mb-10 max-w-sm">
+        <p className="mb-8 max-w-sm text-sm leading-loose text-warm-gray sm:mb-10">
           {product.description}
         </p>
 
         {/* Specs grid */}
-        <div className="grid grid-cols-2 gap-6 pt-8 border-t border-cream-dark mb-10">
+        <div className="mb-8 grid grid-cols-2 gap-x-4 gap-y-5 border-t border-cream-dark pt-6 sm:mb-10 sm:gap-6 sm:pt-8">
           {specs.map((s) => (
             <div key={s.label}>
               <div className="text-2xs tracking-[0.2em] uppercase text-warm-gray mb-1.5">

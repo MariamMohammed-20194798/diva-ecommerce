@@ -2,9 +2,9 @@ import Link from 'next/link';
 
 export default function Hero() {
   return (
-    <section className="relative grid min-h-screen grid-cols-1 overflow-hidden lg:grid-cols-2">
+    <section className="relative grid min-h-0 grid-cols-1 overflow-hidden lg:min-h-screen lg:grid-cols-2">
       {/* ── LEFT ── */}
-      <div className="relative z-10 flex flex-col justify-center px-4 pb-16 pt-28 sm:px-8 sm:pt-32 sm:pb-20 lg:px-16 lg:pt-40 lg:pb-24">
+      <div className="relative z-10 flex flex-col justify-center px-4 pb-12 pt-24 sm:px-8 sm:pt-32 sm:pb-20 lg:px-16 lg:pt-40 lg:pb-24">
         <p
           className="section-label opacity-0"
           style={{ animation: 'fadeUp 0.9s ease 0.3s forwards' }}
@@ -13,7 +13,7 @@ export default function Hero() {
         </p>
 
         <h1
-          className="mb-8 font-cormorant text-[clamp(2.5rem,10vw,6rem)] font-light leading-[0.95] text-charcoal opacity-0 sm:mb-10 lg:mb-12"
+          className="mb-6 font-cormorant text-[clamp(2.5rem,16vw,6rem)] font-light leading-[0.95] text-charcoal opacity-0 sm:mb-10 sm:text-[clamp(2.5rem,10vw,6rem)] lg:mb-12"
           style={{ animation: 'fadeUp 1s ease 0.5s forwards' }}
         >
           Dressed
@@ -30,7 +30,7 @@ export default function Hero() {
         </h1>
 
         <p
-          className="mb-10 max-w-xs text-sm leading-relaxed text-warm-gray opacity-0 sm:mb-12 lg:mb-14"
+          className="mb-8 max-w-xs text-sm leading-relaxed text-warm-gray opacity-0 sm:mb-12 lg:mb-14"
           style={{ animation: 'fadeUp 1s ease 0.75s forwards' }}
         >
           Each piece in our collection is a meditation on femininity — crafted for the
@@ -38,7 +38,7 @@ export default function Hero() {
         </p>
 
         <div
-          className="flex flex-wrap items-center gap-4 opacity-0 sm:gap-10"
+          className="flex w-full flex-wrap items-center gap-4 opacity-0 sm:w-auto sm:gap-10"
           style={{ animation: 'fadeUp 1s ease 1s forwards' }}
         >
           <Link href="/collections" className="btn-primary w-full sm:w-auto">
@@ -48,7 +48,7 @@ export default function Hero() {
       </div>
 
       {/* ── RIGHT — abstract art panel ── */}
-      <div className="relative min-h-[280px] overflow-hidden bg-rose-gold-pale sm:min-h-[360px] lg:min-h-0">
+      <div className="relative aspect-[4/3] min-h-[250px] overflow-hidden bg-rose-gold-pale sm:aspect-auto sm:min-h-[360px] lg:min-h-0">
         {/* Pulsing circles */}
         <div
           className="absolute h-48 w-48 rounded-full bg-rose-gold-light opacity-50 sm:h-72 sm:w-72 lg:h-96 lg:w-96"

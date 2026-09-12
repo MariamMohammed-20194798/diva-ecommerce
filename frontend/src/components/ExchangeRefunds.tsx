@@ -1,23 +1,21 @@
-"use client"
+'use client';
 
-import { useRef } from "react"
-import Link from "next/link"
-import { motion, useInView } from "framer-motion"
-import { Button } from "@/components/ui/button"
+import { useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
 
 const policyItems = [
-  "requests are accepted within 14 days of receiving the order",
-  "the process takes up to 14 days",
-  "exchange/refunds come with a 80 egp fee",
-  "items must be unused and returned in their original packaging",
-]
+  'requests are accepted within 14 days of receiving the order',
+  'the process takes up to 14 days',
+  'exchange/refunds come with a 80 egp fee',
+  'items must be unused and returned in their original packaging',
+];
 
 export default function ExchangeRefunds() {
-  const ref = useRef<HTMLDivElement>(null)
-  const isInView = useInView(ref, { once: true, margin: "-100px" })
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true, margin: '-100px' });
 
   return (
-    <section ref={ref} className="py-24 bg-background overflow-hidden">
+    <section ref={ref} className="overflow-hidden bg-background py-14 sm:py-20 lg:py-24">
       <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
@@ -32,23 +30,24 @@ export default function ExchangeRefunds() {
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ delay: 0.2, duration: 0.6 }}
-          className="mx-auto mt-8 max-w-3xl text-lg leading-relaxed text-foreground/80 font-light"
+          className="mx-auto mt-6 max-w-3xl text-base font-light leading-relaxed text-foreground/80 sm:mt-8 sm:text-lg"
         >
-          Our aim is to provide you with a seamless experience from our website to your door. If you
-          encounter any issue, feel free to reach out; your feedback helps us grow!
+          Our aim is to provide you with a seamless experience from our website to your
+          door. If you encounter any issue, feel free to reach out; your feedback helps us
+          grow!
         </motion.p>
 
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={isInView ? { opacity: 1, scale: 1 } : {}}
           transition={{ delay: 0.4, duration: 0.8 }}
-          className="mt-16 grid grid-cols-1 gap-6 sm:grid-cols-2"
+          className="mt-10 grid grid-cols-1 gap-4 sm:mt-16 sm:grid-cols-2 sm:gap-6"
         >
           {policyItems.map((item, index) => (
             <motion.div
               key={item}
               whileHover={{ y: -5 }}
-              className="rounded-2xl px-8 py-8 text-sm text-foreground/90 font-medium flex items-center justify-center text-center shadow-sm"
+              className="flex min-h-24 items-center justify-center rounded-2xl px-4 py-6 text-center text-sm font-medium text-foreground/90 shadow-sm sm:px-8 sm:py-8"
             >
               {item}
             </motion.div>
@@ -61,7 +60,7 @@ export default function ExchangeRefunds() {
           transition={{ delay: 0.6, duration: 0.6 }}
         >
           <button
-            className="btn-primary mt-12 px-5 h-12 hover:bg-foreground hover:text-white transition-all hover:scale-105 active:scale-95"
+            className="btn-primary mt-10 h-12 w-full px-5 hover:bg-foreground hover:text-white transition-all hover:scale-105 active:scale-95 sm:mt-12 sm:w-auto"
             suppressHydrationWarning
           >
             request an exchange/refund
@@ -69,5 +68,5 @@ export default function ExchangeRefunds() {
         </motion.div>
       </div>
     </section>
-  )
+  );
 }

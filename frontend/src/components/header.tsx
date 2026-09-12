@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Search, ShoppingBag, User, Menu, X, Heart } from 'lucide-react';
+import { ShoppingBag, User, Menu, X, Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { fetchCart, subscribeToCartUpdates } from '@/lib/cart';
 import { getWishlistProductIds, subscribeToWishlistUpdates } from '@/lib/products';
@@ -15,7 +15,7 @@ const navigation = [
   // { name: "New Arrivals", href: "/collection" },
   { name: 'Collections', href: '/collections' },
   // { name: 'Docs', href: '/docs' },
-  { name: "Size Guide", href: "/size-guide" },
+  { name: 'Size Guide', href: '/size-guide' },
   { name: 'Our Story', href: '/our-story' },
 ];
 
@@ -122,7 +122,7 @@ export function Header() {
             <div className="flex lg:flex-1">
               <Link
                 href="/"
-                className="text-2xl font-light tracking-[0.3em] text-foreground"
+                className="text-xl font-light tracking-[0.25em] text-foreground sm:text-2xl sm:tracking-[0.3em]"
               >
                 DIVA
               </Link>
@@ -146,7 +146,7 @@ export function Header() {
               {/* <Button variant="ghost" size="icon" aria-label="Search" className="hidden sm:block">
                 <Search className="h-5 w-5" />
               </Button> */}
-              <Link href="/wishlist" >
+              <Link href="/wishlist">
                 <Button
                   variant="ghost"
                   size="icon"
@@ -161,7 +161,7 @@ export function Header() {
                   )}
                 </Button>
               </Link>
-              
+
               <Link href={accountHref}>
                 <Button variant="ghost" size="icon" aria-label="Account">
                   <User className="h-5 w-5" />
@@ -188,13 +188,13 @@ export function Header() {
 
           {/* Mobile menu */}
           {mobileMenuOpen && (
-            <div className="lg:hidden py-4 border-t border-border">
-              <div className="flex flex-col gap-4">
+            <div className="border-t border-border py-3 lg:hidden sm:py-4">
+              <div className="flex flex-col gap-1 sm:gap-4">
                 {navigation.map((item) => (
                   <Link
                     key={item.name}
                     href={item.href}
-                    className="text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
+                    className="flex min-h-11 items-center text-base font-medium text-muted-foreground transition-colors hover:text-foreground"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     {item.name}

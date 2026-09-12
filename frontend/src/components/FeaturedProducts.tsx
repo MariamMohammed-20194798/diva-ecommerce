@@ -135,10 +135,10 @@ export default function FeaturedProducts() {
   };
 
   return (
-    <section ref={sectionRef} className="py-24 bg-background overflow-hidden" id="new">
+    <section ref={sectionRef} className="overflow-hidden bg-background py-14 sm:py-20 lg:py-24" id="new">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div
-          className="text-center mb-16"
+          className="mb-10 text-center sm:mb-16"
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
@@ -168,7 +168,7 @@ export default function FeaturedProducts() {
               <motion.div
                 key={product.id}
                 variants={itemVariants}
-                className="group/card w-[72%] shrink-0 snap-start cursor-pointer sm:w-[45%] lg:w-[24%]"
+                className="group/card w-[82%] shrink-0 snap-start cursor-pointer sm:w-[45%] lg:w-[24%]"
               >
                 <div className="relative group/image mb-4 aspect-[3/4] overflow-hidden rounded-[24px] bg-muted">
                   <Link
@@ -255,7 +255,7 @@ export default function FeaturedProducts() {
                     href={`/products/${product.slug}`}
                     className="inline-block group-hover/card:text-primary transition-colors"
                   >
-                    <h3 className="text-lg font-light tracking-wide">{product.name}</h3>
+                    <h3 className="break-words text-base font-light tracking-wide sm:text-lg">{product.name}</h3>
                   </Link>
                   <p className="text-md font-medium text-foreground/70">
                     {formatPriceEgp(product.price)}

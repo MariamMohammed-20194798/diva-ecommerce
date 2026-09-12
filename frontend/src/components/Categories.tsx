@@ -138,10 +138,10 @@ export default function Categories() {
   };
 
   return (
-    <section ref={sectionRef} className="bg-background py-24 overflow-hidden" id="collections">
+    <section ref={sectionRef} className="overflow-hidden bg-background py-14 sm:py-20 lg:py-24" id="collections">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div
-          className="mb-16 text-center"
+          className="mb-10 text-center sm:mb-16"
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
@@ -171,7 +171,7 @@ export default function Categories() {
               <motion.div
                 key={category.key}
                 variants={cardVariants}
-                className="group/card relative aspect-[3/4] w-[72%] shrink-0 snap-start overflow-hidden rounded-[28px] sm:w-[46%] lg:w-[31%]"
+                className="group/card relative aspect-[3/4] w-[82%] shrink-0 snap-start overflow-hidden rounded-[24px] sm:w-[46%] sm:rounded-[28px] lg:w-[31%]"
                 whileHover={{ y: -10 }}
                 transition={{ duration: 0.4, ease: 'easeOut' }}
               >
@@ -196,19 +196,19 @@ export default function Categories() {
 
                 <div className="absolute inset-0 bg-black/30 transition-colors duration-300 group-hover/card:bg-black/40 z-1" />
 
-                <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-white z-10 text-center">
+                <div className="absolute inset-0 z-10 flex flex-col items-center justify-center p-4 text-center text-white sm:p-6">
                   <motion.h3
-                    className="mb-2 text-xl font-light tracking-wider sm:text-2xl"
+                    className="mb-2 text-lg font-light tracking-wider sm:text-2xl"
                     initial={{ opacity: 0.9 }}
                     whileHover={{ scale: 1.05 }}
                   >
                     {category.name}
                   </motion.h3>
-                  <p className="mb-6 line-clamp-2 text-sm text-white/80 max-w-[240px]">
+                  <p className="mb-5 line-clamp-2 max-w-[240px] text-sm text-white/80 sm:mb-6">
                     {category.description}
                   </p>
                   <motion.div
-                    className="inline-flex items-center text-xs uppercase tracking-[0.2em] bg-white/10 backdrop-blur-md px-4 py-2 rounded-full border border-white/20"
+                    className="inline-flex min-h-11 items-center rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs uppercase tracking-[0.2em] backdrop-blur-md"
                     whileHover={{
                       scale: 1.05,
                       backgroundColor: 'rgba(255, 255, 255, 0.2)',
