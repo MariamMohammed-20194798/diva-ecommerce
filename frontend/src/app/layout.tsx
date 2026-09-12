@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import Script from 'next/script';
 import './globals.css';
 import './tailwind.config.ts';
 import { QueryProvider } from '@/providers/query-provider';
@@ -30,6 +30,21 @@ export default function RootLayout({
           </main>
           <Footer />
           <Toaster richColors position="top-right" />
+          <div id="VG_OVERLAY_CONTAINER" style={{ width: 0, height: 0 }} />
+          <Script id="vg-config" strategy="afterInteractive">
+            {`window.VG_CONFIG = {
+  ID: "0s5LyqAvEq5i6vMfsz5n",
+  region: "eu",
+  appOrigin: "https://convocore.ai",
+  render: "bottom-right",
+  stylesheets: ["https://vg-bunny-cdn.b-cdn.net/vg_live_build/styles.css"]
+};`}
+          </Script>
+          <Script
+            id="vg-bundle"
+            src="https://vg-bunny-cdn.b-cdn.net/vg_live_build/vg_bundle.js"
+            strategy="afterInteractive"
+          />
         </QueryProvider>
       </body>
     </html>

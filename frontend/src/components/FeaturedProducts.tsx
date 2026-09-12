@@ -135,7 +135,11 @@ export default function FeaturedProducts() {
   };
 
   return (
-    <section ref={sectionRef} className="overflow-hidden bg-background py-14 sm:py-20 lg:py-24" id="new">
+    <section
+      ref={sectionRef}
+      className="overflow-hidden bg-background py-14 sm:py-20 lg:py-24"
+      id="new"
+    >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div
           className="mb-10 text-center sm:mb-16"
@@ -255,7 +259,9 @@ export default function FeaturedProducts() {
                     href={`/products/${product.slug}`}
                     className="inline-block group-hover/card:text-primary transition-colors"
                   >
-                    <h3 className="break-words text-base font-light tracking-wide sm:text-lg">{product.name}</h3>
+                    <h3 className="break-words text-base font-light tracking-wide sm:text-lg">
+                      {product.name}
+                    </h3>
                   </Link>
                   <p className="text-md font-medium text-foreground/70">
                     {formatPriceEgp(product.price)}

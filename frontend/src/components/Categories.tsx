@@ -138,7 +138,11 @@ export default function Categories() {
   };
 
   return (
-    <section ref={sectionRef} className="overflow-hidden bg-background py-14 sm:py-20 lg:py-24" id="collections">
+    <section
+      ref={sectionRef}
+      className="overflow-hidden bg-background py-14 sm:py-20 lg:py-24"
+      id="collections"
+    >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div
           className="mb-10 text-center sm:mb-16"
