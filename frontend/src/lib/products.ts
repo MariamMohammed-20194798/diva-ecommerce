@@ -119,6 +119,11 @@ const toColorHex = (colorName: string) => {
     tiger: '#e08d3c',
     naviblue: '#000080',
     beige: '#EDE8D0',
+    burgundy: '#800020',
+    gold: '#FFD700',
+    silver: '#C0C0C0',
+    cognac: '#800020',
+    blush: '#F5C6D6',
   };
 
   return map[normalized] ?? '#888888';
