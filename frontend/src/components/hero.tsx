@@ -142,7 +142,7 @@ export default function Hero() {
           <div className="mb-1 text-2xs tracking-[0.2em] uppercase text-rose-gold">
             Starting from
           </div>
-          <div className="font-cormorant text-base text-charcoal sm:text-lg">EGP 500</div>
+          <div className="font-cormorant text-base text-charcoal sm:text-lg">EGP 89000</div>
         </div>
       </div>
 
